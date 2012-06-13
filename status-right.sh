@@ -24,12 +24,12 @@ mpd_np+=(["background"]="colour234")
 mpd_np+=(["separator"]="${separator_left_bold}")
 register_addin "mpd_np"
 
-declare -A uptime
-uptime+=(["script"]="${addins_path}/uptime.sh")
-uptime+=(["foreground"]="colour167")
-uptime+=(["background"]="colour237")
-uptime+=(["separator"]="${separator_left_bold}")
-register_addin "uptime"
+declare -A load
+load+=(["script"]="${addins_path}/load.sh")
+load+=(["foreground"]="colour167")
+load+=(["background"]="colour237")
+load+=(["separator"]="${separator_left_bold}")
+register_addin "load"
 
 declare -A date_day
 date_day+=(["script"]="${addins_path}/date_day.sh")

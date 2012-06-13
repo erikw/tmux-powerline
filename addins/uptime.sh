@@ -1,5 +1,3 @@
 #!/bin/sh
-# Print the uptime.
-uptime | cut -d "," -f 3- | cut -d ":" -f2
-
-exit 0
+# Prints the uptime.
+uptime  | grep -Pzo "(?<=up  )[^,]*"
