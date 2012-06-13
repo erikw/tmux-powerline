@@ -11,15 +11,15 @@ The following addins exists for now:
 	* tmux info
 
 # Screenshots
-** Full screenshot **
+**Full screenshot**
 
 ![Full screenshot](https://github.com/erikw/tmux-powerline/raw/master/img/full.png)
 
-** left-status **
+**left-status**
 
 ![left-status](https://github.com/erikw/tmux-powerline/raw/master/img/left-status.png)
 
-** right-status **
+**right-status**
 
 ![right-status](https://github.com/erikw/tmux-powerline/raw/master/img/right-status.png)
 
