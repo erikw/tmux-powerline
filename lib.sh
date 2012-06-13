@@ -1,5 +1,7 @@
 # Library functions.
 
+addins_path="./addins"
+
 declare entries
 
 # Register an addin.

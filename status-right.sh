@@ -11,35 +11,35 @@ cd "$(dirname $0)"
 # Addins
 
 declare -A mail_count
-mail_count+=(["script"]="maildir_inbox_count.sh")
+mail_count+=(["script"]="${addins_path}/maildir_inbox_count.sh")
 mail_count+=(["foreground"]="white")
 mail_count+=(["background"]="red")
 mail_count+=(["separator"]="${separator_left_bold}")
 register_addin "mail_count"
 
 declare -A mpd_np
-mpd_np+=(["script"]="mpd_np.sh")
+mpd_np+=(["script"]="${addins_path}/mpd_np.sh")
 mpd_np+=(["foreground"]="colour37")
 mpd_np+=(["background"]="colour234")
 mpd_np+=(["separator"]="${separator_left_bold}")
 register_addin "mpd_np"
 
 declare -A uptime
-uptime+=(["script"]="uptime.sh")
+uptime+=(["script"]="${addins_path}/uptime.sh")
 uptime+=(["foreground"]="colour167")
 uptime+=(["background"]="colour237")
 uptime+=(["separator"]="${separator_left_bold}")
 register_addin "uptime"
 
 declare -A date_day
-date_day+=(["script"]="date_day.sh")
+date_day+=(["script"]="${addins_path}/date_day.sh")
 date_day+=(["foreground"]="colour136")
 date_day+=(["background"]="colour235")
 date_day+=(["separator"]="${separator_left_bold}")
 register_addin "date_day"
 
 declare -A date_full
-date_full+=(["script"]="date_full.sh")
+date_full+=(["script"]="${addins_path}/date_full.sh")
 date_full+=(["foreground"]="colour136")
 date_full+=(["background"]="colour235")
 date_full+=(["separator"]="${separator_left_thin}")
@@ -47,7 +47,7 @@ date_full+=(["separator_fg"]="default")
 register_addin "date_full"
 
 declare -A time
-time+=(["script"]="time.sh")
+time+=(["script"]="${addins_path}/time.sh")
 time+=(["foreground"]="colour136")
 time+=(["background"]="colour235")
 time+=(["separator"]="${separator_left_thin}")
