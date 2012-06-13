@@ -1,8 +1,14 @@
 # Library functions.
 
 addins_path="./addins"
-
 declare entries
+
+# Separators
+separator_left_bold="◀"
+separator_left_thin="❮"
+separator_right_bold="▶"
+separator_right_thin="❯"
+
 
 # Register an addin.
 register_addin() {
@@ -64,11 +70,6 @@ print_status_line_right() {
 	# End in a clean state.
 	echo "#[default]"
 }
-
-separator_left_bold="◀"
-separator_left_thin="❮"
-separator_right_bold="▶"
-separator_right_thin="❯"
 
 #Internal printer for left.
 __ui_left() {
