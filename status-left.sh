@@ -5,7 +5,7 @@
 cd "$(dirname $0)"
 
 # Source lib functions.
-. lib.sh
+. ./lib.sh
 
 # Addins
 

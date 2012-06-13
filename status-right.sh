@@ -1,4 +1,3 @@
-# TODO try: Power: #(acpi -V | awk \'NR==1 {print $4}\' | cut -d \",\" -f1)
 #!/bin/sh
 # This script prints a string will be evaluated for text attributes (but not shell commands) by tmux. It consists of a bunch of addins that are simple shell scripts/programs that output the information to show. For each addin the desired foreground and background color can be specified as well as what separator to use. The script the glues together these addins dynamically so that if one script suddenly does not output anything (= nothing should be shown) the separator colors will be nicely handled.
 
@@ -6,7 +5,7 @@
 cd "$(dirname $0)"
 
 # Source lib functions.
-. lib.sh
+. ./lib.sh
 
 # Addins
 
