@@ -39,7 +39,7 @@ To use the scripts; set the following in your `~/.tmux.conf`:
 	set-option -g status-utf8 on
 	set-option -g status-justify "centre"
 	set-option -g status-left-length 60
-	set-option -g status-right-length 100
+	set-option -g status-right-length 120
 	set-option -g status-left "#(~/path/to/tmux-powerline/status-left.sh)"
 	set-option -g status-right "#(~/path/to//tmux-powerline/status-right.sh)"
 

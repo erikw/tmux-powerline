@@ -14,7 +14,7 @@ fi
 np=$(mpd_np)
 
 if [ -n "$np" ]; then
-	echo "♫ ${np}"
+	echo "♫ ${np}" | cut -c1-50
 
 fi
 
