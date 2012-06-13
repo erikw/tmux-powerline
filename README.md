@@ -6,6 +6,7 @@ The following addins exists for now:
 * MPD now playing (requires [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)).
 * Maildir check.
 * GNU Linux and Macintosh OS X battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery)).
+* Weather in Celcius, Farenheit and Kelvin!
 * System load and uptime.
 * Date and time.
 * Hostname.

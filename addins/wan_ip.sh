@@ -1,5 +1,5 @@
 #!/bin/sh
-# Prints the WAN IP address.
+# Prints the WAN IP address. The result is cached and updated according to $update_period.
 tmp_file="/tmp/wan_ip.txt"
 
 wan_ip=""
@@ -18,12 +18,15 @@ if [ -z "$wan_ip" ]; then
 	#wan_ip=$(wget --timeout=1 --tries=1 -O - http://formyip.com/ 2>/dev/null | grep -Pzo "(?<=Your IP is )[^<]*")
 	wan_ip=$(wget --timeout=2 --tries=1 -O - http://whatismyip.akamai.com/ 2>/dev/null)
 	if [ "$?" -eq "0" ]; then
-		echo "${wan_ip}" > /tmp/wan_ip.txt
+		echo "${wan_ip}" > $tmp_file
 	elif [ -f "${tmp_file}" ]; then
-		wan_ip=$(cat ${tmp_file})
+		wan_ip=$(cat "$tmp_file")
 	fi
 fi
+
+if [ -n "$wan_ip" ]; then
 	#echo "Ⓦ ${wan_ip}"
 	echo "ⓦ ${wan_ip}"
+fi
 
 exit 0
