@@ -23,7 +23,7 @@ if [ -z "$wan_ip" ]; then
 		wan_ip=$(cat ${tmp_file})
 	fi
 fi
-	#echo "Ⓦ ${wan_ip} "
-	echo "ⓦ ${wan_ip} "
+	#echo "Ⓦ ${wan_ip}"
+	echo "ⓦ ${wan_ip}"
 
 exit 0
