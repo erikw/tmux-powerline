@@ -23,7 +23,7 @@ The following addins exists for now:
 
 ![right-status](https://github.com/erikw/tmux-powerline/raw/master/img/right-status.png)
 
-Now I've read my inbox so the maildir-addin disappears.!
+Now I've read my inbox so the maildir-addin disappears!
 
 ![right-status, no mail](https://github.com/erikw/tmux-powerline/raw/master/img/right-status_no_mail.png)
 
