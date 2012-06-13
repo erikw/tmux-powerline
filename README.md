@@ -5,7 +5,7 @@ The following addins exists for now:
 * LAN & WAN IP addresses.
 * MPD now playing (requires libmpdclient).
 * Maildir check.
-* GNU Linux and Macintosh OS X battery status.
+* GNU Linux and Macintosh OS X battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery)).
 * System load and uptime.
 * Date and time.
 * Hostname.
