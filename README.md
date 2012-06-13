@@ -3,7 +3,7 @@ This is a set of scripts for making a nice and dynamic tmux status-bar where ele
 
 The following addins exists for now:
 * LAN & WAN IP addresses.
-* MPD now playing (requires libmpdclient).
+* MPD now playing (requires [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)).
 * Maildir check.
 * GNU Linux and Macintosh OS X battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery)).
 * System load and uptime.
