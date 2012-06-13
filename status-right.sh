@@ -22,7 +22,7 @@ mpd_np+=(["script"]="${addins_path}/mpd_np.sh")
 mpd_np+=(["foreground"]="colour37")
 mpd_np+=(["background"]="colour234")
 mpd_np+=(["separator"]="${separator_left_bold}")
-#register_addin "mpd_np"
+register_addin "mpd_np"
 
 declare -A load
 load+=(["script"]="${addins_path}/load.sh")

@@ -13,7 +13,8 @@ fi
 if [ -n "$ip" ]; then
 	ip=$(echo "$ip" | cut -d: -f2 | awk '{ print $1}')
 
-	echo "Ⓛ ${ip}"
+	#echo "Ⓛ ${ip}"
+	echo "ⓛ ${ip}"
 	exit 0
 else
 	exit 1

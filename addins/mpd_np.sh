@@ -10,12 +10,12 @@ cd "$(dirname $0)"
 if [ ! -x "mpd_np" ]; then
 	make clean all &>/dev/null
 fi
-
-np=$(mpd_np)
-
-if [ -n "$np" ]; then
-	echo "♫ ${np}" | cut -c1-50
-
+if [ -x "mpd_np" ]; then
+	np=$(mpd_np)
+	if [ -n "$np" ]; then
+		echo "♫ ${np}" | cut -c1-50
+	fi
+	exit 0
+else
+	exit 1
 fi
-
-exit 0;
