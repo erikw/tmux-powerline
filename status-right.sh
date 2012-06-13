@@ -8,6 +8,7 @@ cd "$(dirname $0)"
 . ./lib.sh
 
 # Addins
+# Comment/uncomment the register function call to enable or disable an addin.
 
 declare -A mail_count
 mail_count+=(["script"]="${addins_path}/maildir_inbox_count.sh")
@@ -21,7 +22,7 @@ mpd_np+=(["script"]="${addins_path}/mpd_np.sh")
 mpd_np+=(["foreground"]="colour37")
 mpd_np+=(["background"]="colour234")
 mpd_np+=(["separator"]="${separator_left_bold}")
-register_addin "mpd_np"
+#register_addin "mpd_np"
 
 declare -A load
 load+=(["script"]="${addins_path}/load.sh")
@@ -29,6 +30,13 @@ load+=(["foreground"]="colour167")
 load+=(["background"]="colour237")
 load+=(["separator"]="${separator_left_bold}")
 register_addin "load"
+
+declare -A battery
+battery+=(["script"]="${addins_path}/battery.sh")
+battery+=(["foreground"]="colour127")
+battery+=(["background"]="colour137")
+battery+=(["separator"]="${separator_left_bold}")
+#register_addin "battery"
 
 declare -A date_day
 date_day+=(["script"]="${addins_path}/date_day.sh")
