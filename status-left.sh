@@ -7,6 +7,9 @@ cd "$(dirname $0)"
 # Source lib functions.
 . ./lib.sh
 
+# Source global configurations.
+. ./config.sh
+
 # Segments
 
 declare -A tmux_session_info

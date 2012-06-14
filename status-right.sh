@@ -7,6 +7,9 @@ cd "$(dirname $0)"
 # Source lib functions.
 . ./lib.sh
 
+# Source global configurations.
+. ./config.sh
+
 # Segment
 # Comment/uncomment the register function call to enable or disable a segment.
 
@@ -22,21 +25,21 @@ mpd_np+=(["script"]="${segments_path}/mpd_np.sh")
 mpd_np+=(["foreground"]="colour37")
 mpd_np+=(["background"]="colour234")
 mpd_np+=(["separator"]="${separator_left_bold}")
-register_segment "mpd_np"
+#register_segment "mpd_np"
 
 declare -A load
 load+=(["script"]="${segments_path}/load.sh")
 load+=(["foreground"]="colour167")
 load+=(["background"]="colour237")
 load+=(["separator"]="${separator_left_bold}")
-register_segment "load"
+#register_segment "load"
 
 declare -A battery
 battery+=(["script"]="${segments_path}/battery.sh")
 battery+=(["foreground"]="colour127")
 battery+=(["background"]="colour137")
 battery+=(["separator"]="${separator_left_bold}")
-#register_segment "battery"
+register_segment "battery"
 
 declare -A weather
 weather+=(["script"]="${segments_path}/weather.sh")

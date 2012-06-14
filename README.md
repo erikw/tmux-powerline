@@ -6,7 +6,7 @@ The following segments exists for now:
 * MPD now playing (requires [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)).
 * Maildir check.
 * GNU Linux and Macintosh OS X battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery)).
-* Weather in Celcius, Farenheit and Kelvin!
+* Weather in Celsius, Fahrenheit and Kelvin!
 * System load and uptime.
 * Date and time.
 * Hostname.
@@ -52,7 +52,7 @@ To use the scripts; set the following in your `~/.tmux.conf`:
 	set-option -g status-right-length 120
 	set-option -g status-left "#(~/path/to/tmux-powerline/status-left.sh)"
 	set-option -g status-right "#(~/path/to//tmux-powerline/status-right.sh)"
-	
+
 Also I recommend you to use the [tmux-colors-solarized](https://github.com/seebi/tmux-colors-solarized) theme (as well as solarized for [everything else](http://ethanschoonover.com/solarized) :)):
 
 	source ~/path/to/tmux-colors-solarized/tmuxcolors.conf
@@ -61,6 +61,17 @@ Now edit the two scripts to suit you needs. The segments can be move around and 
 
 	$$EDITOR ~/path/to/tmux-powerline/status-left.sh
 	$$EDITOR ~/path/to/tmux-powerline/status-right.sh
+
+## Segments
+
+A number of common segments are included that covers some general functions like time, date battery etc. Each segment is represented as an associative array containing the following fields:
+
+	*script*, mandatory, the shell script producing the output text to be shown.
+	*foreground*, mandatory, the text foreground color.
+	*background*, mandatory, the text background color.
+	*separator*, mandatory, the separator to use. Can be (as described in `lib.sh`) any of separator_(left(_(bold|thin))|right(_(bold|thin)))
+	*separator_fg*, optional, overrides the default blending coloring of the separator with a custom colored foreground.
+
 
 # Notes
 It's written over a night and in Bash so be prepared for the ugliness. I had some interesting design ideas but after hours of struggling with associative arrays that could not be declare where and how I wanted etc. I just went with the ugly way(s) :-P
