@@ -67,7 +67,6 @@ if [ -f "$tmp_file" ]; then
 
 	up_to_date=$(echo "(${time_now}-${last_update}) < ${update_period}" | bc)
 	if [ "$up_to_date" -eq 1 ]; then
-		#degrees=$(cat ${tmp_file})
 		read_tmp_file
 	fi
 fi
@@ -81,14 +80,12 @@ if [ -z "$degrees" ]; then
 	search_location=$(echo "$location" | sed -e 's/\s/%20/g')
 
 	weather_data=$(curl --max-time 2 -s "http://www.google.com/ig/api?weather=${search_location}")
-	echo "$weather_data" >aus
 	if [ "$?" -eq "0" ]; then
 		degrees=$(echo "$weather_data" | sed "s|.*<temp_${search_unit} data=\"\([^\"]*\)\"/>.*|\1|")
 		conditions=$(echo "$weather_data" | grep -Pzo "<current_conditions>(\\n|.)*</current_conditions>" | grep -Pzo "(?<=<condition\sdata=\")([^\"]*)")
 		echo "$degrees" > $tmp_file
 		echo "$conditions" >> $tmp_file
 	elif [ -f "$tmp_file" ]; then
-		#degrees=$(cat "$tmp_file")
 		read_tmp_file
 	fi
 fi
