@@ -1,6 +1,6 @@
 # Library functions.
 
-addins_path="./addins"
+segments_path="./segments"
 declare entries
 
 # Separators
@@ -10,10 +10,10 @@ separator_right_bold="▶"
 separator_right_thin="❯"
 
 
-# Register an addin.
-register_addin() {
-	addin_name="$1"
-	entries[${#entries[*]}]="$addin_name"
+# Register a segment.
+register_segment() {
+	segment_name="$1"
+	entries[${#entries[*]}]="$segment_name"
 
 }
 
@@ -41,7 +41,7 @@ print_status_line_right() {
 	echo "#[default]"
 }
 
-first_addin_left=1
+first_segment_left=1
 print_status_line_left() {
 	prev_bg="colour148"
 	for entry in ${entries[*]}; do
@@ -61,8 +61,8 @@ print_status_line_left() {
 		__ui_left "$prev_bg" "$background" "$foreground" "$separator" "$separator_fg"
 		echo -n "$output"
 		prev_bg="$background"
-		if [ "$first_addin_left" -eq "1" ]; then
-			first_addin_left=0
+		if [ "$first_segment_left" -eq "1" ]; then
+			first_segment_left=0
 		fi
 	done
 	__ui_left "colour235" "colour235" "red" "$separator_right_bold" "$prev_bg"
@@ -92,7 +92,7 @@ __ui_left() {
 	local bg_right="$2"
 	local fg_right="$3"
 	local separator
-	if [ "$first_addin_left" -eq "1" ]; then
+	if [ "$first_segment_left" -eq "1" ]; then
 		separator=""
 	else
 		separator="$4"
@@ -106,13 +106,13 @@ __ui_left() {
 		separator_bg="$bg_right"
 	fi
 
-	if [ "$first_addin_left" -eq "1" ]; then
+	if [ "$first_segment_left" -eq "1" ]; then
 		echo -n "#[bg=${bg_right}]"
 	fi
 
 	echo -n " #[fg=${bg_left}, bg=${separator_bg}]${separator}#[fg=${fg_right},bg=${bg_right}]"
 
-	if [ "$first_addin_left" -ne "1" ]; then
+	if [ "$first_segment_left" -ne "1" ]; then
 		echo -n " "
 	fi
 }

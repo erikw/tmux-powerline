@@ -1,7 +1,7 @@
 # tmux-powerline
-This is a set of scripts for making a nice and dynamic tmux status-bar where elements can come and disappears depending on events. I really like the look of [Lokaltog/vim-powerline](https://github.com/Lokaltog/vim-powerline) and I decided I wanted the same for tmux.
+This is a set of scripts (segments) for making a nice and dynamic tmux status-bar where elements can come and disappears depending on events. I really like the look of [Lokaltog/vim-powerline](https://github.com/Lokaltog/vim-powerline) and I decided I wanted the same for tmux.
 
-The following addins exists for now:
+The following segments exists for now:
 * LAN & WAN IP addresses.
 * MPD now playing (requires [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)).
 * Maildir check.
@@ -29,7 +29,7 @@ New mails, now playing in MPD, average load, date and time.
 
 ![right-status](https://github.com/erikw/tmux-powerline/raw/master/img/right-status.png)
 
-Now I've read my inbox so the maildir addin disappears!
+Now I've read my inbox so the maildir segment disappears!
 
 ![right-status, no mail](https://github.com/erikw/tmux-powerline/raw/master/img/right-status_no_mail.png)
 
@@ -37,7 +37,7 @@ Now I've read my inbox so the maildir addin disappears!
 
 ![right-status, no mpd](https://github.com/erikw/tmux-powerline/raw/master/img/right-status_no_mpd.png)
 
-Weather addin using Google's weather API and remaining battery.
+Weather segment using Google's weather API and remaining battery.
 
 ![right-status, no mpd](https://github.com/erikw/tmux-powerline/raw/master/img/right-status_weather_battery.png)
 
@@ -57,7 +57,7 @@ Also I recommend you to use the [tmux-colors-solarized](https://github.com/seebi
 
 	source ~/path/to/tmux-colors-solarized/tmuxcolors.conf
 
-Now edit the two scripts to suit you needs. The addins can be move around and does not needs to be in the order (or same file) as they are now. It should be quite easy to add you own addins.
+Now edit the two scripts to suit you needs. The segments can be move around and does not needs to be in the order (or same file) as they are now. It should be quite easy to add you own segments.
 
 	$$EDITOR ~/path/to/tmux-powerline/status-left.sh
 	$$EDITOR ~/path/to/tmux-powerline/status-right.sh
