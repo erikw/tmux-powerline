@@ -16,7 +16,7 @@
  * MPD_HOST=[password@]host
  * MPD_PORT=port
  * If they are empty they defaults to localhost on port 6600.
- .*/
+ */
 int main(int argc, const char *argv[])
 {
 	char *mpd_host = NULL;
