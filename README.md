@@ -52,6 +52,10 @@ To use the scripts; set the following in your `~/.tmux.conf`:
 	set-option -g status-right-length 120
 	set-option -g status-left "#(~/path/to/tmux-powerline/status-left.sh)"
 	set-option -g status-right "#(~/path/to//tmux-powerline/status-right.sh)"
+	
+Also I recommend you to use the [tmux-colors-solarized](https://github.com/seebi/tmux-colors-solarized) theme (as well as solarized for [everything else](http://ethanschoonover.com/solarized) :)):
+
+	source ~/path/to/tmux-colors-solarized/tmuxcolors.conf
 
 # Notes
 It's written over a night and in Bash so be prepared for the ugliness. I had some interesting design ideas but after hours of struggling with associative arrays that could not be declare where and how I wanted etc. I just went with the ugly way(s) :-P
