@@ -19,7 +19,7 @@ The following addins exists for now:
 
 **left-status**
 
-Current tmux session, window and pane, hostname and WAN&Lan IP address.
+Current tmux session, window and pane, hostname and LAN&WAN IP address.
 
 ![left-status](https://github.com/erikw/tmux-powerline/raw/master/img/left-status.png)
 
