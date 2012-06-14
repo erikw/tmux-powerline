@@ -114,5 +114,6 @@ if [ -n "$CUTE_BATTERY_INDICATOR" ]; then
     echo `cutinate $BATTERY_STATUS`
 else
     echo "${HEART_FULL} ${BATTERY_STATUS}%"
+    #echo "⛁ ${BATTERY_STATUS}%"
 fi
 

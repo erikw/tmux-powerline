@@ -33,6 +33,10 @@ Now I've read my inbox so the maildir-addin disappears!
 
 ![right-status, no mpd](https://github.com/erikw/tmux-powerline/raw/master/img/right-status_no_mpd.png)
 
+Weather addin using Googles Weather API.
+
+![right-status, no mpd](https://github.com/erikw/tmux-powerline/raw/master/img/right-status_weather.png)
+
 # Configuration
 To use the scripts; set the following in your `~/.tmux.conf`:
 

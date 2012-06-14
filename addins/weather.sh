@@ -9,6 +9,56 @@ unit="c"
 
 tmp_file="/tmp/weather.txt"
 
+get_condition_symbol() {
+	local conditions=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+	case "$conditions" in
+	sunny | "partly sunny" | "mostly sunny")
+		echo "☀"
+		#echo "☼"
+		;;
+	"rain and snow" | "chance of rain" | "light rain" | rain | "freezing drizzle" | flurries | showers | "scattered showers")
+		#echo "☂"
+		echo "☔"
+		;;
+	snow | "light snow" | "scattered snow showers" | icy | ice/snow | "chance of snow" | "snow showers" | sleet)
+		#echo "☃"
+		echo "❅"
+		;;
+	"partly cloudy" |" mostly cloudy" | cloudy | overcast)
+		echo "☁"
+		;;
+	"chance of storm" | thunderstorm | "chance of tstorm" | storm | "scattered thunderstorms")
+		#echo "⚡"
+		echo "☈"
+		;;
+	dust | fog | smoke | haze | mist)
+		echo "♨"
+		;;
+	windy)
+		echo "⚑"
+		#echo "⚐"
+		;;
+	clear)
+		echo "☐"
+		;;
+	*)
+		echo "？"
+		;;
+	esac
+}
+
+read_tmp_file() {
+	if [ ! -f "$tmp_file" ]; then
+		return
+	fi
+	IFS_bak="$IFS"
+	IFS=$'\n'
+	lines=($(cat ${tmp_file}))
+	IFS="$IFS_bak"
+	degrees="${lines[0]}"
+	conditions="${lines[1]}"
+}
+
 degrees=""
 if [ -f "$tmp_file" ]; then
 	last_update=$(stat -c "%Y" ${tmp_file})
@@ -17,7 +67,8 @@ if [ -f "$tmp_file" ]; then
 
 	up_to_date=$(echo "(${time_now}-${last_update}) < ${update_period}" | bc)
 	if [ "$up_to_date" -eq 1 ]; then
-		degrees=$(cat ${tmp_file})
+		#degrees=$(cat ${tmp_file})
+		read_tmp_file
 	fi
 fi
 
@@ -29,12 +80,16 @@ if [ -z "$degrees" ]; then
 	fi
 	search_location=$(echo "$location" | sed -e 's/\s/%20/g')
 
-	weather_data=$(curl --maxtime 2 -s "http://www.google.com/ig/api?weather=${search_location}")
+	weather_data=$(curl --max-time 2 -s "http://www.google.com/ig/api?weather=${search_location}")
+	echo "$weather_data" >aus
 	if [ "$?" -eq "0" ]; then
 		degrees=$(echo "$weather_data" | sed "s|.*<temp_${search_unit} data=\"\([^\"]*\)\"/>.*|\1|")
+		conditions=$(echo "$weather_data" | grep -Pzo "<current_conditions>(\\n|.)*</current_conditions>" | grep -Pzo "(?<=<condition\sdata=\")([^\"]*)")
 		echo "$degrees" > $tmp_file
+		echo "$conditions" >> $tmp_file
 	elif [ -f "$tmp_file" ]; then
-		degrees=$(cat "$tmp_file")
+		#degrees=$(cat "$tmp_file")
+		read_tmp_file
 	fi
 fi
 
@@ -43,5 +98,6 @@ if [ -n "$degrees" ]; then
 		degrees=$(echo "${degrees} + 273.15" | bc)
 	fi
 	unit_upper=$(echo "$unit" | tr '[cfk]' '[CFK]')
-	echo "${degrees}°${unit_upper}"
+	condition_symbol=$(get_condition_symbol "$conditions")
+	echo "${condition_symbol} ${degrees}°${unit_upper}"
 fi

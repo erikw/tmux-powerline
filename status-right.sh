@@ -38,6 +38,13 @@ battery+=(["background"]="colour137")
 battery+=(["separator"]="${separator_left_bold}")
 #register_addin "battery"
 
+declare -A weather
+weather+=(["script"]="${addins_path}/weather.sh")
+weather+=(["foreground"]="colour255")
+weather+=(["background"]="colour37")
+weather+=(["separator"]="${separator_left_bold}")
+register_addin "weather"
+
 declare -A date_day
 date_day+=(["script"]="${addins_path}/date_day.sh")
 date_day+=(["foreground"]="colour136")
