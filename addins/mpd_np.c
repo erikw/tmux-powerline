@@ -11,8 +11,12 @@
 #endif
 #define DEBUG_PRINTF(...) do{ if (DO_DEBUG) { printf(__VA_ARGS__);} } while(0)
 
-/* Output the current song if MPD is in a playing state. The connection host is
- * specified like for mpc with an environment variable.*/
+/* Output the current song if MPD is in a playing state. The connection password, host and port is
+ * specified like for mpc with environment variables
+ * MPD_HOST=[password@]host
+ * MPD_PORT=port
+ * If they are empty they defaults to localhost on port 6600.
+ .*/
 int main(int argc, const char *argv[])
 {
 	char *mpd_host = NULL;
