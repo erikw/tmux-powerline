@@ -24,7 +24,7 @@ get_condition_symbol() {
 		#echo "☃"
 		echo "❅"
 		;;
-	"partly cloudy" |" mostly cloudy" | cloudy | overcast)
+	"partly cloudy" | "mostly cloudy" | cloudy | overcast)
 		echo "☁"
 		;;
 	"chance of storm" | thunderstorm | "chance of tstorm" | storm | "scattered thunderstorms")
