@@ -19,9 +19,13 @@ The following addins exists for now:
 
 **left-status**
 
+Current tmux session, window and pane, hostname and WAN&Lan IP address.
+
 ![left-status](https://github.com/erikw/tmux-powerline/raw/master/img/left-status.png)
 
 **right-status**
+
+New mails, now playing in MPD, average load, date and time.
 
 ![right-status](https://github.com/erikw/tmux-powerline/raw/master/img/right-status.png)
 
