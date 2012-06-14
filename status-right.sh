@@ -69,6 +69,6 @@ time+=(["separator_fg"]="default")
 register_addin "time"
 
 # Print the status line in the order of registration above.
-print_status_line_left
+print_status_line_right
 
 exit 0

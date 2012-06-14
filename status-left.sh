@@ -40,6 +40,6 @@ wan_ip+=(["separator_fg"]="white")
 register_addin "wan_ip"
 
 # Print the status line in the order of registration above.
-print_status_line_right
+print_status_line_left
 
 exit 0
