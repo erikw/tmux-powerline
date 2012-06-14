@@ -39,7 +39,8 @@ get_condition_symbol() {
 		#echo "⚐"
 		;;
 	clear)
-		echo "☐"
+		#echo "☐"
+		echo "✈"	# So clear you can see the aeroplanes!
 		;;
 	*)
 		echo "？"
