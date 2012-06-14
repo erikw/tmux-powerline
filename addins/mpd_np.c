@@ -171,7 +171,7 @@ int main(int argc, const char *argv[])
 		DEBUG_PRINTF("Could not get song title.");
 		return EXIT_FAILURE;
 	}
-	printf("%s - %s", song_artist, song_title);
+	printf("%s - %s\n", song_artist, song_title);
 
 	mpd_song_free(song);
 	mpd_connection_free(mpd_connection);
