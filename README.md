@@ -57,5 +57,10 @@ Also I recommend you to use the [tmux-colors-solarized](https://github.com/seebi
 
 	source ~/path/to/tmux-colors-solarized/tmuxcolors.conf
 
+Now edit the two scripts to suit you needs. The addins can be move around and does not needs to be in the order (or same file) as they are now. It should be quite easy to add you own addins.
+
+	$$EDITOR ~/path/to/tmux-powerline/status-left.sh
+	$$EDITOR ~/path/to/tmux-powerline/status-right.sh
+
 # Notes
 It's written over a night and in Bash so be prepared for the ugliness. I had some interesting design ideas but after hours of struggling with associative arrays that could not be declare where and how I wanted etc. I just went with the ugly way(s) :-P
