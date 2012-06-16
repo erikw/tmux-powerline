@@ -83,7 +83,7 @@ if [ -z "$degrees" ]; then
 	weather_data=$(curl --max-time 2 -s "http://www.google.com/ig/api?weather=${search_location}")
 	if [ "$?" -eq "0" ]; then
 		degrees=$(echo "$weather_data" | sed "s|.*<temp_${search_unit} data=\"\([^\"]*\)\"/>.*|\1|")
-		conditions=$(echo "$weather_data" | grep -Pzo "<current_conditions>(\\n|.)*</current_conditions>" | grep -Pzo "(?<=<condition\sdata=\")([^\"]*)")
+		conditions=$(echo "$weather_data" | grep -PZo "<current_conditions>(\\n|.)*</current_conditions>" | grep -PZo "(?<=<condition\sdata=\")([^\"]*)")
 		echo "$degrees" > $tmp_file
 		echo "$conditions" >> $tmp_file
 	elif [ -f "$tmp_file" ]; then
