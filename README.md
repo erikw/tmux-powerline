@@ -58,7 +58,7 @@ $ git clone git://github.com/erikw/tmux-powerline.git
 
 Now edit your `~/.tmux.conf` to use the scripts:
 
-<!-- Close syntaqx enoguth. -->
+<!-- Close syntax enoguth. -->
 ```vim
 set-option -g status on
 set-option -g status-interval 2
