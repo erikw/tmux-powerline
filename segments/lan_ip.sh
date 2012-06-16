@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Prints the local network IP address.
 nic0="eth0"
 nic1="wlan0"

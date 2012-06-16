@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Print a simple line of NP in mpd.
 #
 # Previously I used something as simple as
