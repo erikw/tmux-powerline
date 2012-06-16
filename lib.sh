@@ -3,12 +3,17 @@
 segments_path="./segments"
 declare entries
 
-# Separators
-separator_left_bold="◀"
-separator_left_thin="❮"
-separator_right_bold="▶"
-separator_right_thin="❯"
+# Separators (patched font required)
+separator_left_bold="⮂"
+separator_left_thin="⮃"
+separator_right_bold="⮀"
+separator_right_thin="⮁"
 
+# Alternative separators in the normal Unicode table.
+#separator_left_bold="◀"
+#separator_left_thin="❮"
+#separator_right_bold="▶"
+#separator_right_thin="❯"
 
 # Register a segment.
 register_segment() {

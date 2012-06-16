@@ -6,7 +6,7 @@ The following segments exists for now:
 * MPD now playing.
 * Maildir check.
 * GNU Linux and Macintosh OS X battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery)).
-* Weather in Celsius, Fahrenheit and Kelvin!
+* Weather in Celsius, Fahrenheit and Kelvin using Google's weather API.
 * System load and uptime.
 * Date and time.
 * Hostname.
@@ -25,7 +25,7 @@ Current tmux session, window and pane, hostname and LAN&WAN IP address.
 
 **right-status**
 
-New mails, now playing in MPD, average load, date and time.
+New mails, now playing in MPD, average load, weather, date and time.
 
 ![right-status](https://github.com/erikw/tmux-powerline/raw/master/img/right-status.png)
 
@@ -33,11 +33,11 @@ Now I've read my inbox so the maildir segment disappears!
 
 ![right-status, no mail](https://github.com/erikw/tmux-powerline/raw/master/img/right-status_no_mail.png)
 
-`mpc pause` and there's no need for showing NP anymore.
+`mpc pause` and there's no need for showing NP anymore. Also the weather has become much nicer!
 
 ![right-status, no mpd](https://github.com/erikw/tmux-powerline/raw/master/img/right-status_no_mpd.png)
 
-Weather segment using Google's weather API and remaining battery.
+Remaining battery.
 
 ![right-status, weather and battery](https://github.com/erikw/tmux-powerline/raw/master/img/right-status_weather_battery.png)
 
@@ -45,6 +45,7 @@ Weather segment using Google's weather API and remaining battery.
 
 * Recent tmux version
 * `bash --version` >= 4.0
+* A patched font. Follow instructions at [Lokaltog/vim-powerline/fontpatcher](https://github.com/Lokaltog/vim-powerline/tree/develop/fontpatcher).
 * [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/) for MPD now playing.
 
 # Installation
