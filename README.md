@@ -75,7 +75,7 @@ set-option -g status-right "#(~/path/to/tmux-powerline/status-right.sh)"
 Also I recommend you to use the [tmux-colors-solarized](https://github.com/seebi/tmux-colors-solarized) theme (as well as solarized for [everything else](http://ethanschoonover.com/solarized) :)):
 
 ```bash
-source "~/path/to/tmux-colors-solarized/tmuxcolors.conf"
+source ~/path/to/tmux-colors-solarized/tmuxcolors.conf
 ```
 
 # Configuration
