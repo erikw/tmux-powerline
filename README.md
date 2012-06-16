@@ -21,7 +21,7 @@ Check [segments/](https://github.com/erikw/tmux-powerline/tree/master/segments) 
 
 **left-status**
 
-Current tmux session, window and pane, hostname and LAN&WAN IP address.
+Current tmux session, window and pane, hostname and LAN & WAN IP address.
 
 ![left-status](https://github.com/erikw/tmux-powerline/raw/master/img/left-status.png)
 
