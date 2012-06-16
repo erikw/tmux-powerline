@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #Print the status-left for tmux.
 #
 # Enter the script directory so we easily can use the other scripts.

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Prints the current weather in Celsius, Fahrenheits or lord Kelvins. The forecast is cached and updated with a period of $update_period.
 
 # You location. Find a string that works for you by Googling on "weather in <location-string>"

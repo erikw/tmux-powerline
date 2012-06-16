@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Return the number of new mails in my Maildir inbox.
 
 if [ ! -d "$HOME/.mail/inbox/new" ]; then
