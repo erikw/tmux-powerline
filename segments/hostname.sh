@@ -1,5 +1,5 @@
 #!/bin/sh
 # Prints the hostname
-hostname
+hostname -s
 
 exit 0
