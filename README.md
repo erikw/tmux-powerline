@@ -50,30 +50,39 @@ Weather segment using Google's weather API and remaining battery.
 # Installation
 Just check out the repo with:
 
-	$ cd ~/some/path/
-	$ git clone git://github.com/erikw/tmux-powerline.git
+```console
+$ cd ~/some/path/
+$ git clone git://github.com/erikw/tmux-powerline.git
+```
 
 Now edit your `~/.tmux.conf` to use the scripts:
 
-	set-option -g status on
-	set-option -g status-interval 2
-	set-option -g status-utf8 on
-	set-option -g status-justify "centre"
-	set-option -g status-left-length 60
-	set-option -g status-right-length 120
-	set-option -g status-left "#(~/path/to/tmux-powerline/status-left.sh)"
-	set-option -g status-right "#(~/path/to/tmux-powerline/status-right.sh)"
+<!-- Close syntaqx enoguth. -->
+```vim
+set-option -g status on
+set-option -g status-interval 2
+set-option -g status-utf8 on
+set-option -g status-justify "centre"
+set-option -g status-left-length 60
+set-option -g status-right-length 120
+set-option -g status-left "#(~/path/to/tmux-powerline/status-left.sh)"
+set-option -g status-right "#(~/path/to/tmux-powerline/status-right.sh)"
+```
 
 Also I recommend you to use the [tmux-colors-solarized](https://github.com/seebi/tmux-colors-solarized) theme (as well as solarized for [everything else](http://ethanschoonover.com/solarized) :)):
 
-	source ~/path/to/tmux-colors-solarized/tmuxcolors.conf
+```bash
+source "~/path/to/tmux-colors-solarized/tmuxcolors.conf"
+```
 
 # Configuration
 
 Edit the two status scripts to suit you needs. A number of common segments are included that covers some general functions like time, date battery etc. The segments can be moved around and does not needs to be in the order (or same file) as they are now. It should be quite easy to add you own segments.
 
-	$ $EDITOR ~/path/to/tmux-powerline/status-left.sh
-	$ $EDITOR ~/path/to/tmux-powerline/status-right.sh
+```console
+$ $EDITOR ~/path/to/tmux-powerline/status-left.sh
+$ $EDITOR ~/path/to/tmux-powerline/status-right.sh
+```
 
 Here is one segment configuration explained so you'll know how to make you own.
 
