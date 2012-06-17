@@ -13,8 +13,8 @@ get_condition_symbol() {
 	local conditions=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 	case "$conditions" in
 	sunny | "partly sunny" | "mostly sunny")
-		echo "☀"
-		#echo "☼"
+		#echo "☀"
+		echo "☼"
 		;;
 	"rain and snow" | "chance of rain" | "light rain" | rain | "heavy rain" | "freezing drizzle" | flurries | showers | "scattered showers")
 		#echo "☂"
@@ -40,7 +40,7 @@ get_condition_symbol() {
 		;;
 	clear)
 		#echo "☐"
-		echo "✈"	# So clear you can see the aeroplanes!
+		echo "✈"	# So clear you can see the aeroplanes! TODO what symbol does best represent a clear sky?
 		;;
 	*)
 		echo "？"
@@ -64,7 +64,7 @@ degrees=""
 if [ -f "$tmp_file" ]; then
 	last_update=$(stat -c "%Y" ${tmp_file})
 	time_now=$(date +%s)
-	update_period=960
+	update_period=600
 
 	up_to_date=$(echo "(${time_now}-${last_update}) < ${update_period}" | bc)
 	if [ "$up_to_date" -eq 1 ]; then
