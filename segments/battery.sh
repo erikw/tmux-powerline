@@ -46,7 +46,7 @@ case $(uname -s) in
     "Linux")
         BATPATH=/sys/class/power_supply/BAT1
 		if [ ! -e $BATPATH ]; then
-			BATPATH=/sys/class/power_supply/BAT0/
+			BATPATH=/sys/class/power_supply/BAT0
 		fi
         STATUS=$BATPATH/status
         BAT_FULL=$BATPATH/charge_full
