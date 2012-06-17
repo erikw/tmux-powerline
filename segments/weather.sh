@@ -16,7 +16,7 @@ get_condition_symbol() {
 		echo "☀"
 		#echo "☼"
 		;;
-	"rain and snow" | "chance of rain" | "light rain" | rain | "freezing drizzle" | flurries | showers | "scattered showers")
+	"rain and snow" | "chance of rain" | "light rain" | rain | "heavy rain" | "freezing drizzle" | flurries | showers | "scattered showers")
 		#echo "☂"
 		echo "☔"
 		;;
