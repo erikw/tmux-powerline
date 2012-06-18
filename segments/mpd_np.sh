@@ -6,8 +6,8 @@
 # But I decided that I don't want any info about songs if there is nothing playing. Unfortunately I did not find a way of expressing this with mpc (I'm sure there is with idle/idleloop) but I did found a useful library: libmpdclient. I've used version 2.7 when developing my small program. Download the latest version here: http://sourceforge.net/projects/musicpd/files/libmpdclient/
 
 # Source MPD environment variables (MPD_HOST and MPD_PORT). I refactored out this from ~/.bashrc and source this file there as well. This is not needed if you run your MPD server at localhost, no password and on the standard port.
-if [ -e $HOME/.mpd_env ]; then
-	. $HOME/.mpd_env
+if [ -f $HOME/.mpd_env ]; then
+	source $HOME/.mpd_env
 fi
 
 cd "$(dirname $0)"
