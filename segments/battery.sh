@@ -1,5 +1,5 @@
 # NOTE I have note written this. I cloned it from https://github.com/richoH/dotfiles/blob/master/bin/battery and just made somemodifications so it works for my laptop. Check that URL for more recent versions.
-#!/bin/sh
+#!/usr/bin/env sh
 #CUTE_BATTERY_INDICATOR="true"
 
 HEART_FULL=♥

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 # Prints the hostname
 hostname -s
 

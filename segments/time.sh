@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 # Prints the current time.
 date +"%H:%M  "
 
