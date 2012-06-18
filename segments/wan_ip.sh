@@ -5,7 +5,11 @@ tmp_file="/tmp/tmux-powerline_wan_ip.txt"
 
 wan_ip=""
 if [ -f "$tmp_file" ]; then
-	last_update=$(stat -c "%Y" ${tmp_file})
+	if [ "$PLATFORM" == "mac" ]; then
+		last_update=$(stat -f "%m" ${tmp_file})
+	else
+		last_update=$(stat -c "%Y" ${tmp_file})
+	fi
 	time_now=$(date +%s)
 	update_period=900
 
@@ -17,7 +21,7 @@ fi
 
 if [ -z "$wan_ip" ]; then
 	#wan_ip=$(wget --timeout=1 --tries=1 -O - http://formyip.com/ 2>/dev/null | grep -Pzo "(?<=Your IP is )[^<]*")
-	wan_ip=$(wget --timeout=2 --tries=1 -O - http://whatismyip.akamai.com/ 2>/dev/null)
+	wan_ip=$(curl --max-time 2 -s http://whatismyip.akamai.com/)
 	if [ "$?" -eq "0" ]; then
 		echo "${wan_ip}" > $tmp_file
 	elif [ -f "${tmp_file}" ]; then
