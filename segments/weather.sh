@@ -13,8 +13,14 @@ get_condition_symbol() {
 	local conditions=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 	case "$conditions" in
 	sunny | "partly sunny" | "mostly sunny")
-		#echo "☀"
-		echo "☼"
+		hour=$(date +%H)
+		if [ "$hour" -ge "22" -o "$hour" -le "5" ]; then
+			#echo "☽"
+			echo "☾"
+		else
+			#echo "☀"
+			echo "☼"
+		fi
 		;;
 	"rain and snow" | "chance of rain" | "light rain" | rain | "heavy rain" | "freezing drizzle" | flurries | showers | "scattered showers")
 		#echo "☂"
