@@ -12,7 +12,7 @@ The following segments exists for now:
 * Date and time.
 * Hostname.
 * tmux info.
-* CWD in window/pane
+* CWD in pane
 
 Check [segments/](https://github.com/erikw/tmux-powerline/tree/master/segments) for more undocumented segments and details.
 
