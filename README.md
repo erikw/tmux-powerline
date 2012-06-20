@@ -79,6 +79,11 @@ Also I recommend you to use the [tmux-colors-solarized](https://github.com/seebi
 ```bash
 source ~/path/to/tmux-colors-solarized/tmuxcolors.conf
 ```
+Some segments e.g. cwd and cvs_branch needs to find the current working directory of the active pane. To achive this we let tmux save the path each time the bash prompt is displayed. Put this in your `~/.bashrc` or where you define you PS1 variable (I use and source `~/.bash_ps1`):
+
+```bash
+PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") $PWD)'
+```
 
 # Configuration
 
@@ -89,11 +94,6 @@ $ $EDITOR ~/path/to/tmux-powerline/status-left.sh
 $ $EDITOR ~/path/to/tmux-powerline/status-right.sh
 ```
 
-Some segments e.g. cwd and cvs_branch needs to find the current working directory of the active pane. To achive this we let tmux save the path each time the bash prompt is displayed. Put this in your `~/.bashrc` or where you define you PS1 variable (I use and source `~/.bash_ps1`):
-
-```bash
-PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") $PWD)'
-```
 
 Here is one segment configuration explained so you'll know how to make you own.
 
