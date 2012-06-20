@@ -13,6 +13,13 @@ cd "$(dirname $0)"
 # Segment
 # Comment/uncomment the register function call to enable or disable a segment.
 
+declare -A pwd
+pwd+=(["script"]="${segments_path}/pwd.sh")
+pwd+=(["foreground"]="colour211")
+pwd+=(["background"]="colour89")
+pwd+=(["separator"]="${separator_left_bold}")
+#register_segment "pwd"
+
 declare -A mail_count
 mail_count+=(["script"]="${segments_path}/maildir_inbox_count.sh")
 mail_count+=(["foreground"]="white")
