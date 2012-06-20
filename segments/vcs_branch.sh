@@ -5,8 +5,8 @@
 segment_cwd=$(dirname $0)
 source "$segment_cwd/../lib.sh"
 
-cwd=$(get_tmux_pwd)
-cd "$cwd"
+tmux_cwd=$(get_tmux_cwd)
+cd "$tmux_cwd"
 
 branch_symbol="⭠"
 git_colour="colour5"

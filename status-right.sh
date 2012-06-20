@@ -5,10 +5,10 @@
 cd "$(dirname $0)"
 
 # Source lib functions.
-. ./lib.sh
+source ./lib.sh
 
 # Source global configurations.
-. ./config.sh
+source ./config.sh
 
 # Segment
 # Comment/uncomment the register function call to enable or disable a segment.
