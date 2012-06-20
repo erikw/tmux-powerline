@@ -121,3 +121,8 @@ __ui_left() {
 		echo -n " "
 	fi
 }
+
+# Get the current path in the segment.
+get_tmux_pwd() {
+	tmux show-environment $(tmux display -p "TMUXPWD_#I_#P") | grep -PZo "(?<==).*$"
+}

@@ -8,9 +8,11 @@ The following segments exists for now:
 * GNU Linux and Macintosh OS X battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery)).
 * Weather in Celsius, Fahrenheit and Kelvin using Google's weather API.
 * System load and uptime.
+* Git or SVN branch in CWD.
 * Date and time.
 * Hostname.
 * tmux info.
+* CWD in window/pane
 
 Check [segments/](https://github.com/erikw/tmux-powerline/tree/master/segments) for more undocumented segments and details.
 
@@ -85,6 +87,12 @@ Edit the two status scripts to suit you needs. A number of common segments are i
 ```console
 $ $EDITOR ~/path/to/tmux-powerline/status-left.sh
 $ $EDITOR ~/path/to/tmux-powerline/status-right.sh
+```
+
+Some segments e.g. cwd and cvs_branch needs to find the current working directory of the active pane. To achive this we let tmux save the path each time the bash prompt is displayed. Put this in your `~/.bashrc` or where you define you PS1 variable (I use and source `~/.bash_ps1`):
+
+```bash
+PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") $PWD)'
 ```
 
 Here is one segment configuration explained so you'll know how to make you own.
