@@ -1,11 +1,6 @@
 # Library functions.
 
-cwd=$(dirname $0)
-#echo "$cwd/config.sh"
-# Source global configurations.
-source ${cwd}/../config.sh
-
-segments_path="./segments"
+segments_dir="segments"
 declare entries
 
 if [ -n "$USE_PATCHED_FONT" -a "$USE_PATCHED_FONT" == "true" ]; then

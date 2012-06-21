@@ -1,12 +1,12 @@
 #/usr/bin/env bash
 # Prints current branch in a VCS directory if it could be detected.
 
-# Source lib to get function get_tmux_pwd
-segment_cwd=$(dirname $0)
-source "$segment_cwd/../lib.sh"
+# Source lib to get the function get_tmux_pwd
+segment_path=$(dirname $0)
+source "$segment_path/../lib.sh"
 
-tmux_cwd=$(get_tmux_cwd)
-cd "$tmux_cwd"
+tmux_path=$(get_tmux_cwd)
+cd "$tmux_path"
 
 branch_symbol="⭠"
 git_colour="colour5"

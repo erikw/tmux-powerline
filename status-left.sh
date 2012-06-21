@@ -1,17 +1,16 @@
 #!/usr/bin/env bash
 #Print the status-left for tmux.
 #
-# Enter the script directory so we easily can use the other scripts.
-#cd "$(dirname $0)"
+# The powerline root directory.
 cwd=$(dirname $0)
 
-# Source lib functions.
-source ${cwd}/lib.sh
-
 # Source global configurations.
-source ${cwd}/config.sh
+source "${cwd}/config.sh"
 
-segments_path="${cwd}/${segments_path}"
+# Source lib functions.
+source "${cwd}/lib.sh"
+
+segments_path="${cwd}/${segments_dir}"
 
 # Segments
 
