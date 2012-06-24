@@ -7,7 +7,7 @@ location="Lund, Sweden"
 # Can be any of {c,f,k}.
 unit="c"
 
-tmp_file="/tmp/weather.txt"
+tmp_file="/tmp/tmux-powerline_weather.txt"
 
 get_condition_symbol() {
 	local conditions=$(echo "$1" | tr '[:upper:]' '[:lower:]')
