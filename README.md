@@ -106,6 +106,3 @@ time+=(["separator"]="${separator_left_thin}")	# mandatory, the separator to use
 time+=(["separator_fg"]="default")				# optional, overrides the default blending coloring of the separator with a custom colored foreground.
 register_segment "time"							# Registers the name of the array declared above.
 ```
-
-# Notes
-It's written over a night and in Bash so be prepared for the ugliness. I had some interesting design ideas but after hours of struggling with associative arrays that could not be declare where and how I wanted etc. I just went with the ugly way(s) :-P
