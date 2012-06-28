@@ -68,7 +68,11 @@ read_tmp_file() {
 
 degrees=""
 if [ -f "$tmp_file" ]; then
-	last_update=$(stat -c "%Y" ${tmp_file})
+	if [ "$PLATFORM" == "mac" ]; then
+		last_update=$(stat -f "%m" ${tmp_file})
+	else
+		last_update=$(stat -c "%Y" ${tmp_file})
+	fi
 	time_now=$(date +%s)
 	update_period=600
 
@@ -84,7 +88,11 @@ if [ -z "$degrees" ]; then
 	else
 		search_unit="$unit"
 	fi
-	search_location=$(echo "$location" | sed -e 's/\s/%20/g')
+	if [ "$PLATFORM" == "mac" ]; then
+		search_location=$(echo "$location" | sed -e 's/[ ]/%20/g')
+	else
+		search_location=$(echo "$location" | sed -e 's/\s/%20/g')
+	fi
 
 	weather_data=$(curl --max-time 2 -s "http://www.google.com/ig/api?weather=${search_location}")
 	if [ "$?" -eq "0" ]; then

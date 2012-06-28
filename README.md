@@ -52,6 +52,23 @@ Remaining battery.
 * A patched font. Follow instructions at [Lokaltog/vim-powerline/fontpatcher](https://github.com/Lokaltog/vim-powerline/tree/develop/fontpatcher).
 * [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/) for MPD now playing.
 
+## Mac specific requirements
+tmux-powerline uses associative arrays in bash, which were added in bash version 4.0. OS X Lion ships with an antiquated version of bash ( run
+`bash --version` to see your version). In order to use tmux-powerline, you need to install a newer version of bash, fortunately,
+[brew](http://mxcl.github.com/homebrew/) makes this very easy. If you don't have brew, [install it](https://github.com/mxcl/homebrew/wiki/installation).
+Then follow these steps:
+
+	$ brew install bash
+	$ sudo bash -c "echo /usr/local/Cellar/bash/%INSTALLED_VERSION%/bin/bash >> /private/etc/shells"
+	$ chsh -s /usr/local/Cellar/bash/%INSTALLED_VERSION%/bin/bash
+
+The first command installs bash with brew, the second registers the new shell with the system and the third changes to the new shell for your user.
+If you later upgrade bash through brew, don't forget to do the last two steps again with the new version number. After doing the above and restarting your
+terminal, running `echo $SHELL` should result in the following:
+
+	$ echo $SHELL
+	/usr/local/Cellar/bash/%INSTALLED_VERSION%/bin/bash
+
 # Installation
 Just check out the repo with:
 
@@ -73,6 +90,8 @@ set-option -g status-right-length 120
 set-option -g status-left "#(~/path/to/tmux-powerline/status-left.sh)"
 set-option -g status-right "#(~/path/to/tmux-powerline/status-right.sh)"
 ```
+
+Don't forget to change the PLATFORM variable in config.sh to reflect your operating system of choice.
 
 Also I recommend you to use the [tmux-colors-solarized](https://github.com/seebi/tmux-colors-solarized) theme (as well as solarized for [everything else](http://ethanschoonover.com/solarized) :)):
 

@@ -128,7 +128,11 @@ __ui_left() {
 get_tmux_cwd() {
 	local env_name=$(tmux display -p "TMUXPWD_#I_#P")
 	# Strangest bash bug I've ever seen: if stderr is not redirected to stdin, and not e.g. /dev/null or a regular file, execution will stop and all output written to stdout previosly will disappear if `tmux show-env` can't find the desired envvar.
-	local env_val=$(tmux show-environment "$env_name" 2>&1)
+	if [ "$PLATFORM" == "mac" ]; then
+		local env_val=$(tmux show-environment | grep "$env_name")
+	else
+		local env_val=$(tmux show-environment "$env_name" 2>&1)
+	fi
 	if [[ ! $env_val =~ "unknown variable" ]]; then
 		local tmux_pwd=$(echo "$env_val" | grep -PZo "(?<==).*$")
 		echo "$tmux_pwd"
