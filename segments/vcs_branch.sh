@@ -49,7 +49,7 @@ parse_svn_branch() {
 		return
 	fi
 
-	type git 2>&1 > /dev/null
+	type svn 2>&1 > /dev/null
 	if [ "$?" -ne 0 ]; then
 		return
 	fi
