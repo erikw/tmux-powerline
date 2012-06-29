@@ -1,4 +1,6 @@
-#!/usr/bin/osascript
+#!/usr/bin/env osascript
+# Returns the number of unread mails in the INBOX of Apple Mail.
+
 set mail_running to is_running("Mail")
 
 if mail_running

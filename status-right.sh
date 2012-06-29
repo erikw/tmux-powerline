@@ -23,7 +23,8 @@ pwd+=(["separator"]="${separator_left_bold}")
 #register_segment "pwd"
 
 declare -A mail_count
-mail_count+=(["script"]="${segments_path}/maildir_inbox_count.sh")
+mail_count+=(["script"]="${segments_path}/maildir_count.sh")
+#mail_count+=(["script"]="${segments_path}/apple_mail_count.sh")
 mail_count+=(["foreground"]="white")
 mail_count+=(["background"]="red")
 mail_count+=(["separator"]="${separator_left_bold}")
