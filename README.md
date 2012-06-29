@@ -73,6 +73,9 @@ $ echo $SHELL
 /usr/local/Cellar/bash/%INSTALLED_VERSION%/bin/bash
 ```
 
+NOTE: In order to get the mail count segment to work on a Mac, the Mail application must be running. Otherwise, the AppleScript will launch it and that's
+pretty annoying if you don't want it.
+
 # Installation
 Just check out the repository with:
 
