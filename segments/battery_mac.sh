@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 HEART_CONNECTED=♥
 HEART_DISCONNECTED=♡
