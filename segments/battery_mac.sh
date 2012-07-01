@@ -1,6 +1,33 @@
 #!/usr/bin/env sh
-# Battery status for Macintosh machines. Borrowed from https://github.com/Meldanya/dotfiles/blob/master/tmux/power.sh
-/usr/sbin/ioreg -l | awk 'BEGIN{a=0;b=0}
-$0 ~ "MaxCapacity" {a=$5;next}
-$0 ~ "CurrentCapacity" {b=$5;nextfile}
-END{printf("%d%%", b/a * 100)}'
+
+HEART_CONNECTED=♥
+HEART_DISCONNECTED=♡
+
+case $(uname -s) in
+    "Darwin")
+        ioreg -c AppleSmartBattery -w0 | \
+        grep -o '"[^"]*" = [^ ]*' | \
+        sed -e 's/= //g' -e 's/"//g' | \
+        sort | \
+        while read key value; do
+            case $key in
+                "MaxCapacity")
+                    export maxcap=$value;;
+                "CurrentCapacity")
+                    export curcap=$value;;
+                "ExternalConnected")
+                    export extconnect=$value;;
+            esac
+            if [[ -n $maxcap && -n $curcap && -n $extconnect ]]; then
+                if [[ "$curcap" == "$maxcap" ]]; then
+                    exit
+                fi
+                if [[ "$extconnect" == "Yes" ]]; then
+                    echo $HEART_CONNECTED $(( 100 * $curcap / $maxcap ))"%"
+                else
+                    echo $HEART_DISCONNECTED $(( 100 * $curcap / $maxcap ))"%"
+                fi
+                break
+            fi
+        done
+esac
