@@ -37,6 +37,15 @@ mpd_np+=(["background"]="colour234")
 mpd_np+=(["separator"]="${separator_left_bold}")
 register_segment "mpd_np"
 
+declare -A spotify_np
+if [ "$PLATFORM" == "mac" ]; then
+  spotify_np+=(["script"]="${segments_path}/spotify_np_mac.sh")
+fi
+spotify_np+=(["foreground"]="colour37")
+spotify_np+=(["background"]="colour234")
+spotify_np+=(["separator"]="${separator_left_bold}")
+#register_segment "spotify_np"
+
 declare -A load
 load+=(["script"]="${segments_path}/load.sh")
 load+=(["foreground"]="colour167")
