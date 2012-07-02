@@ -46,6 +46,15 @@ spotify_np+=(["background"]="colour234")
 spotify_np+=(["separator"]="${separator_left_bold}")
 #register_segment "spotify_np"
 
+declare -A itunes_np
+if [ "$PLATFORM" == "mac" ]; then
+  itunes_np+=(["script"]="${segments_path}/itunes_np_mac.sh")
+fi
+itunes_np+=(["foreground"]="colour37")
+itunes_np+=(["background"]="colour234")
+itunes_np+=(["separator"]="${separator_left_bold}")
+#register_segment "itunes_np"
+
 declare -A load
 load+=(["script"]="${segments_path}/load.sh")
 load+=(["foreground"]="colour167")
