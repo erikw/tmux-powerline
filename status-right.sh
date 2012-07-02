@@ -34,6 +34,7 @@ declare -A now_playing
 if [ "$PLATFORM" == "linux" ]; then
 	now_playing+=(["script"]="${segments_path}/np_mpd.sh")
 	#now_playing+=(["script"]="${segments_path}/np_rhythmbox.sh")
+	#now_playing+=(["script"]="${segments_path}/np_banshee.sh")
 elif [ "$PLATFORM" == "mac" ]; then
 	now_playing+=(["script"]="${segments_path}/np_itunes_mac.sh")
 	#now_playing+=(["script"]="${segments_path}/np_itunes_mac.sh")
