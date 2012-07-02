@@ -105,7 +105,7 @@ __ui_left() {
 		separator="$4"
 	fi
 
-	local separator_fg
+	local separator_bg
 	if [ -n "$5" ]; then
 		bg_left="$5"
 		separator_bg="$bg_right"
