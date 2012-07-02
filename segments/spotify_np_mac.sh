@@ -13,7 +13,7 @@ if process_list contains "Spotify" then
       set artist_name to artist of current track
       #     set album_name to album of current track
       set trim_length to 40
-      set now_playing to "♫ " & track_name & " - " & artist_name
+      set now_playing to "♫  " & track_name & " - " & artist_name
       if length of now_playing is less than trim_length then
         set now_playing_trim to now_playing
       else
