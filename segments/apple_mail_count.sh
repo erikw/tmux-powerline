@@ -1,14 +1,12 @@
 #!/usr/bin/env osascript
 # Returns the number of unread mails in the INBOX of Apple Mail.
 
-set mail_running to is_running("Mail")
+tell application "System Events"
+  set process_list to (name of every process)
+end tell
 
-if mail_running
-	tell application "Mail"
-	   set a to unread count of inbox
-	end tell
+if process_list contains "Mail" then
+  tell application "Mail"
+    set a to " " & unread count of inbox
+  end tell
 end if
-
-on is_running(appName)
-  tell application "System Events" to (name of processes) contains appName
-end is_running

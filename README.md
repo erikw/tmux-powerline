@@ -3,7 +3,7 @@ This is a set of scripts (segments) for making a nice and dynamic tmux status-ba
 
 The following segments exists for now:
 * LAN & WAN IP addresses.
-* MPD now playing.
+* MPD now playing, Spotify and iTunes now playing for Mac OSX.
 * New mail count for Maildir and Apple Mail.
 * GNU Linux and Macintosh OS X battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery)).
 * Weather in Celsius, Fahrenheit and Kelvin using Google's weather API.
@@ -29,7 +29,7 @@ Current tmux session, window and pane, hostname and LAN & WAN IP address.
 
 **right-status**
 
-New mails, now playing in MPD, average load, weather, date and time.
+New mails, now playing in MPD, (Spotify and iTunes for OSX) average load, weather, date and time.
 
 ![right-status](https://github.com/erikw/tmux-powerline/raw/master/img/right-status.png)
 
