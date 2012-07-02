@@ -7,7 +7,7 @@ LDLIBS = -lmpdclient
 .PHONY: all clean
 
 
-all: mpd_np
+all: np_mpd
 
 clean:
-	$(RM) mpd_np
+	$(RM) np_mpd

@@ -30,30 +30,20 @@ mail_count+=(["background"]="red")
 mail_count+=(["separator"]="${separator_left_bold}")
 register_segment "mail_count"
 
-declare -A mpd_np
-mpd_np+=(["script"]="${segments_path}/mpd_np.sh")
-mpd_np+=(["foreground"]="colour37")
-mpd_np+=(["background"]="colour234")
-mpd_np+=(["separator"]="${separator_left_bold}")
-register_segment "mpd_np"
-
-declare -A spotify_np
-if [ "$PLATFORM" == "mac" ]; then
-  spotify_np+=(["script"]="${segments_path}/spotify_np_mac.sh")
+declare -A now_playing
+if [ "$PLATFORM" == "linux" ]; then
+	now_playing+=(["script"]="${segments_path}/np_mpd.sh")
+	#now_playing+=(["script"]="${segments_path}/np_rhytmbox.sh")
+elif [ "$PLATFORM" == "mac" ]; then
+	now_playing+=(["script"]="${segments_path}/np_itunes_mac.sh")
+	#now_playing+=(["script"]="${segments_path}/np_itunes_mac.sh")
 fi
-spotify_np+=(["foreground"]="colour37")
-spotify_np+=(["background"]="colour234")
-spotify_np+=(["separator"]="${separator_left_bold}")
-#register_segment "spotify_np"
-
-declare -A itunes_np
-if [ "$PLATFORM" == "mac" ]; then
-  itunes_np+=(["script"]="${segments_path}/itunes_np_mac.sh")
+if [[ ${now_playing["script"]} ]]; then
+	now_playing+=(["foreground"]="colour37")
+	now_playing+=(["background"]="colour234")
+	now_playing+=(["separator"]="${separator_left_bold}")
+	register_segment "now_playing"
 fi
-itunes_np+=(["foreground"]="colour37")
-itunes_np+=(["background"]="colour234")
-itunes_np+=(["separator"]="${separator_left_bold}")
-#register_segment "itunes_np"
 
 declare -A load
 load+=(["script"]="${segments_path}/load.sh")
