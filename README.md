@@ -3,9 +3,9 @@ This is a set of scripts (segments) for making a nice and dynamic tmux status-ba
 
 The following segments exists for now:
 * LAN & WAN IP addresses.
-* Now Playing for MPD, Spotify (Linux native|wine, OS X), iTunes (OS X), Rhythmbox, Banshee and Audacious.
+* Now Playing for MPD, Spotify (GNU/Linux native or wine, OS X), iTunes (OS X), Rhythmbox, Banshee and Audacious.
 * New mail count for Maildir and Apple Mail.
-* GNU Linux and Macintosh OS X battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery)).
+* GNU/Linux and Macintosh OS X battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery)).
 * Weather in Celsius, Fahrenheit and Kelvin using Google's weather API.
 * System load and uptime.
 * Git or SVN branch in CWD.
