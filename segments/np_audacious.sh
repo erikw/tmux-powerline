@@ -3,7 +3,7 @@
 
 max_len=40	# Trim output to this length.
 
-# Check if audacious is playing and print that song
+# Check if audacious is playing and print that song.
 audacious_pid=$(pidof audacious)
 if [ -n "$audacious_pid" ]; then
 	if $(audtool playback-playing); then
