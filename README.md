@@ -29,7 +29,7 @@ Current tmux session, window and pane, hostname and LAN & WAN IP address.
 
 **right-status**
 
-New mails, now playing in MPD, (Spotify and iTunes for OSX) average load, weather, date and time.
+New mails, now playing, average load, weather, date and time.
 
 ![right-status](https://github.com/erikw/tmux-powerline/raw/master/img/right-status.png)
 
@@ -37,7 +37,7 @@ Now I've read my inbox so the maildir segment disappears!
 
 ![right-status, no mail](https://github.com/erikw/tmux-powerline/raw/master/img/right-status_no_mail.png)
 
-`mpc pause` and there's no need for showing NP anymore. Also the weather has become much nicer!
+After pausing the music there's no need for showing NP anymore. Also the weather has become much nicer!
 
 ![right-status, no mpd](https://github.com/erikw/tmux-powerline/raw/master/img/right-status_no_mpd.png)
 
