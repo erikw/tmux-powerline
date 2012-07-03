@@ -132,3 +132,6 @@ time+=(["separator"]="${separator_left_thin}")	# mandatory, the separator to use
 time+=(["separator_fg"]="default")				# optional, overrides the default blending coloring of the separator with a custom colored foreground.
 register_segment "time"							# Registers the name of the array declared above.
 ```
+# Hacking
+
+This project can only gain positivly from contributions. Fork today and make your own enhancments share back! 
