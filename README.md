@@ -33,7 +33,7 @@ New mails, now playing, average load, weather, date and time.
 
 ![right-status](https://github.com/erikw/tmux-powerline/raw/master/img/right-status.png)
 
-Now I've read my inbox so the maildir segment disappears!
+Now I've read my inbox so the mail segment disappears!
 
 ![right-status, no mail](https://github.com/erikw/tmux-powerline/raw/master/img/right-status_no_mail.png)
 
@@ -98,7 +98,7 @@ set-option -g status-left "#(~/path/to/tmux-powerline/status-left.sh)"
 set-option -g status-right "#(~/path/to/tmux-powerline/status-right.sh)"
 ```
 
-Set the maximum lengths to something that suits your configuration of segments and size of terminal (the maximum segments length will be handled better in the future). Don't forget to change the PLATFORM variable in config.sh to reflect your operating system of choice.
+Set the maximum lengths to something that suits your configuration of segments and size of terminal (the maximum segments length will be handled better in the future). Don't forget to change the PLATFORM variable in `config.sh` to reflect your operating system of choice.
 
 Also I recommend you to use the [tmux-colors-solarized](https://github.com/seebi/tmux-colors-solarized) theme (as well as solarized for [everything else](http://ethanschoonover.com/solarized) :)):
 
