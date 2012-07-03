@@ -60,6 +60,12 @@ Then follow these steps:
 
 ```bash
 $ brew install bash
+```
+
+NOTE: If you're using something other than bash (or if you don't want this newer version of bash as your default shell) you shouldn't need to follow
+the rest of the instructions. If something seems broken, try following the last two steps and see if it helps.
+
+```bash
 $ sudo bash -c "echo /usr/local/Cellar/bash/%INSTALLED_VERSION%/bin/bash >> /private/etc/shells"
 $ chsh -s /usr/local/Cellar/bash/%INSTALLED_VERSION%/bin/bash
 ```
