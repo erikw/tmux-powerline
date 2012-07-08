@@ -53,6 +53,9 @@ Remaining battery.
 * A patched font. Follow instructions at [Lokaltog/vim-powerline/fontpatcher](https://github.com/Lokaltog/vim-powerline/tree/develop/fontpatcher).
 * [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/) for MPD now playing.
 
+## Segment Requirements
+* WAN IP: curl
+
 ## OS X specific requirements
 
 **You still need to follow the first part of these instructions even if you are running zsh or something else as your default shell!**
