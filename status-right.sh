@@ -73,6 +73,13 @@ weather+=(["background"]="colour37")
 weather+=(["separator"]="${separator_left_bold}")
 register_segment "weather"
 
+declare -A layout
+layout+=(["script"]="${segments_path}/xkb_layout.sh")
+layout+=(["foreground"]="colour136")
+layout+=(["background"]="colour235")
+layout+=(["separator"]="${separator_left_bold}")
+#register_segment "layout"
+
 declare -A date_day
 date_day+=(["script"]="${segments_path}/date_day.sh")
 date_day+=(["foreground"]="colour136")
