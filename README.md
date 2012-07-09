@@ -13,6 +13,7 @@ The following segments exists for now:
 * Hostname.
 * tmux info.
 * CWD in pane
+* Current X keyboard layout.
 
 Check [segments/](https://github.com/erikw/tmux-powerline/tree/master/segments) for more undocumented segments and details.
 
