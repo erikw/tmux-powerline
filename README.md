@@ -54,6 +54,9 @@ Remaining battery.
 * [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/) for MPD now playing.
 
 ## OS X specific requirements
+
+**You still need to follow the first part of these instructions even if you are running zsh or something else as your default shell!**
+
 tmux-powerline uses associative arrays in bash, which were added in bash version 4.0. OS X Lion ships with an antiquated version of bash ( run
 `bash --version` to see your version). In order to use tmux-powerline, you need to install a newer version of bash, fortunately,
 [brew](http://mxcl.github.com/homebrew/) makes this very easy. If you don't have brew, [install it](https://github.com/mxcl/homebrew/wiki/installation).
@@ -63,15 +66,15 @@ Then follow these steps:
 $ brew install bash
 ```
 
-NOTE: If you're using something other than bash (or if you don't want this newer version of bash as your default shell) you shouldn't need to follow
-the rest of the instructions. If something seems broken, try following the last two steps and see if it helps.
+**If you're using something other than bash (or if you don't want this newer version of bash as your default shell) you should be done now**. If something
+seems broken, try following the last two steps and see if it helps:
 
 ```bash
 $ sudo bash -c "echo /usr/local/Cellar/bash/%INSTALLED_VERSION%/bin/bash >> /private/etc/shells"
 $ chsh -s /usr/local/Cellar/bash/%INSTALLED_VERSION%/bin/bash
 ```
 
-The first command installs bash with brew, the second registers the new shell with the system and the third changes to the new shell for your user.
+The first command installs bash through brew, the second registers the new shell with the system and the third changes to the new shell for your user.
 If you later upgrade bash through brew, don't forget to do the last two steps again with the new version number. After doing the above and restarting your
 terminal, running `echo $SHELL` should result in the following:
 
