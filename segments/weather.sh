@@ -94,7 +94,7 @@ if [ -z "$degrees" ]; then
 		search_location=$(echo "$location" | sed -e 's/\s/%20/g')
 	fi
 
-	weather_data=$(curl --max-time 2 -s "http://www.google.com/ig/api?weather=${search_location}")
+	weather_data=$(curl --max-time 4 -s "http://www.google.com/ig/api?weather=${search_location}")
 	if [ "$?" -eq "0" ]; then
 		error=$(echo "$weather_data" | grep "problem_cause\|DOCTYPE");
 		if [ -n "$error" ]; then
