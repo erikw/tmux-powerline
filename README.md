@@ -120,7 +120,7 @@ PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$
 
 # Configuration
 
-Edit the two status scripts to suit you needs. A number of common segments are included that covers some general functions like time, date battery etc. The segments can be moved around and does not needs to be in the order (or same file) as they are now. It should be quite easy to add you own segments.
+Edit the two status scripts to suit you needs. A number of common segments are included that covers some general functions like time, date, battery etc. The segments can be moved around and does not needs to be in the order (or same file) as they are now. It should be quite easy to add you own segments.
 
 ```console
 $ $EDITOR ~/path/to/tmux-powerline/status-left.sh
