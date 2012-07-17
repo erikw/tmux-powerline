@@ -10,6 +10,11 @@
 # for some.
 
 # This script will print the correct layout even if layout is set per window.
+# Exit if platform is not linux as this script is dependant on X11
+if [ $PLATFORM != "linux" ]; then
+	exit 0
+fi
+
 cd "$(dirname $0)"
 if [ ! -x "xkb_layout" ]; then
 	make clean xkb_layout &>/dev/null
@@ -19,7 +24,7 @@ if [ -x ./xkb_layout ]; then
 	cur_layout_nbr=$(($(./xkb_layout)+1));
 	cur_layout=$(setxkbmap -query | grep layout | sed 's/layout:\s\+//g' | \
 		awk -F ',' '{print $'$(echo "$cur_layout_nbr")'}')
-	echo "⌨ $cur_layout "
+	echo "⌨  $cur_layout"
 else
 	exit 1
 fi

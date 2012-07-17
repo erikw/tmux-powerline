@@ -74,11 +74,13 @@ weather+=(["separator"]="${separator_left_bold}")
 register_segment "weather"
 
 declare -A xkb_layout
-xkb_layout+=(["script"]="${segments_path}/xkb_layout.sh")
-xkb_layout+=(["foreground"]="colour117")
-xkb_layout+=(["background"]="colour125")
-xkb_layout+=(["separator"]="${separator_left_bold}")
-#register_segment "xkb_layout"
+if [ "$PLATFORM" == "linux" ]; then
+	xkb_layout+=(["script"]="${segments_path}/xkb_layout.sh")
+	xkb_layout+=(["foreground"]="colour117")
+	xkb_layout+=(["background"]="colour125")
+	xkb_layout+=(["separator"]="${separator_left_bold}")
+fi
+register_segment "xkb_layout"
 
 declare -A date_day
 date_day+=(["script"]="${segments_path}/date_day.sh")

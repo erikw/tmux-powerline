@@ -55,6 +55,7 @@ Remaining battery.
 
 ## Segment Requirements
 * WAN IP: curl
+* xkb_layout: X11, XKB
 
 ## OS X specific requirements
 
