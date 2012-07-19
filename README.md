@@ -47,14 +47,17 @@ Remaining battery.
 ![right-status, weather and battery](https://github.com/erikw/tmux-powerline/raw/master/img/right-status_weather_battery.png)
 
 # Requirements
+Requirements for the lib to work are:
 
 * Recent tmux version
 * `bash --version` >= 4.0
 * A patched font. Follow instructions at [Lokaltog/vim-powerline/fontpatcher](https://github.com/Lokaltog/vim-powerline/tree/develop/fontpatcher).
-* [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/) for MPD now playing.
 
 ## Segment Requirements
+Requirements for some segments. You only need to fullfill the requirements for those segments you want to use.
+
 * WAN IP: curl
+* MPD now playing: [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
 * xkb_layout: X11, XKB
 
 ## OS X specific requirements
