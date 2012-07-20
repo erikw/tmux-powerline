@@ -80,7 +80,7 @@ if [ "$PLATFORM" == "linux" ]; then
 	xkb_layout+=(["background"]="colour125")
 	xkb_layout+=(["separator"]="${separator_left_bold}")
 fi
-register_segment "xkb_layout"
+#register_segment "xkb_layout"
 
 declare -A date_day
 date_day+=(["script"]="${segments_path}/date_day.sh")
