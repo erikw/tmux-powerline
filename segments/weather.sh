@@ -96,13 +96,13 @@ if [ -z "$degrees" ]; then
 
 	weather_data=$(curl --max-time 4 -s "http://www.google.com/ig/api?weather=${search_location}")
 	if [ "$?" -eq "0" ]; then
-		error=$(echo "$weather_data" | grep "problem_cause\|DOCTYPE");
+		error=$(echo "$weather_data" | grep --color=never "problem_cause\|DOCTYPE");
 		if [ -n "$error" ]; then
 			echo "error"
 			exit 1
 		fi
 		degrees=$(echo "$weather_data" | sed "s|.*<temp_${search_unit} data=\"\([^\"]*\)\"/>.*|\1|")
-		conditions=$(echo "$weather_data" | grep -PZo "<current_conditions>(\\n|.)*</current_conditions>" | grep -PZo "(?<=<condition\sdata=\")([^\"]*)")
+		conditions=$(echo "$weather_data" | grep --color=never -PZo "<current_conditions>(\\n|.)*</current_conditions>" | grep --color=never -PZo "(?<=<condition\sdata=\")([^\"]*)")
 		echo "$degrees" > $tmp_file
 		echo "$conditions" >> $tmp_file
 	elif [ -f "$tmp_file" ]; then

@@ -30,7 +30,7 @@ parse_git_branch() {
 
 	local branch=$(echo "$branches" | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 
-	echo "$branches" | grep "remotes/git-svn" &>/dev/null
+	echo "$branches" | grep --color=never "remotes/git-svn" &>/dev/null
 	is_gitsvn=$([ "$?" -eq 0 ] && echo 1 || echo 0)
 
 	echo  -n "#[fg="
@@ -57,7 +57,7 @@ parse_svn_branch() {
 	local svn_root=$(svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p')
 	local svn_url=$(svn info 2>/dev/null | sed -ne 's#^URL: ##p')
 
-	local branch=$(echo $svn_url | sed -e 's#^'"${svn_root}"'##g' | egrep -o '(tags|branches)/[^/]+|trunk' | egrep -o '[^/]+$' | awk '{print $1}')
+	local branch=$(echo $svn_url | sed -e 's#^'"${svn_root}"'##g' | egrep --color=never -o '(tags|branches)/[^/]+|trunk' | egrep --color=never -o '[^/]+$' | awk '{print $1}')
 	echo  "#[fg=${svn_colour}]${branch_symbol} #[fg=colour42]${branch}"
 }
 
