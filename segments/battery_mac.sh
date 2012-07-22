@@ -6,7 +6,7 @@ HEART_DISCONNECTED=♡
 case $(uname -s) in
     "Darwin")
         ioreg -c AppleSmartBattery -w0 | \
-        grep -o '"[^"]*" = [^ ]*' | \
+        grep --color=never -o '"[^"]*" = [^ ]*' | \
         sed -e 's/= //g' -e 's/"//g' | \
         sort | \
         while read key value; do

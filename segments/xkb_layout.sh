@@ -22,7 +22,7 @@ fi
 
 if [ -x ./xkb_layout ]; then
 	cur_layout_nbr=$(($(./xkb_layout)+1));
-	cur_layout=$(setxkbmap -query | grep layout | sed 's/layout:\s\+//g' | \
+	cur_layout=$(setxkbmap -query | grep --color=never layout | sed 's/layout:\s\+//g' | \
 		awk -F ',' '{print $'$(echo "$cur_layout_nbr")'}')
 	echo "⌨  $cur_layout"
 else

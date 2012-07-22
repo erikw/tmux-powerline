@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 # Prints the uptime.
-uptime | grep -PZo "(?<=up )[^,]*"
+uptime | grep --color=never -PZo "(?<=up )[^,]*"

@@ -89,7 +89,7 @@ case $(uname -s) in
         esac
 
         ioreg -c AppleSmartBattery -w0 | \
-        grep -o '"[^"]*" = [^ ]*' | \
+        grep --color=never -o '"[^"]*" = [^ ]*' | \
         sed -e 's/= //g' -e 's/"//g' | \
         sort | \
         while read key value; do
