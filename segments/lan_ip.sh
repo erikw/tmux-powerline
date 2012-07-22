@@ -8,8 +8,8 @@ if [ "$PLATFORM" == "mac" ]; then
 else
 	nic0="eth0"
 	nic1="wlan0"
-	ip0=$(/sbin/ifconfig ${nic0}} 2>/dev/null | grep 'inet addr:')
-	ip1=$(/sbin/ifconfig ${nic1}} 2>/dev/null | grep 'inet addr:')
+	ip0=$(/sbin/ifconfig ${nic0} 2>/dev/null | grep 'inet addr:')
+	ip1=$(/sbin/ifconfig ${nic1} 2>/dev/null | grep 'inet addr:')
 fi
 if [ -n "$ip0" ]; then
 	lan_ip="$ip0"
