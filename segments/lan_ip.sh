@@ -3,13 +3,13 @@
 if [ "$PLATFORM" == "mac" ]; then
 	nic0="en0"
 	nic1="en1"
-	ip0=$(/sbin/ifconfig ${nic0} | grep 'inet ')
-	ip1=$(/sbin/ifconfig ${nic1} | grep 'inet ')
+	ip0=$(/sbin/ifconfig ${nic0} 2>/dev/null | grep 'inet ')
+	ip1=$(/sbin/ifconfig ${nic1} 2>/dev/null } | grep 'inet ')
 else
 	nic0="eth0"
 	nic1="wlan0"
-	ip0=$(/sbin/ifconfig ${nic0} | grep 'inet addr:')
-	ip1=$(/sbin/ifconfig ${nic1} | grep 'inet addr:')
+	ip0=$(/sbin/ifconfig ${nic0}} 2>/dev/null | grep 'inet addr:')
+	ip1=$(/sbin/ifconfig ${nic1}} 2>/dev/null | grep 'inet addr:')
 fi
 if [ -n "$ip0" ]; then
 	lan_ip="$ip0"
