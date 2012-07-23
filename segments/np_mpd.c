@@ -61,7 +61,7 @@ int main(int argc, const char *argv[])
 			mpd_password_m[first_len] = '\0';
 			strncpy(mpd_host_m, second, second_len);
 			mpd_host_m[second_len] = '\0';
-		} else  if (first != NULL) {
+		} else if (first != NULL) {
 			DEBUG_PRINTF("%s\n", first);
 			size_t first_len = strlen(first);
 			mpd_host_m = (char *) malloc(first_len + 1);
