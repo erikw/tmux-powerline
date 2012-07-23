@@ -17,6 +17,9 @@ else
 	separator_right_thin="❯"
 fi
 
+# Make sure that grep does not emit colors.
+export GREP_OPTIONS="--color=never"
+
 # Register a segment.
 register_segment() {
 	segment_name="$1"
