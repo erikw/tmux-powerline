@@ -102,7 +102,11 @@ if [ -z "$degrees" ]; then
 			exit 1
 		fi
 		degrees=$(echo "$weather_data" | sed "s|.*<temp_${search_unit} data=\"\([^\"]*\)\"/>.*|\1|")
-		conditions=$(echo "$weather_data" | grep -PZo "<current_conditions>(\\n|.)*</current_conditions>" | grep -PZo "(?<=<condition\sdata=\")([^\"]*)")
+		if [ "$PLATFORM" == "mac" ]; then
+			conditions=$(echo "$weather_data" | grep -EZo "<current_conditions>(\\n|.)*</current_conditions>" | grep -EZo '<condition data="([a-zA-Z]*)"/>' | sed -n 's/^.*\"\([a-zA-Z]*\)\".*/\1/p')
+		else
+			conditions=$(echo "$weather_data" | grep -PZo "<current_conditions>(\\n|.)*</current_conditions>" | grep -PZo "(?<=<condition\sdata=\")([^\"]*)")
+		fi
 		echo "$degrees" > $tmp_file
 		echo "$conditions" >> $tmp_file
 	elif [ -f "$tmp_file" ]; then
