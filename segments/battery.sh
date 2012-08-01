@@ -1,5 +1,6 @@
-# NOTE I have note written this. I cloned it from https://github.com/richoH/dotfiles/blob/master/bin/battery and just made somemodifications so it works for my laptop. Check that URL for more recent versions.
-#!/usr/bin/env sh
+#!/usr/bin/env bash
+# LICENSE This code is not under the same license as the rest of the project as it's "stolen". It's cloned from https://github.com/richoH/dotfiles/blob/master/bin/battery and just some modifications are done so it works for my laptop. Check that URL for more recent versions.
+
 #CUTE_BATTERY_INDICATOR="true"
 
 HEART_FULL=♥
