@@ -12,6 +12,7 @@ branch_symbol="⭠"
 git_colour="colour5"
 git_svn_colour="colour34"
 svn_colour="colour220"
+hg_colour="colour45"
 
 # Show git banch.
 parse_git_branch() {
@@ -45,14 +46,15 @@ parse_git_branch() {
 
 # Show SVN branch.
 parse_svn_branch() {
-	if [ ! -d ".svn/" ]; then
-		return
-	fi
-
 	type svn 2>&1 > /dev/null
 	if [ "$?" -ne 0 ]; then
 		return
 	fi
+
+	if [ ! -d ".svn/" ]; then
+		return
+	fi
+
 
 	local svn_root=$(svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p')
 	local svn_url=$(svn info 2>/dev/null | sed -ne 's#^URL: ##p')
@@ -61,11 +63,28 @@ parse_svn_branch() {
 	echo  "#[fg=${svn_colour}]${branch_symbol} #[fg=colour42]${branch}"
 }
 
+parse_hg_branch() {
+	type hg 2>&1 > /dev/null
+	if [ "$?" -ne 0 ]; then
+		return
+	fi
+
+	summary=$(hg summary)
+	if [ "$?" -ne 0 ]; then
+		return
+	fi
+
+	local branch=$(echo "$summary" | grep 'branch:' | cut -d ' ' -f2)
+	echo  "#[fg=${hg_colour}]${branch_symbol} #[fg=colour42]${branch}"
+}
+
 branch=""
 if [ -n "${git_branch=$(parse_git_branch)}" ]; then
 	branch="$git_branch"
 elif [ -n "${svn_branch=$(parse_svn_branch)}" ]; then
 	branch="$svn_branch"
+elif [ -n "${hg_branch=$(parse_hg_branch)}" ]; then
+	branch="$hg_branch"
 fi
 
 if [ -n "$branch" ]; then

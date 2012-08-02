@@ -8,7 +8,7 @@ The following segments exists for now:
 * GNU/Linux and Macintosh OS X battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery)).
 * Weather in Celsius, Fahrenheit and Kelvin using Google's weather API.
 * System load and uptime.
-* Git or SVN branch in CWD.
+* Git, SVN and Mercurial branch in CWD.
 * Date and time.
 * Hostname.
 * tmux info.
