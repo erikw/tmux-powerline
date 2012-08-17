@@ -51,11 +51,11 @@ case $(uname -s) in
 		fi
         STATUS=$BATPATH/status
         BAT_FULL=$BATPATH/charge_full
-		if [ ! -f $BAT_FULL ]; then
+		if [ ! -r $BAT_FULL ]; then
 			BAT_FULL=$BATPATH/energy_full
 		fi
         BAT_NOW=$BATPATH/charge_now
-		if [ ! -f $BAT_NOW ]; then
+		if [ ! -r $BAT_NOW ]; then
 			BAT_NOW=$BATPATH/energy_now
 		fi
 
