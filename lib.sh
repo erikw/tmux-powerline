@@ -28,7 +28,7 @@ register_segment() {
 }
 
 print_status_line_right() {
-	local prev_bg="colour236"
+	local prev_bg="colour235"
 	for entry in ${entries[*]}; do
 		local script=$(eval echo \${${entry}["script"]})
 		local foreground=$(eval echo \${${entry}["foreground"]})
@@ -75,7 +75,7 @@ print_status_line_left() {
 			first_segment_left=0
 		fi
 	done
-	__ui_left "colour236" "colour236" "red" "$separator_right_bold" "colour236"
+	__ui_left "colour235" "colour235" "red" "$separator_right_bold" "$prev_bg"
 
 	# End in a clean state.
 	echo "#[default]"
