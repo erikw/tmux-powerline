@@ -48,6 +48,13 @@ if [[ ${now_playing["script"]} ]]; then
 	register_segment "now_playing"
 fi
 
+declare -A cpu
+cpu+=(["script"]="${segments_path}/cpu.sh")
+cpu+=(["foreground"]="colour136")
+cpu+=(["background"]="colour235")
+cpu+=(["separator"]="${separator_left_bold}")
+register_segment "cpu"
+
 declare -A load
 load+=(["script"]="${segments_path}/load.sh")
 load+=(["foreground"]="colour167")
