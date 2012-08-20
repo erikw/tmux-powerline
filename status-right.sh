@@ -51,9 +51,9 @@ fi
 declare -A cpu
 cpu+=(["script"]="${segments_path}/cpu.sh")
 cpu+=(["foreground"]="colour136")
-cpu+=(["background"]="colour235")
+cpu+=(["background"]="colour240")
 cpu+=(["separator"]="${separator_left_bold}")
-register_segment "cpu"
+#register_segment "cpu"
 
 declare -A load
 load+=(["script"]="${segments_path}/load.sh")

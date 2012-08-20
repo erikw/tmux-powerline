@@ -1,15 +1,15 @@
 #!/usr/bin/env sh
-# Prints the CPU usage: user% sys% idle
+# Prints the CPU usage: user% sys% idle.
 
+cpu_line=$(top -b -n 1 | grep "Cpu(s)")
 
-if [ "$PLATFORM" == "mac" ]; then
-  	cpu=$(top -l 1 | grep "CPU usage" | awk '{ print $3, $5, $7 }')
-elif [ "$PLATFORM" == "linux" ]; then
-	cpu=$(top -b -n 1 | grep "Cpu(s)" | awk '{ print $2, $3, $5 }' | sed 's/\w\{2\},//g')
+cpu_user=$(echo "$cpu_line" | grep -Po "(\d+(.\d+)?)(?=%?\s?(us(er)?))")
+cpu_system=$(echo "$cpu_line" | grep -Po "(\d+(.\d+)?)(?=%?\s?(sys?))")
+cpu_idle=$(echo "$cpu_line" | grep -Po "(\d+(.\d+)?)(?=%?\s?(id(le)?))")
+
+if [ -n "$cpu_user" ] && [ -n "$cpu_system" ] && [ -n "$cpu_idle" ]; then
+	echo "${cpu_user}, ${cpu_system}, ${cpu_idle}"
+	exit 0
+else
+	exit 1
 fi
-
-if [ -n "$cpu" ]; then
-	echo "$cpu"
-fi
-
-exit 0
