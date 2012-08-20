@@ -1,5 +1,5 @@
 # tmux-powerline
-This is a set of scripts (segments) for making a nice and dynamic tmux status-bar where elements can come and disappears depending on events. I really like the look of [Lokaltog/vim-powerline](https://github.com/Lokaltog/vim-powerline) and I decided I wanted the same for tmux.
+This is a set of scripts (segments) for making a nice and dynamic tmux statusbar where elements can come and disappears depending on events. I really like the look of [Lokaltog/vim-powerline](https://github.com/Lokaltog/vim-powerline) and I decided I wanted the same for tmux.
 
 The following segments exists for now:
 * LAN & WAN IP addresses.
