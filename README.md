@@ -7,7 +7,7 @@ The following segments exists for now:
 * New mail count for Maildir and Apple Mail.
 * GNU/Linux and Macintosh OS X battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery)).
 * Weather in Celsius, Fahrenheit and Kelvin using Google's weather API.
-* System load and uptime.
+* System load, cpu usage and uptime.
 * Git, SVN and Mercurial branch in CWD.
 * Date and time.
 * Hostname.
@@ -148,4 +148,4 @@ register_segment "time"							# Registers the name of the array declared above.
 ```
 # Hacking
 
-This project can only gain positivly from contributions. Fork today and make your own enhancments and segments to share back! 
+This project can only gain positivly from contributions. Fork today and make your own enhancments and segments to share back!
