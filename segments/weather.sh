@@ -88,6 +88,7 @@ if [ -z "$degrees" ]; then
 	else
 		search_unit="$unit"
 	fi
+	# Convert spaces before using this in the URL.
 	if [ "$PLATFORM" == "mac" ]; then
 		search_location=$(echo "$location" | sed -e 's/[ ]/%20/g')
 	else
