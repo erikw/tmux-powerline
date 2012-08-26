@@ -148,4 +148,4 @@ register_segment "time"							# Registers the name of the array declared above.
 ```
 # Hacking
 
-This project can only gain positivly from contributions. Fork today and make your own enhancments and segments to share back!
+This project can only gain positively from contributions. Fork today and make your own enhancments and segments to share back!
