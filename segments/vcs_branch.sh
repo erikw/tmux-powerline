@@ -16,7 +16,7 @@ hg_colour="colour45"
 
 # Show git banch.
 parse_git_branch() {
-	type git 2>&1 > /dev/null
+	type git >/dev/null 2>&1
 	if [ "$?" -ne 0 ]; then
 		return
 	fi
@@ -46,7 +46,7 @@ parse_git_branch() {
 
 # Show SVN branch.
 parse_svn_branch() {
-	type svn 2>&1 > /dev/null
+	type svn >/dev/null 2>&1
 	if [ "$?" -ne 0 ]; then
 		return
 	fi
@@ -64,7 +64,7 @@ parse_svn_branch() {
 }
 
 parse_hg_branch() {
-	type hg 2>&1 > /dev/null
+	type hg >/dev/null 2>&1
 	if [ "$?" -ne 0 ]; then
 		return
 	fi
