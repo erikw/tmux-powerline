@@ -24,7 +24,7 @@ parse_git_branch() {
 	#git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ \[\1\]/'
 
 	# Quit if this is not a Git repo.
-	branches=$(git branch 2>/dev/null)
+	branches=$(git branch --no-color 2>/dev/null)
 	if [ "$?" -ne 0 ]; then
 		return
 	fi
