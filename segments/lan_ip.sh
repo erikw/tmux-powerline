@@ -5,8 +5,13 @@
 if [ "$PLATFORM" == "mac" ]; then
 	nic0="en0"
 	nic1="en1"
-	ip0=$(/sbin/ifconfig ${nic0} 2>/dev/null | grep 'inet ')
-	ip1=$(/sbin/ifconfig ${nic1} 2>/dev/null | grep 'inet ')
+	#ip0=$(/sbin/ifconfig ${nic0} 2>/dev/null | grep 'inet ')
+	#ip1=$(/sbin/ifconfig ${nic1} 2>/dev/null | grep 'inet ')
+    lan_ip=`/sbin/ifconfig en0 2>/dev/null | grep 'inet ' | awk '{print $2}'`
+    if [ -z "$lan_ip" ]; then
+        # get wireless lan ip
+        lan_ip=`/sbin/ifconfig en1 2>/dev/null | grep 'inet ' | awk '{print $2}'`
+    fi
 else
 	#nic=eth0		# Use this NIC.
 	nic="USE_FIRST_FOUND"	# Find the first IP address on all active NICs.
@@ -27,6 +32,7 @@ fi
 if [ -n "$lan_ip" ]; then
 
 	#echo "Ⓛ ${lan_ip}"
+	#echo "ⓛ ${lan_ip}"
 	echo "ⓛ ${lan_ip}"
 	exit 0
 else
