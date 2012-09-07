@@ -5,12 +5,11 @@
 if [ "$PLATFORM" == "mac" ]; then
 	nic0="en0"
 	nic1="en1"
-	#ip0=$(/sbin/ifconfig ${nic0} 2>/dev/null | grep 'inet ')
-	#ip1=$(/sbin/ifconfig ${nic1} 2>/dev/null | grep 'inet ')
-    lan_ip=`/sbin/ifconfig en0 2>/dev/null | grep 'inet ' | awk '{print $2}'`
+    # get wired lan ip
+    lan_ip=`/sbin/ifconfig $nic0 2>/dev/null | grep 'inet ' | awk '{print $2}'`
+    # if no wired lan, get wireless lan ip
     if [ -z "$lan_ip" ]; then
-        # get wireless lan ip
-        lan_ip=`/sbin/ifconfig en1 2>/dev/null | grep 'inet ' | awk '{print $2}'`
+        lan_ip=`/sbin/ifconfig $nic1 2>/dev/null | grep 'inet ' | awk '{print $2}'`
     fi
 else
 	#nic=eth0		# Use this NIC.
