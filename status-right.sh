@@ -53,12 +53,12 @@ cpu+=(["script"]="${segments_path}/cpu.sh")
 cpu+=(["foreground"]="colour136")
 cpu+=(["background"]="colour240")
 cpu+=(["separator"]="${separator_left_bold}")
-register_segment "cpu"
+#register_segment "cpu"
 
 declare -A load
 load+=(["script"]="${segments_path}/load.sh")
-load+=(["foreground"]="colour167")
-load+=(["background"]="colour237")
+load+=(["foreground"]="#FFFFFF")
+load+=(["background"]="#996666")
 load+=(["separator"]="${separator_left_bold}")
 register_segment "load"
 
@@ -71,7 +71,7 @@ fi
 battery+=(["foreground"]="colour127")
 battery+=(["background"]="colour0")
 battery+=(["separator"]="${separator_left_bold}")
-register_segment "battery"
+#register_segment "battery"
 
 declare -A weather
 weather+=(["script"]="${segments_path}/weather.sh")
@@ -91,25 +91,25 @@ fi
 
 declare -A date_day
 date_day+=(["script"]="${segments_path}/date_day.sh")
-date_day+=(["foreground"]="colour36")
-date_day+=(["background"]="colour0")
+date_day+=(["foreground"]="colour255")
+date_day+=(["background"]="colour127")
 date_day+=(["separator"]="${separator_left_bold}")
 register_segment "date_day"
 
 declare -A date_full
 date_full+=(["script"]="${segments_path}/date_full.sh")
-date_full+=(["foreground"]="colour37")
-date_full+=(["background"]="colour0")
-date_full+=(["separator"]="${separator_left_thin}")
-date_full+=(["separator_fg"]="default")
+date_full+=(["foreground"]="colour255")
+date_full+=(["background"]="#ff6666")
+date_full+=(["separator"]="${separator_left_bold}")
+#date_full+=(["separator_fg"]="default")
 register_segment "date_full"
 
 declare -A time
 time+=(["script"]="${segments_path}/time.sh")
-time+=(["foreground"]="colour127")
-time+=(["background"]="colour0")
-time+=(["separator"]="${separator_left_thin}")
-time+=(["separator_fg"]="default")
+time+=(["foreground"]="colour255")
+time+=(["background"]="#996666")
+time+=(["separator"]="${separator_left_bold}")
+#time+=(["separator_fg"]="default")
 register_segment "time"
 
 # Print the status line in the order of registration above.
