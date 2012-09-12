@@ -33,6 +33,7 @@ register_segment "mail_count"
 declare -A now_playing
 if [ "$PLATFORM" == "linux" ]; then
 	now_playing+=(["script"]="${segments_path}/np_mpd.sh")
+	#now_playing+=(["script"]="${segments_path}/np_mocp.sh")
 	#now_playing+=(["script"]="${segments_path}/np_spotify_linux_wine.sh")
 	#now_playing+=(["script"]="${segments_path}/np_spotify_linux_native.sh")
 	#now_playing+=(["script"]="${segments_path}/np_rhythmbox.sh")
