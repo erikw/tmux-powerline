@@ -39,12 +39,18 @@ print_status_line_right() {
 			separator_fg=$(eval echo \${${entry}["separator_fg"]})
 		fi
 
-		local output=$(${script})
-		if [ -z "$output" ]; then
+		# Can't be declared local if we want the exit code.
+		output=$(${script})
+		local exit_code="$?"
+		if [ "$exit_code" -ne 0 ]; then
+			echo "Segment ${script} exited with code ${exit_code}. Aborting."
+			exit 1
+		elif [ -z "$output" ]; then
 			continue
 		fi
 		__ui_right "$prev_bg" "$background" "$foreground" "$separator" "$separator_fg"
 		echo -n "$output"
+		unset output
 		prev_bg="$background"
 	done
 	# End in a clean state.
