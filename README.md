@@ -158,7 +158,7 @@ register_segment "time"							# Registers the name of the array declared above.
 Some segments might not work on your system for various reasons such as missing programs or different versions not having the same options. If a segment fails the printing should be aborted. To investigate further why a segment fails you can run
 
 ```bash
-bash -x ~/path/to/failing/segment.sh
+$ bash -x ~/path/to/failing/segment.sh
 ```
 
 # Hacking
