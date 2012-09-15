@@ -100,7 +100,7 @@ $ git clone git://github.com/erikw/tmux-powerline.git
 
 Now edit your `~/.tmux.conf` to use the scripts:
 
-<!-- Close syntax enoguth. -->
+<!-- Close syntax enought. -->
 ```vim
 set-option -g status on
 set-option -g status-interval 2
@@ -123,6 +123,13 @@ Some segments e.g. cwd and cvs_branch needs to find the current working director
 
 ```bash
 PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")'
+```
+
+You can toggle the visibility of the status bars by adding the following to you `~/.tmux.conf`:
+
+```vim
+bind C-[ run '~/path/to/tmux-powerline/mute_statusbar.sh left'		# Mute left statusbar.
+bind C-] run '~/path/to/tmux-powerline/mute_statusbar.sh right'		# Mute right statusbar.
 ```
 
 # Configuration

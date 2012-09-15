@@ -12,6 +12,9 @@ source "${cwd}/lib.sh"
 
 segments_path="${cwd}/${segments_dir}"
 
+# Mute this statusbar?
+mute_status_check "left"
+
 # Segments
 
 declare -A tmux_session_info
