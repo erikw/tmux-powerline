@@ -153,6 +153,14 @@ time+=(["separator"]="${separator_left_thin}")	# mandatory, the separator to use
 time+=(["separator_fg"]="default")				# optional, overrides the default blending coloring of the separator with a custom colored foreground.
 register_segment "time"							# Registers the name of the array declared above.
 ```
+# Debugging
+
+Some segments might not work on your system for various reasons such as missing programs or different versions not having the same options. If a segment fails the printing should be aborted. To investigate further why a segment fails you can run
+
+```bash
+bash -x ~/path/to/failing/segment.sh
+```
+
 # Hacking
 
 This project can only gain positively from contributions. Fork today and make your own enhancments and segments to share back!
