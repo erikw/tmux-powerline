@@ -135,7 +135,7 @@ get_tmux_cwd() {
 	#local env_val=$(tmux show-environment "$env_name" 2>&1)
 
 	if [[ ! $env_val =~ "unknown variable" ]]; then
-		local tmux_pwd=$(echo "$env_val" | grep -PZo "(?<==).*$")
+		local tmux_pwd=$(echo "$env_val" | sed 's/^.*=//')
 		echo "$tmux_pwd"
 	fi
 }
