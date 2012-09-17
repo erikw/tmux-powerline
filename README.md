@@ -51,7 +51,7 @@ Requirements for the lib to work are:
 
 * Recent tmux version
 * `bash --version` >= 4.0
-* A patched font. Follow instructions at [Lokaltog/vim-powerline/fontpatcher](https://github.com/Lokaltog/vim-powerline/tree/develop/fontpatcher).
+* A patched font. Follow instructions at [Lokaltog/vim-powerline/fontpatcher](https://github.com/Lokaltog/vim-powerline/tree/develop/fontpatcher) or [download](https://github.com/Lokaltog/vim-powerline/wiki/Patched-fonts) a new one.
 
 ## Segment Requirements
 Requirements for some segments. You only need to fullfill the requirements for those segments you want to use.
