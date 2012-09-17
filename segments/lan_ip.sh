@@ -16,11 +16,12 @@ else
 	nic="USE_FIRST_FOUND"	# Find the first IP address on all active NICs.
 
 	if [ "$nic" == "USE_FIRST_FOUND" ]; then
-		all_nics=$(ifconfig | cut -d ' ' -f1)
+		all_nics=$(ifconfig | cut -d ' ' -f1 | tr -d :)
 		nics=(${all_nics[@]//lo/}) 	# Remove lo interface.
 
 		for nic in ${nics[@]}; do
-			lan_ip=$(ifconfig "$nic" |  grep -Po "(?<=inet addr:)[^ ]+")
+			#lan_ip=$(ifconfig "$nic" |  grep -Po "(?<=inet addr:)[^ ]+")
+			lan_ip=$(ifconfig "$nic" | grep '\<inet\>' | sed -n '1p' | tr -s ' ' | cut -d ' ' -f3 | cut -d ':' -f2)
 			[ -n "$lan_ip" ] && break
 		done
 	else
