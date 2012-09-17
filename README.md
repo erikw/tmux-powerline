@@ -125,7 +125,7 @@ Some segments e.g. cwd and cvs_branch needs to find the current working director
 PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")'
 ```
 
-You can toggle the visibility of the statusbars by adding the following to you `~/.tmux.conf`:
+You can toggle the visibility of the statusbars by adding the following to your `~/.tmux.conf`:
 
 ```vim
 bind C-[ run '~/path/to/tmux-powerline/mute_statusbar.sh left'		# Mute left statusbar.
