@@ -13,25 +13,19 @@ if [ "$PLATFORM" == "mac" ]; then
 		lan_ip=$(/sbin/ifconfig $nic1 2>/dev/null | grep 'inet ' | awk '{print $2}')
 	fi
 else
-	nic="USE_FIRST_FOUND"   # Find the first IP address on all active NICs.
+	# get the names of all attached NICs
+	all_nics=$(ip addr show | cut -d ' ' -f2 | tr -d :)
 
-	if [ "$nic" == "USE_FIRST_FOUND" ]; then
-		# get the names of all attached NICs
-		all_nics=$(ip addr show | cut -d ' ' -f2 | tr -d :)
+	for nic in ${all_nics[@]}; do
+		if [ $nic != "lo" ]; then
+			# parse IP address for the NIC
+			lan_ip=$(ip addr show "eth0" | grep '\<inet\>' | tr -s ' ' | cut -d ' ' -f3)
+			# trim the CIDR suffix
+			lan_ip=${lan_ip%/*}
 
-		for nic in ${all_nics[@]}; do
-			if [ $nic != "lo" ]; then
-				# parse IP address for the NIC
-				lan_ip=$(ip addr show "eth0" | grep '\<inet\>' | tr -s ' ' | cut -d ' ' -f3)
-				# trim the CIDR suffix
-				lan_ip=${lan_ip%/*}
-
-				[ -n "$lan_ip" ] && break
-			fi
-		done
-	else
-		lan_ip=$(ifconfig "$nic" | grep -Po "(?<=inet addr:)[^ ]+")
-	fi
+			[ -n "$lan_ip" ] && break
+		fi
+	done
 fi
 
 if [ -n "$lan_ip" ]; then
