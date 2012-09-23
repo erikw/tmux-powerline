@@ -56,7 +56,7 @@ Requirements for the lib to work are:
 ## Segment Requirements
 Requirements for some segments. You only need to fullfill the requirements for those segments you want to use.
 
-* WAN IP: curl
+* WAN IP: curl, bc
 * MPD now playing: [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
 * xkb_layout: X11, XKB
 
