@@ -5,24 +5,29 @@
 if [ "$PLATFORM" == "mac" ]; then
 	nic0="en0"
 	nic1="en1"
-    	# Get wired lan IP.
-    	lan_ip=$(/sbin/ifconfig $nic0 2>/dev/null | grep 'inet ' | awk '{print $2}')
-    	# If no wired lan, get wireless lan IP.
-    	if [ -z "$lan_ip" ]; then
-        	lan_ip=$(/sbin/ifconfig $nic1 2>/dev/null | grep 'inet ' | awk '{print $2}')
-    	fi
+
+	# Get wired lan IP.
+	lan_ip=$(/sbin/ifconfig $nic0 2>/dev/null | grep 'inet ' | awk '{print $2}')
+	# If no wired lan, get wireless lan IP.
+	if [ -z "$lan_ip" ]; then
+		lan_ip=$(/sbin/ifconfig $nic1 2>/dev/null | grep 'inet ' | awk '{print $2}')
+	fi
 else
-	#nic=eth0		# Use this NIC.
-	nic="USE_FIRST_FOUND"	# Find the first IP address on all active NICs.
+	nic="USE_FIRST_FOUND"   # Find the first IP address on all active NICs.
 
 	if [ "$nic" == "USE_FIRST_FOUND" ]; then
-		all_nics=$(ifconfig | cut -d ' ' -f1 | tr -d :)
-		nics=(${all_nics[@]//lo/}) 	# Remove lo interface.
+		# get the names of all attached NICs
+		all_nics=$(ip addr show | cut -d ' ' -f2 | tr -d :)
 
-		for nic in ${nics[@]}; do
-			#lan_ip=$(ifconfig "$nic" |  grep -Po "(?<=inet addr:)[^ ]+")
-			lan_ip=$(ifconfig "$nic" | grep '\<inet\>' | sed -n '1p' | tr -s ' ' | cut -d ' ' -f3 | cut -d ':' -f2)
-			[ -n "$lan_ip" ] && break
+		for nic in ${all_nics[@]}; do
+			if [ $nic != "lo" ]; then
+				# parse IP address for the NIC
+				lan_ip=$(ip addr show "eth0" | grep '\<inet\>' | tr -s ' ' | cut -d ' ' -f3)
+				# trim the CIDR suffix
+				lan_ip=${lan_ip%/*}
+
+				[ -n "$lan_ip" ] && break
+			fi
 		done
 	else
 		lan_ip=$(ifconfig "$nic" | grep -Po "(?<=inet addr:)[^ ]+")
@@ -30,8 +35,6 @@ else
 fi
 
 if [ -n "$lan_ip" ]; then
-
-	#echo "Ⓛ ${lan_ip}"
 	echo "ⓛ ${lan_ip}"
 	exit 0
 else
