@@ -13,18 +13,17 @@ if [ "$PLATFORM" == "mac" ]; then
 		lan_ip=$(/sbin/ifconfig $nic1 2>/dev/null | grep 'inet ' | awk '{print $2}')
 	fi
 else
-	# get the names of all attached NICs
+	# Get the names of all attached NICs.
 	all_nics=$(ip addr show | cut -d ' ' -f2 | tr -d :)
+	all_nics=(${all_nics[@]//lo/})   # Remove lo interface.
 
 	for nic in ${all_nics[@]}; do
-		if [ $nic != "lo" ]; then
-			# parse IP address for the NIC
-			lan_ip=$(ip addr show "eth0" | grep '\<inet\>' | tr -s ' ' | cut -d ' ' -f3)
-			# trim the CIDR suffix
-			lan_ip=${lan_ip%/*}
+		# Parse IP address for the NIC.
+		lan_ip=$(ip addr show ${nic} | grep '\<inet\>' | tr -s ' ' | cut -d ' ' -f3)
+		# Trim the CIDR suffix.
+		lan_ip=${lan_ip%/*}
 
-			[ -n "$lan_ip" ] && break
-		fi
+		[ -n "$lan_ip" ] && break
 	done
 fi
 
