@@ -7,7 +7,7 @@ if [ "$PLATFORM" == "linux" ] ; then
     cpu_system=$(echo "$cpu_line" | grep -Po "(\d+(.\d+)?)(?=%?\s?(sys?))")
     cpu_idle=$(echo "$cpu_line" | grep -Po "(\d+(.\d+)?)(?=%?\s?(id(le)?))")
 else
-    cpus_line=$(top -l 1 | grep "CPU usage:" | sed 's/CPU usage: //')
+    cpus_line=$(top -e -l 1 | grep "CPU usage:" | sed 's/CPU usage: //')
     cpu_user=$(echo "$cpus_line" | awk '{print $1}'  | sed 's/%//' )
     cpu_system=$(echo "$cpus_line" | awk '{print $3}'| sed 's/%//' )
     cpu_idle=$(echo "$cpus_line" | awk '{print $5}'  | sed 's/%//' )
