@@ -6,7 +6,13 @@
 NP=`mpc current 2>&1`
 if [ $? -eq 0 ] && [ -n "$NP" ]
 then
-    echo "♫  $NP" 
+    SYMBOL=♫
+    mpc | grep "paused"
+    if [ $? -eq 0 ]; then
+        exit 1
+    fi
+
+    echo "$SYMBOL  $NP" 
     exit 0
 fi
 
