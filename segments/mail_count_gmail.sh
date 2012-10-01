@@ -8,8 +8,8 @@
 # then store that in your keychain. 
 # See http://support.google.com/accounts/bin/answer.py?hl=en&answer=185833 for more info.
 
-username="erik.westrup"				# Enter your Gmail username here WITH OUT @gmail.com.
-password="omreituflcsftbom"			# Leave this empty to get password from keychain.
+username=""					# Enter your Gmail username here WITH OUT @gmail.com.
+password="		"			# Leave this empty to get password from keychain.
 interval=5					# Query interval in minutes .
 tmp_file="/tmp/tmux-powerline_gmail_count.txt"	# File to store mail count in.
 override=false			# When true a force reloaded will be done.
