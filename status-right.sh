@@ -26,8 +26,9 @@ pwd+=(["separator"]="${separator_left_bold}")
 #register_segment "pwd"
 
 declare -A mail_count
-mail_count+=(["script"]="${segments_path}/maildir_count.sh")
-#mail_count+=(["script"]="${segments_path}/apple_mail_count.sh")
+mail_count+=(["script"]="${segments_path}/mail_count_maildir.sh")
+#mail_count+=(["script"]="${segments_path}/mail_count_gmail.sh")
+#mail_count+=(["script"]="${segments_path}/mail_count_apple_mail.sh")
 mail_count+=(["foreground"]="white")
 mail_count+=(["background"]="red")
 mail_count+=(["separator"]="${separator_left_bold}")
@@ -36,6 +37,7 @@ register_segment "mail_count"
 declare -A now_playing
 if [ "$PLATFORM" == "linux" ]; then
 	now_playing+=(["script"]="${segments_path}/np_mpd.sh")
+	#now_playing+=(["script"]="${segments_path}/np_mpd_simple.sh")
 	#now_playing+=(["script"]="${segments_path}/np_mocp.sh")
 	#now_playing+=(["script"]="${segments_path}/np_spotify_linux_wine.sh")
 	#now_playing+=(["script"]="${segments_path}/np_spotify_linux_native.sh")

@@ -72,14 +72,13 @@ print_status_line_left() {
 
 		local output=$(${script})
 		if [ -n "$output" ]; then
-
-            __ui_left "$prev_bg" "$background" "$foreground" "$separator" "$separator_fg"
-            echo -n "$output"
-            prev_bg="$background"
-            if [ "$first_segment_left" -eq "1" ]; then
-                first_segment_left=0
-            fi
-        fi
+            	    __ui_left "$prev_bg" "$background" "$foreground" "$separator" "$separator_fg"
+            	    echo -n "$output"
+            	    prev_bg="$background"
+            	    if [ "$first_segment_left" -eq "1" ]; then
+                	first_segment_left=0
+            	    fi
+        	fi
 	done
 	__ui_left "colour235" "colour235" "red" "$separator_right_bold" "$prev_bg"
 
