@@ -14,12 +14,12 @@
 # Account name : <username-below>@<server-below>
 # Password : Your password ( Once again, try to use 2 step-verification and application-specific password)
 
-username=""         # Enter your Gmail username here WITH OUT @gmail.com.( OR @domain )
-password="    "     # Leave this empty to get password from keychain.
-server=""           # domain name that will complete your email ( eg. gmail.com/ example.com)
-interval=5          # Query interval in minutes .
+username=""		# Enter your Gmail username here WITH OUT @gmail.com.( OR @domain )
+password=""		# Leave this empty to get password from keychain.
+server="gmail.com"	# Domain name that will complete your email. For normal GMail users it probably is "gmail.com but can be "foo.tld" for Google Apps users.
+interval=5		# Query interval in minutes .
 tmp_file="/tmp/tmux-powerline_gmail_count.txt"  # File to store mail count in.
-override=false      # When true a force reloaded will be done.
+override=false		# When true a force reloaded will be done.
 
 # Get password from OS X keychain.
 mac_keychain_get_pass() {
