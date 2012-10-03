@@ -6,7 +6,7 @@ The following segments exists for now:
 * Now Playing for MPD, Spotify (GNU/Linux native or wine, OS X), iTunes (OS X), Rhythmbox, Banshee, MOC, and Audacious.
 * New mail count for GMail, Maildir and Apple Mail.
 * GNU/Linux and Macintosh OS X battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery)).
-* Weather in Celsius, Fahrenheit and Kelvin using Google's weather API.
+* Weather in Celsius, Fahrenheit and Kelvin using Yahoo Weather.
 * System load, cpu usage and uptime.
 * Git, SVN and Mercurial branch in CWD.
 * Date and time.

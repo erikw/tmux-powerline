@@ -1,15 +1,20 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Prints the current weather in Celsius, Fahrenheits or lord Kelvins. The forecast is cached and updated with a period of $update_period.
-# by flytreeleft(flytreeleft@126.com)
 
-# You location. Find a code that works for you by Yahoo weather(http://weather.yahoo.com/)
-# Tianjin China
-location="2159908"
+# You location. Find a code that works for you:
+# 1. Go to Yahoo weather http://weather.yahoo.com/
+# 2. Find the weather for you location
+# 3. Copy the last numbers in that URL. e.g. "http://weather.yahoo.com/united-states/california/newport-beach-12796587/" has the number "12796587"
+location="12796587"
 
 # Can be any of {c,f,k}.
 unit="c"
 
-tmp_file="/tmp/tmux-powerline_weather.txt"
+# The update period in seconds.
+update_period=600
+
+# Cache file.
+tmp_file="/tmp/tmux-powerline_weather_yahoo.txt"
 
 get_condition_symbol() {
     local condition=$(echo "$1" | tr '[:upper:]' '[:lower:]')
@@ -34,7 +39,7 @@ get_condition_symbol() {
     "tornado" | "tropical storm" | "hurricane" | "severe thunderstorms" | "thunderstorms" | "isolated thunderstorms" | "scattered thunderstorms")
         echo "☈"
         ;;
-    "dust" | "foggy" | "haze" | "smoky" | "blustery")
+    "dust" | "fog" | "foggy" | "haze" | "smoky" | "blustery")
         echo "♨"
         ;;
     "windy")
@@ -69,7 +74,6 @@ if [ -f "$tmp_file" ]; then
         last_update=$(stat -c "%Y" ${tmp_file})
     fi
     time_now=$(date +%s)
-    update_period=600
 
     up_to_date=$(echo "(${time_now}-${last_update}) < ${update_period}" | bc)
     if [ "$up_to_date" -eq 1 ]; then

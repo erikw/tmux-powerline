@@ -1,5 +1,6 @@
 #!/bin/bash
 # Prints the current weather in Celsius, Fahrenheits or lord Kelvins. The forecast is cached and updated with a period of $update_period.
+# NOTE this has stoppned working, sadly.
 
 # You location. Find a string that works for you by Googling on "weather in <location-string>"
 location="Lund, Sweden"
@@ -7,7 +8,10 @@ location="Lund, Sweden"
 # Can be any of {c,f,k}.
 unit="c"
 
-tmp_file="/tmp/tmux-powerline_weather.txt"
+# Update time in seconds.
+update_period=600
+
+tmp_file="/tmp/tmux-powerline_weather_google.txt"
 
 get_condition_symbol() {
 	local conditions=$(echo "$1" | tr '[:upper:]' '[:lower:]')
@@ -74,7 +78,6 @@ if [ -f "$tmp_file" ]; then
 		last_update=$(stat -c "%Y" ${tmp_file})
 	fi
 	time_now=$(date +%s)
-	update_period=600
 
 	up_to_date=$(echo "(${time_now}-${last_update}) < ${update_period}" | bc)
 	if [ "$up_to_date" -eq 1 ]; then
