@@ -1,7 +1,8 @@
 #!/bin/bash
 # Prints the WAN IP address. The result is cached and updated according to $update_period.
 
-tmp_file="/tmp/tmux-powerline_wan_ip.txt"
+# Cache file.
+tmp_file="${tp_tmpdir}/wan_ip.txt"
 
 wan_ip=""
 if [ -f "$tmp_file" ]; then

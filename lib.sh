@@ -20,6 +20,12 @@ fi
 # Make sure that grep does not emit colors.
 export GREP_OPTIONS="--color=never"
 
+# Create temp directory for segments to use.
+export tp_tmpdir="/tmp/tmux-powerline"
+if [ ! -d "$tp_tmpdir" ]; then
+	mkdir "$tp_tmpdir"
+fi
+
 # Register a segment.
 register_segment() {
 	segment_name="$1"
@@ -149,7 +155,7 @@ get_tmux_cwd() {
 mute_status_check() {
 	local side="$1"
 	local tmux_session=$(tmux display -p "#S")
-	local mute_file="/tmp/tmux-powerline_mute_${tmux_session}_${side}"
+	local mute_file="${tp_tmpdir}/mute_${tmux_session}_${side}"
 	if [ -e  "$mute_file" ]; then
 		exit
 	fi
@@ -159,7 +165,7 @@ mute_status_check() {
 mute_status() {
 	local side="$1"
 	local tmux_session=$(tmux display -p "#S")
-	local mute_file="/tmp/tmux-powerline_mute_${tmux_session}_${side}"
+	local mute_file="${tp_tmpdir}/mute_${tmux_session}_${side}"
 	if [ -e  "$mute_file" ]; then
 		rm "$mute_file"
 	else

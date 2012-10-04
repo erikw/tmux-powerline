@@ -11,7 +11,8 @@ unit="c"
 # Update time in seconds.
 update_period=600
 
-tmp_file="/tmp/tmux-powerline_weather_google.txt"
+# Cach file.
+tmp_file="${tp_tmpdir}/weather_google.txt"
 
 get_condition_symbol() {
 	local conditions=$(echo "$1" | tr '[:upper:]' '[:lower:]')

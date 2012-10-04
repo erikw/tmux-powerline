@@ -8,13 +8,13 @@
 location="12796587"
 
 # Can be any of {c,f,k}.
-unit="c"
+unit="f"
 
 # The update period in seconds.
 update_period=600
 
 # Cache file.
-tmp_file="/tmp/tmux-powerline_weather_yahoo.txt"
+tmp_file="${tp_tmpdir}/weather_yahoo.txt"
 
 get_condition_symbol() {
     local condition=$(echo "$1" | tr '[:upper:]' '[:lower:]')
