@@ -9,10 +9,22 @@ if [ -n "$mocp_pid" ]; then
     mocp_np=$(mocp -i | grep ^Title | sed "s/^Title://")
     mocp_paused=$(mocp -i | grep ^State | sed "s/^State: //")
     if [[ $mocp_np ]]; then
+        # anything starting with 0 is a Octal number in shell,C or Perl,
+        # so we must explicitly state the base of a number using base#number
+        offset=$((10#$(date +%S) * ${#mocp_np} / 60))
+        # truncate title
+        mocp_np=${mocp_np:offset:max_len}
+        # how many spaces we need to fill to keep the length of status?
+        fill_count=$((max_len - ${#mocp_np}))
+        for (( i=0; i < fill_count; i++ )); do
+          mocp_np=$(echo "$mocp_np"" ")
+        done
         if [[ "$mocp_paused" != "PAUSE" ]]; then
-            echo "♫ ⮀ ${mocp_np}" | cut -c1-"$max_len"
+            echo "♫ ⮀ ${mocp_np}"
+            #echo "♫ ⮀ ${mocp_np}" | cut -c1-"$max_len"
         elif [[ "$mocp_paused" == "PAUSE" ]]; then
-            echo "♫ || ${mocp_np}" | cut -c1-"$max_len"
+            echo "♫ || ${mocp_np}"
+            #echo "♫ || ${mocp_np}" | cut -c1-"$max_len"
         fi
     fi
 fi
