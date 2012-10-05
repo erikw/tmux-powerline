@@ -9,7 +9,7 @@ tmux_path=$(get_tmux_cwd)
 cd "$tmux_path"
 
 branch_symbol="⭠"
-git_colour="colour5"
+git_colour="colour8"
 git_svn_colour="colour34"
 svn_colour="colour220"
 hg_colour="colour45"
@@ -41,7 +41,7 @@ parse_git_branch() {
 		echo -n "$git_svn_colour"
 	fi
 	# TODO pass colour arguments as paramters/globals to segments?
-	echo "]${branch_symbol} #[fg=colour42]${branch}"
+	echo "]${branch_symbol} #[fg=colour8]${branch}"
 }
 
 # Show SVN branch.
