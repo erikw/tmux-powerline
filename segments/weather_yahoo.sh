@@ -39,7 +39,7 @@ get_condition_symbol() {
     "tornado" | "tropical storm" | "hurricane" | "severe thunderstorms" | "thunderstorms" | "isolated thunderstorms" | "scattered thunderstorms")
         echo "☈"
         ;;
-    "dust" | "fog" | "foggy" | "haze" | "smoky" | "blustery")
+    "dust" | "foggy" | "haze" | "smoky" | "blustery" | "mist")
         echo "♨"
         ;;
     "windy")
