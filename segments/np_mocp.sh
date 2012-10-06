@@ -1,26 +1,31 @@
 #!/usr/bin/env bash
 # Prints now playing in Mocp. If the output is too long it will scroll like a marquee tag.
 
-# source lib to get the function roll_stuff
+trim_method="roll" 	# Can be {trim or roll).
+max_len=20		# Trim output to this length.
+roll_speed=2		# Roll speed in chraacters per second.
+
 segment_path=$(dirname $0)
 source "$segment_path/../lib.sh"
-
-max_len=40 #Trim output to this length.
-speed=1 #Rolling speed
 
 # Check if rhythmbox is playing and print that song.
 mocp_pid=$(pidof mocp)
 if [ -n "$mocp_pid" ]; then
-    mocp_np=$(mocp -i | grep ^Title | sed "s/^Title://")
+    np=$(mocp -i | grep ^Title | sed "s/^Title://")
     mocp_paused=$(mocp -i | grep ^State | sed "s/^State: //")
-    if [[ $mocp_np ]]; then
-        mocp_np=$(roll_stuff "${mocp_np}" ${max_len} ${speed})
+    if [[ $np ]]; then
+        case "$trim_method" in
+            "roll")
+        	np=$(roll_stuff "${np}" ${max_len} ${roll_speed})
+        	;;
+            "trim")
+		np=$(echo "${np}" | cut -c1-"$max_len")
+		;;
+	esac
         if [[ "$mocp_paused" != "PAUSE" ]]; then
-            echo "♫ ⮀ ${mocp_np}"
-            #echo "♫ ⮀ ${mocp_np}" | cut -c1-"$max_len"
+            echo "♫ ⮀ ${np}"
         elif [[ "$mocp_paused" == "PAUSE" ]]; then
-            echo "♫ || ${mocp_np}"
-            #echo "♫ || ${mocp_np}" | cut -c1-"$max_len"
+            echo "♫ || ${np}"
         fi
     fi
 fi
