@@ -166,3 +166,46 @@ mute_status() {
 		touch "$mute_file"
 	fi
 }
+
+# Rolling anything what you want
+roll_stuff() {
+  local stuff="$1"
+  # the length of stuff that will be shown
+  local max_len="10"
+  if [ -n "$2" ]; then
+    max_len="$2"
+  fi
+  # the number of characters which are moved per second
+  local speed="1"
+  if [ -n "$3" ]; then
+    speed="$3"
+  fi
+  if [ -n "${stuff}" ]; then
+    # anything starting with 0 is an Octal number in Shell,C or Perl,
+    # so we must explicityly state the base of a number using base#number
+    local offset=$((10#$(date +%s) * ${speed} % ${#stuff}))
+    # truncate stuff
+    stuff=${stuff:offset}
+    local char # character
+    local bytes # the bytes of one character
+    local index
+    for ((index=0; index < max_len; index++)); do
+      char=${stuff:index:1}
+      bytes=$(echo -n $char | wc -c)
+      # the character will takes twice space
+      # of an alphabet if bytes > 1
+      if ((bytes > 1)); then
+        max_len=$((max_len - 1))
+      fi
+    done
+    stuff=${stuff:0:max_len}
+    #echo "index=${index} max=${max_len} len=${#stuff}"
+    # how many spaces we need to fill to keep
+    # the length of stuff that will be shown?
+    local fill_count=$((${index} - ${#stuff}))
+    for ((index=0; index < fill_count; index++)); do
+      stuff="${stuff} "
+    done
+  fi
+  echo "${stuff}"
+}
