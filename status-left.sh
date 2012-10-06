@@ -25,18 +25,27 @@ tmux_session_info+=(["separator"]="${separator_right_bold}")
 #tmux_session_info+=(["separator_fg"]="default")
 register_segment "tmux_session_info"
 
+declare -A whoami
+whoami+=(["script"]="${segments_path}/whoami.sh")
+whoami+=(["foreground"]="colour250")
+whoami+=(["background"]="colour242")
+whoami+=(["separator"]="${separator_right_bold}")
+register_segment "whoami"
+
 declare -A hostname
 hostname+=(["script"]="${segments_path}/hostname.sh")
-hostname+=(["foreground"]="colour250")
+hostname+=(["foreground"]="colour252")
 hostname+=(["background"]="colour242")
-hostname+=(["separator"]="${separator_right_bold}")
+hostname+=(["separator"]="${separator_right_thin}")
+hostname+=(["separator_fg"]="colour250")
 register_segment "hostname"
 
 declare -A lan_ip
 lan_ip+=(["script"]="${segments_path}/lan_ip.sh")
-lan_ip+=(["foreground"]="black")
-lan_ip+=(["background"]="gray")
+lan_ip+=(["foreground"]="colour253")
+lan_ip+=(["background"]="colour242")
 lan_ip+=(["separator"]="${separator_right_thin}")
+lan_ip+=(["separator_fg"]="colour250")
 register_segment "lan_ip"
 
 declare -A wan_ip
@@ -53,7 +62,7 @@ vcs_branch+=(["script"]="${segments_path}/vcs_branch.sh")
 vcs_branch+=(["foreground"]="colour15")
 vcs_branch+=(["background"]="colour237")
 vcs_branch+=(["separator"]="${separator_right_bold}")
-register_segment "vcs_branch"
+#register_segment "vcs_branch"
 
 # Print the status line in the order of registration above.
 print_status_line_left

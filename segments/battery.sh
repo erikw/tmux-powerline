@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # LICENSE This code is not under the same license as the rest of the project as it's "stolen". It's cloned from https://github.com/richoH/dotfiles/blob/master/bin/battery and just some modifications are done so it works for my laptop. Check that URL for more recent versions.
 
-#CUTE_BATTERY_INDICATOR="true"
+CUTE_BATTERY_INDICATOR="true"
 
-HEART_FULL=♥
+HEART_FULL=ϟ
 HEART_EMPTY=♡
 [ -z "$NUM_HEARTS" ] &&
     NUM_HEARTS=5
