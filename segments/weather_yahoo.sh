@@ -46,7 +46,7 @@ get_condition_symbol() {
         echo "⚑"
         ;;
     "clear" | "fair" | "cold")
-        echo "✈"    # So clear you can see the aeroplanes! TODO what symbol does best represent a clear sky?
+        echo "〇"
         ;;
     *)
         echo "？"
