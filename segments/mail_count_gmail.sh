@@ -45,8 +45,8 @@ if [ "$PLATFORM" == "mac" ]; then
 else
   	last_update=$(stat -c "%Y" ${tmp_file})
 fi
-if [ "$(( $(date +"%s") - ${last_update} ))" -gt $interval ] || [ $override == true ]; then
-    	if [ -z $password ]; then # Get password from keychain if it isn't already set.
+if [ "$(( $(date +"%s") - ${last_update} ))" -gt "$interval" ] || [ "$override" == true ]; then
+    	if [ -z "$password" ]; then # Get password from keychain if it isn't already set.
         	if [ "$PLATFORM" == "mac" ]; then
             		mac_keychain_get_pass "${username}@${server}" $server
         	else
