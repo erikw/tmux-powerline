@@ -22,7 +22,7 @@ case $(uname -s) in
                 if [[ "$curcap" == "$maxcap" ]]; then
                     exit
                 fi
-                export charge=$(( 100 * $curcap / $maxcap ))
+                charge=$(( 100 * $curcap / $maxcap ))
                 if [[ "$extconnect" == "Yes" ]]; then
                     echo $HEART_CONNECTED "$charge%"
                 else
