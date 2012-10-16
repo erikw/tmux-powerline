@@ -1,4 +1,4 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 # Prints current branch in a VCS directory if it could be detected.
 
 # Source lib to get the function get_tmux_pwd
