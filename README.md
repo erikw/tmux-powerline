@@ -165,7 +165,7 @@ $ bash -x ~/path/to/failing/segment.sh
 ## Common problems
 
 ### VCS_branch is not updating
-The issue is probably that the update of the current directory in the active pane is not updated correctly. Make sure that your PS1 or PROMPT variable actually contains the line from the installation step above by simply inspecing the output of `echo $PS1`. You might have placed the PS1 line in you shell confugration suc that it is overwritten later. The simplest solution is to put it at the very end to make sure that nothing overwrites it. See issue #52.
+The issue is probably that the update of the current directory in the active pane is not updated correctly. Make sure that your PS1 or PROMPT variable actually contains the line from the installation step above by simply inspecing the output of `echo $PS1`. You might have placed the PS1 line in you shell confugration suc that it is overwritten later. The simplest solution is to put it at the very end to make sure that nothing overwrites it. See [issue #52](https://github.com/erikw/tmux-powerline/issues/52).
 
 
 # Hacking
