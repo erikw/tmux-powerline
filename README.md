@@ -120,7 +120,7 @@ Also I recommend you to use the [tmux-colors-solarized](https://github.com/seebi
 ```bash
 source ~/path/to/tmux-colors-solarized/tmuxcolors.conf
 ```
-Some segments e.g. cwd and cvs_branch needs to find the current working directory of the active pane. To achive this we let tmux save the path each time the bash prompt is displayed. Put this in your `~/.bashrc` or where you define you PS1 variable (I use and source `~/.bash_ps1`):
+Some segments e.g. cwd and cvs_branch needs to find the current working directory of the active pane. To achive this we let tmux save the path each time the shell prompt is displayed. Put the line below in your `~/.bashrc` or where you define you PS1 variable. zsh users can put it in e.g. `~/.zshrc` and may change `PS1` to `PROMPT` (but that's not necessary).
 
 ```bash
 PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")'
@@ -161,6 +161,12 @@ Some segments might not work on your system for various reasons such as missing 
 ```bash
 $ bash -x ~/path/to/failing/segment.sh
 ```
+
+## Common problems
+
+### VCS_branch is not updating
+The issue is probably that the update of the current directory in the active pane is not updated correctly. Make sure that your PS1 or PROMPT variable actually contains the line from the installation step above by simply inspecing the output of `echo $PS1`. You might have placed the PS1 line in you shell confugration suc that it is overwritten later. The simplest solution is to put it at the very end to make sure that nothing overwrites it. See issue #52.
+
 
 # Hacking
 
