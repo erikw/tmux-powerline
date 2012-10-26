@@ -27,15 +27,15 @@ parse_git_branch() {
     branch=$(git symbolic-ref HEAD 2> /dev/null)
     if [[ -z $branch ]] ; then
         # attempt to get short-sha-name
-        branch=":$(git rev-parse --short HEAD)"
-    else
-        branch=${branch##*/}
+        branch=":$(git rev-parse --short HEAD 2> /dev/null)"
     fi
 	if [ "$?" -ne 0 ]; then
         # this must not be a git repo
 		return
 	fi
 
+    # clean off unnecessary information
+    branch=${branch##*/}
 
     echo "$(git branch --no-color 2>/dev/null)" | grep "remotes/git-svn" &>/dev/null
 	is_gitsvn=$([ "$?" -eq 0 ] && echo 1 || echo 0)
