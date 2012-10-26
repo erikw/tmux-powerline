@@ -24,14 +24,20 @@ parse_git_branch() {
 	#git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ \[\1\]/'
 
 	# Quit if this is not a Git repo.
-	branches=$(git branch --no-color 2>/dev/null)
+    branch=$(git symbolic-ref HEAD 2> /dev/null)
+    if [[ -z $branch ]] ; then
+        # attempt to get short-sha-name
+        branch=":$(git rev-parse --short HEAD)"
+    else
+        branch=${branch##*/}
+    fi
 	if [ "$?" -ne 0 ]; then
+        # this must not be a git repo
 		return
 	fi
 
-	local branch=$(echo "$branches" | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 
-	echo "$branches" | grep "remotes/git-svn" &>/dev/null
+    echo "$(git branch --no-color 2>/dev/null)" | grep "remotes/git-svn" &>/dev/null
 	is_gitsvn=$([ "$?" -eq 0 ] && echo 1 || echo 0)
 
 	echo  -n "#[fg="
