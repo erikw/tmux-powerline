@@ -22,30 +22,39 @@ get_condition_symbol() {
     "sunny" | "hot")
         hour=$(date +%H)
         if [ "$hour" -ge "22" -o "$hour" -le "5" ]; then
+            #echo "☽"
             echo "☾"
         else
+            #echo "☀"
             echo "☼"
         fi
         ;;
     "mixed rain and snow" | "mixed rain and sleet" | "freezing drizzle" | "drizzle" | "freezing rain" | "showers" | "mixed rain and hail" | "scattered showers" | "isolated thundershowers" | "thundershowers")
-        echo "☔"
+            #echo "☂"
+            echo "☔"
         ;;
     "snow" | "mixed snow and sleet" | "snow flurries" | "light snow showers" | "blowing snow" | "sleet" | "hail" | "heavy snow" | "scattered snow showers" | "snow showers")
-        echo "❅"
+            #echo "☃"
+            echo "❅"
         ;;
     "cloudy" | "mostly cloudy" | "partly cloudy")
         echo "☁"
         ;;
     "tornado" | "tropical storm" | "hurricane" | "severe thunderstorms" | "thunderstorms" | "isolated thunderstorms" | "scattered thunderstorms")
-        echo "☈"
+            #echo "⚡"
+            echo "☈"
         ;;
     "dust" | "foggy" | "haze" | "smoky" | "blustery" | "mist")
-        echo "♨"
+        #echo "♨"
+        echo "﹌"
+        echo "〰"
         ;;
     "windy")
+        #echo "⚐"
         echo "⚑"
         ;;
     "clear" | "fair" | "cold")
+        #echo "✈"    # So clear you can see the aeroplanes!
         echo "〇"
         ;;
     *)
