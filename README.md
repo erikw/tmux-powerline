@@ -132,7 +132,6 @@ You can toggle the visibility of the statusbars by adding the following to your 
 bind C-[ run '~/path/to/tmux-powerline/mute_statusbar.sh left'		# Mute left statusbar.
 bind C-] run '~/path/to/tmux-powerline/mute_statusbar.sh right'		# Mute right statusbar.
 ```
-To see all output even if some segment fails you can set `DEBUG_MODE="true"` in `config.sh`.
 
 # Configuration
 
@@ -162,7 +161,7 @@ Some segments might not work on your system for various reasons such as missing 
 ```bash
 $ bash -x ~/path/to/failing/segment.sh
 ```
-
+To see all output even if some segment fails you can set `DEBUG_MODE="true"` in `config.sh`.
 
 ## Common problems
 
