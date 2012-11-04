@@ -8,7 +8,7 @@ fi
 
 if [ -z "$PLATFORM" ]; then
 	# You platform \in {linux,bsd,mac}.
-	export PLATFORM="linux"
+	export PLATFORM="mac"
 fi
 
 if [ -z "$USE_PATCHED_FONT" ]; then

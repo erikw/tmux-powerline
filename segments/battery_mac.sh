@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-HEART_CONNECTED=♥
+HEART_CONNECTED=ϟ
 HEART_DISCONNECTED=♡
 
 case $(uname -s) in
