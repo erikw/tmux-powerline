@@ -45,9 +45,10 @@ get_condition_symbol() {
             #echo "⚡"
             echo "☈"
         ;;
-    "dust" | "foggy" | "haze" | "smoky" | "blustery" | "mist" | "fog")
+    "dust" | "foggy" | "fog" | "haze" | "smoky" | "blustery" | "mist")
         #echo "♨"
-        echo "﹌"
+        #echo "﹌"
+        echo "〰"
         ;;
     "windy")
         #echo "⚐"
