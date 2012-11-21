@@ -48,14 +48,13 @@ print_status_line_right() {
 	# Can't be declared local if we want the exit code.
 	output=$(${script})
 	local exit_code="$?"
-  if [ "$DEBUG_MODE" != "false" ]; then
-      if [ "$exit_code" -ne 0 ]; then
-	        echo "Segment ${script} exited with code ${exit_code}. Aborting."
+      if [ "$exit_code" -ne 0 ] && [ "$DEBUG_MODE" = "true" ]; then
+	      	local seg_name="${script##*/}"
+	        echo "Segment '${seg_name}' exited with code ${exit_code}. Aborting."
     	    exit 1
     	elif [ -z "$output" ]; then
 	      continue
     	fi
-  fi
 	__ui_right "$prev_bg" "$background" "$foreground" "$separator" "$separator_fg"
 	echo -n "$output"
 	unset output
