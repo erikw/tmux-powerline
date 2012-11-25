@@ -123,7 +123,7 @@ source ~/path/to/tmux-colors-solarized/tmuxcolors.conf
 Some segments e.g. cwd and cvs_branch needs to find the current working directory of the active pane. To achive this we let tmux save the path each time the shell prompt is displayed. Put the line below in your `~/.bashrc` or where you define you PS1 variable. zsh users can put it in e.g. `~/.zshrc` and may change `PS1` to `PROMPT` (but that's not necessary).
 
 ```bash
-PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")'
+PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#D") "$PWD")'
 ```
 
 You can toggle the visibility of the statusbars by adding the following to your `~/.tmux.conf`:

@@ -141,7 +141,7 @@ __ui_left() {
 
 # Get the current path in the segment.
 get_tmux_cwd() {
-    local env_name=$(tmux display -p "TMUXPWD_#I_#P")
+    local env_name=$(tmux display -p "TMUXPWD_#D")
     local env_val=$(tmux show-environment | grep "$env_name")
     # The version below is still quite new for tmux. Uncommented this in the future :-)
     #local env_val=$(tmux show-environment "$env_name" 2>&1)
