@@ -30,36 +30,40 @@ get_condition_symbol() {
             echo "☼"
         fi
         ;;
-    "rain" | "mixed rain and snow" | "mixed rain and sleet" | "freezing drizzle" | "drizzle" | "freezing rain" | "showers" | "mixed rain and hail" | "scattered showers" | "isolated thundershowers" | "thundershowers")
-            #echo "☂"
-            echo "☔"
+    "rain" | "mixed rain and snow" | "mixed rain and sleet" | "freezing drizzle" | "drizzle" | "freezing rain" | "showers" | "mixed rain and hail" | "scattered showers" | "isolated thundershowers" | "thundershowers" | "light rain with thunder")
+        #echo "☂"
+        echo "☔"
         ;;
     "snow" | "mixed snow and sleet" | "snow flurries" | "light snow showers" | "blowing snow" | "sleet" | "hail" | "heavy snow" | "scattered snow showers" | "snow showers")
-            #echo "☃"
-            echo "❅"
+        #echo "☃"
+        echo "❅"
         ;;
     "cloudy" | "mostly cloudy" | "partly cloudy")
         echo "☁"
         ;;
     "tornado" | "tropical storm" | "hurricane" | "severe thunderstorms" | "thunderstorms" | "isolated thunderstorms" | "scattered thunderstorms")
-            #echo "⚡"
-            echo "☈"
+        #echo "⚡"
+        echo "☈"
         ;;
     "dust" | "foggy" | "fog" | "haze" | "smoky" | "blustery" | "mist")
         #echo "♨"
         #echo "﹌"
         echo "〰"
         ;;
-    "windy")
+    "windy" | "fair/windy")
         #echo "⚐"
         echo "⚑"
         ;;
     "clear" | "fair" | "cold")
-        #echo "✈"    # So clear you can see the aeroplanes!
-        echo "〇"
+        hour=$(date +%H)
+        if [ "$hour" -ge "22" -o "$hour" -le "5" ]; then
+            echo "☾"
+        else
+            echo "〇"
+        fi
         ;;
     *)
-        echo "？"
+        echo "?"
         ;;
     esac
 }
