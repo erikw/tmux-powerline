@@ -55,8 +55,12 @@ get_condition_symbol() {
         echo "⚑"
         ;;
     "clear" | "fair" | "cold")
-        #echo "✈"    # So clear you can see the aeroplanes!
-        echo "〇"
+        hour=$(date +%H)
+        if [ "$hour" -ge "22" -o "$hour" -le "5" ]; then
+            echo "☾"
+        else
+            echo "〇"
+        fi
         ;;
     *)
         echo "？"
