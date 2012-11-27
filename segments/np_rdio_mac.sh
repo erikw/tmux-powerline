@@ -1,23 +1,27 @@
-#!/usr/bin/env osascript
-# Returns the current playing song in Rdio for OSX
+#!/usr/bin/env sh
+
+trim_method="trim" 	# Can be {trim or roll).
+max_len=40			# Trim output to this length.
+roll_speed=2
+
+segment_path=$(dirname $0)
+source "$segment_path/../lib.sh"
+
+np=$(osascript $segment_path/np_rdio_mac.script) 
 
 
-tell application "System Events"
-  set process_list to (name of every process)
-end tell
 
-if process_list contains "Rdio" then
-  tell application "Rdio"
-    if player state is playing then
-      set track_name to name of current track
-      set artist_name to artist of current track
-      set trim_length to 40
-      set now_playing to "♫  " & artist_name & " - " & track_name
-      if length of now_playing is less than trim_length then
-        set now_playing_trim to now_playing
-      else
-        set now_playing_trim to characters 1 thru trim_length of now_playing as string
-      end if
-    end if
-  end tell
-end if
+if [ -n "$np" ]; then
+    case "$trim_method" in
+        "roll")
+        	np=$(roll_stuff "${np}" ${max_len} ${roll_speed})
+        	;;
+        "trim")
+			np=$(echo "${np}" | cut -c1-"$max_len")
+			;;
+	esac
+	echo "♫ ${np}"
+    exit 0
+else
+	exit 1
+fi
