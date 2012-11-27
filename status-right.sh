@@ -47,6 +47,8 @@ if [ "$PLATFORM" == "linux" ]; then
 	#now_playing+=(["script"]="${segments_path}/np_lastfm.sh")
 elif [ "$PLATFORM" == "mac" ]; then
 	now_playing+=(["script"]="${segments_path}/np_itunes_mac.sh")
+  #now_playing+=(["script"]="${segments_path}/np_rdio_mac.sh")
+
 fi
 if [[ ${now_playing["script"]} ]]; then
 	now_playing+=(["foreground"]="colour37")
