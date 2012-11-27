@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+# Wrapper for np_rdio_mac.script that trims output etc.
 
 trim_method="trim" 	# Can be {trim or roll).
 max_len=40			# Trim output to this length.
@@ -8,8 +9,6 @@ segment_path=$(dirname $0)
 source "$segment_path/../lib.sh"
 
 np=$(osascript $segment_path/np_rdio_mac.script) 
-
-
 
 if [ -n "$np" ]; then
     case "$trim_method" in

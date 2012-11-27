@@ -1,5 +1,5 @@
 #!/usr/bin/env osascript
-# Returns the current playing song in Rdio for OSX
+# Returns the current playing song in Rdio for OS X.
 
 tell application "System Events"
   set process_list to (name of every process)
