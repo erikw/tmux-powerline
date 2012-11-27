@@ -2,7 +2,7 @@
 # Print the current working directory (trimmed to max length).
 # NOTE The trimming code's stolen from the web. Courtesy to who ever wrote it.
 
-pwdmaxlen=40		# Max output length.
+max_len=40		# Max output length.
 
 segment_cwd=$(dirname $0)
 source "$segment_cwd/../lib.sh"
@@ -14,11 +14,11 @@ source "$segment_cwd/../lib.sh"
 tcwd=$(get_tmux_cwd)
 trunc_symbol=".."
 dir=${tcwd##*/}
-pwdmaxlen=$(( ( pwdmaxlen < ${#dir} ) ? ${#dir} : pwdmaxlen ))
+max_len=$(( ( max_len < ${#dir} ) ? ${#dir} : max_len ))
 ttcwd=${tcwd/#$HOME/\~}
-pwdoffset=$(( ${#ttcwd} - pwdmaxlen ))
+pwdoffset=$(( ${#ttcwd} - max_len ))
 if [ ${pwdoffset} -gt "0" ]; then
-	ttcwd=${ttcwd:$pwdoffset:$pwdmaxlen}
+	ttcwd=${ttcwd:$pwdoffset:$max_len}
 	ttcwd=${trunc_symbol}/${ttcwd#*/}
 fi
 

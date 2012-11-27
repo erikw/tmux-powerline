@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 # Prints last scrobbled song on Last.fm
 username=""	# Your last.fm username
 
@@ -31,7 +31,7 @@ fi
 if [ -z "$np" ]; then
 	#np=$(wget -qO- http://ws.audioscrobbler.com/1.0/user/${username}/recenttracks.txt | head -n 1 | sed -e 's/^[0-9]*,//' | sed 's/\xe2\x80\x93/-/')
 	np=$(curl --max-time 2 -s  http://ws.audioscrobbler.com/1.0/user/${username}/recenttracks.txt | head -n 1 | sed -e 's/^[0-9]*,//' | sed 's/\xe2\x80\x93/-/')
-	if [ "$?" -eq "0" ]; then
+	if [ "$?" -eq "0" ] && [ -n "$np" ]; then
 		echo "${np}" > $tmp_file
 	fi
 fi
@@ -42,7 +42,7 @@ if [ -n "$np" ]; then
         	np=$(roll_stuff "${np}" ${max_len} ${roll_speed})
         	;;
         "trim")
-			np=$(echo "${np}" | cut -c1-"$max_len")
+			np=${np:0:max_len}
 			;;
 	esac
 	echo "♫ ${np}"

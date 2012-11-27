@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 # Wrapper for np_rdio_mac.script that trims output etc.
 
 trim_method="trim" 	# Can be {trim or roll).
@@ -16,7 +16,7 @@ if [ -n "$np" ]; then
         	np=$(roll_stuff "${np}" ${max_len} ${roll_speed})
         	;;
         "trim")
-			np=$(echo "${np}" | cut -c1-"$max_len")
+			np=${np:0:max_len}
 			;;
 	esac
 	echo "♫ ${np}"

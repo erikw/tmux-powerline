@@ -32,7 +32,7 @@ if [ -x "np_mpd" ]; then
         		np=$(roll_stuff "${np}" ${max_len} ${roll_speed})
         		;;
             "trim")
-				np=$(echo "${np}" | cut -c1-"$max_len")
+				np=${np:0:max_len}
 				;;
 		esac
 		echo "♫ ${np}"

@@ -15,12 +15,12 @@ if [ -n "$audacious_pid" ]; then
         np=$(audtool current-song)
         case "$trim_method" in
             "roll")
-        	np=$(roll_stuff "${np}" ${max_len} ${roll_speed})
-        	;;
+        		np=$(roll_stuff "${np}" ${max_len} ${roll_speed})
+        		;;
             "trim")
-		np=$(echo "${np}" | cut -c1-"$max_len")
-		;;
-	esac
-	echo "♫ ${np}"
+				np=${np:0:max_len}
+				;;
+		esac
+		echo "♫ ${np}"
     fi
 fi

@@ -13,15 +13,15 @@ banshee_pid=$(pidof banshee)
 if [ -n "$banshee_pid" ]; then
     banshee_status=$(banshee --query-current-state 2> /dev/null)
     if [[ "$banshee_status" == "current-state: playing" ]]; then
-	np=$(banshee --query-artist --query-title | cut  -d ":" -f2 | sed  -e 's/ *$//g' -e 's/^ *//g'| sed -e ':a;N;$!ba;s/\n/ - /g' )
+		np=$(banshee --query-artist --query-title | cut  -d ":" -f2 | sed  -e 's/ *$//g' -e 's/^ *//g'| sed -e ':a;N;$!ba;s/\n/ - /g' )
         case "$trim_method" in
             "roll")
-        	np=$(roll_stuff "${np}" ${max_len} ${roll_speed})
-        	;;
+        		np=$(roll_stuff "${np}" ${max_len} ${roll_speed})
+        		;;
             "trim")
-		np=$(echo "${np}" | cut -c1-"$max_len")
-		;;
-	esac
-	echo "♫ ${np}" | cut -c1-"$max_len"
+				np=${np:0:max_len}
+				;;
+		esac
+		echo "♫ ${np}" | cut -c1-"$max_len"
     fi
 fi
