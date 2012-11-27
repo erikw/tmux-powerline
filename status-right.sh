@@ -44,6 +44,7 @@ if [ "$PLATFORM" == "linux" ]; then
 	#now_playing+=(["script"]="${segments_path}/np_rhythmbox.sh")
 	#now_playing+=(["script"]="${segments_path}/np_banshee.sh")
 	#now_playing+=(["script"]="${segments_path}/np_audacious.sh")
+	#now_playing+=(["script"]="${segments_path}/np_lastfm.sh")
 elif [ "$PLATFORM" == "mac" ]; then
 	now_playing+=(["script"]="${segments_path}/np_itunes_mac.sh")
   #now_playing+=(["script"]="${segments_path}/np_rdio_mac.sh")
