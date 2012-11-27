@@ -22,6 +22,4 @@ if [ -n "$np" ]; then
 	esac
 	echo "♫ ${np}"
     exit 0
-else
-	exit 1
 fi
