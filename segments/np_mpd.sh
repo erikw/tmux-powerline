@@ -29,13 +29,13 @@ if [ -x "np_mpd" ]; then
     if [ -n "$np" ]; then
         case "$trim_method" in
             "roll")
-        	np=$(roll_stuff "${np}" ${max_len} ${roll_speed})
-        	;;
+        		np=$(roll_stuff "${np}" ${max_len} ${roll_speed})
+        		;;
             "trim")
-		np=$(echo "${np}" | cut -c1-"$max_len")
-		;;
-	esac
-	echo "♫ ${np}"
+				np=$(echo "${np}" | cut -c1-"$max_len")
+				;;
+		esac
+		echo "♫ ${np}"
     fi
     exit 0
 else

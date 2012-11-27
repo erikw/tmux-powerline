@@ -3,7 +3,7 @@ This is a set of scripts (segments) for making a nice and dynamic tmux statusbar
 
 The following segments exists for now:
 * LAN & WAN IP addresses.
-* Now Playing for MPD, Spotify (GNU/Linux native or wine, OS X), iTunes (OS X), Rhythmbox, Banshee, MOC, and Audacious.
+* Now Playing for MPD, Spotify (GNU/Linux native or wine, OS X), iTunes (OS X), Rhythmbox, Banshee, MOC, Audacious and Last.fm (last scrobbled track).
 * New mail count for GMail, Maildir and Apple Mail.
 * GNU/Linux and Macintosh OS X battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery)).
 * Weather in Celsius, Fahrenheit and Kelvin using Yahoo Weather.
