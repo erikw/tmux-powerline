@@ -9,7 +9,6 @@ if process_list contains "Rdio" then
   tell application "Rdio"
     if player state is playing then
       set track_name to name of current track
-      set track_name to name of current track
       set artist_name to artist of current track
       set album_name to album of current track
       set now_playing to artist_name & " - " & track_name
