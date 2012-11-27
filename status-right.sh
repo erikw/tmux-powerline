@@ -40,15 +40,15 @@ if [ "$PLATFORM" == "linux" ]; then
 	#now_playing+=(["script"]="${segments_path}/np_mpd_simple.sh")
 	#now_playing+=(["script"]="${segments_path}/np_mocp.sh")
 	#now_playing+=(["script"]="${segments_path}/np_spotify_linux_wine.sh")
-	#oow_playing+=(["script"]="${segments_path}/np_spotify_linux_native.sh")
+	#now_playing+=(["script"]="${segments_path}/np_spotify_linux_native.sh")
 	#now_playing+=(["script"]="${segments_path}/np_rhythmbox.sh")
 	#now_playing+=(["script"]="${segments_path}/np_banshee.sh")
 	#now_playing+=(["script"]="${segments_path}/np_audacious.sh")
 	#now_playing+=(["script"]="${segments_path}/np_lastfm.sh")
 elif [ "$PLATFORM" == "mac" ]; then
 	now_playing+=(["script"]="${segments_path}/np_itunes_mac.sh")
-	#oow_playing+=(["script"]="${segments_path}/np_spotify_mac")
-  	#now_playing+=(["script"]="${segments_path}/np_rdio_mac.sh")
+	#now_playing+=(["script"]="${segments_path}/np_spotify_mac")
+  #now_playing+=(["script"]="${segments_path}/np_rdio_mac.sh")
 
 fi
 if [[ ${now_playing["script"]} ]]; then
