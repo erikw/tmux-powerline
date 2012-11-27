@@ -26,8 +26,8 @@ pwd+=(["separator"]="${separator_left_bold}")
 #register_segment "pwd"
 
 declare -A mail_count
-mail_count+=(["script"]="${segments_path}/mail_count_maildir.sh")
-#mail_count+=(["script"]="${segments_path}/mail_count_gmail.sh")
+#mail_count+=(["script"]="${segments_path}/mail_count_maildir.sh")
+mail_count+=(["script"]="${segments_path}/mail_count_gmail.sh")
 #mail_count+=(["script"]="${segments_path}/mail_count_apple_mail.sh")
 mail_count+=(["foreground"]="white")
 mail_count+=(["background"]="red")
@@ -36,7 +36,8 @@ register_segment "mail_count"
 
 declare -A now_playing
 if [ "$PLATFORM" == "linux" ]; then
-	now_playing+=(["script"]="${segments_path}/np_mpd.sh")
+	#now_playing+=(["script"]="${segments_path}/np_mpd.sh")
+	now_playing+=(["script"]="${segments_path}/np_lastfm.sh")
 	#now_playing+=(["script"]="${segments_path}/np_mpd_simple.sh")
 	#now_playing+=(["script"]="${segments_path}/np_mocp.sh")
 	#now_playing+=(["script"]="${segments_path}/np_spotify_linux_wine.sh")
@@ -66,7 +67,7 @@ load+=(["script"]="${segments_path}/load.sh")
 load+=(["foreground"]="colour167")
 load+=(["background"]="colour237")
 load+=(["separator"]="${separator_left_bold}")
-register_segment "load"
+#register_segment "load"
 
 declare -A battery
 if [ "$PLATFORM" == "mac" ]; then
@@ -118,6 +119,14 @@ time+=(["background"]="colour235")
 time+=(["separator"]="${separator_left_thin}")
 time+=(["separator_fg"]="default")
 register_segment "time"
+
+declare -A time_utc
+time_utc+=(["script"]="${segments_path}/time_utc.sh")
+time_utc+=(["foreground"]="colour136")
+time_utc+=(["background"]="colour235")
+time_utc+=(["separator"]="${separator_left_thin}")
+time_utc+=(["separator_fg"]="default")
+#register_segment "time_utc"
 
 # Print the status line in the order of registration above.
 print_status_line_right
