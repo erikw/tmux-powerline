@@ -49,7 +49,7 @@ elif [ "$PLATFORM" == "mac" ]; then
 	now_playing+=(["script"]="${segments_path}/np_itunes_mac.sh")
 	#now_playing+=(["script"]="${segments_path}/np_spotify_mac")
   	#now_playing+=(["script"]="${segments_path}/np_rdio_mac.sh")
-
+    #now_playing+=(["script"]="${segments_path}/np_cmus.sh")
 fi
 if [[ ${now_playing["script"]} ]]; then
 	now_playing+=(["foreground"]="colour37")
