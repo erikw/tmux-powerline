@@ -178,9 +178,9 @@ mute_status() {
 # arg1: text to roll.
 # arg2: max length to display.
 # arg3: roll speed in characters per second.
-roll_stuff() {
-    local stuff="$1"	# Text to print
-    if [ -z "$stuff" ]; then
+roll_text() {
+    local text="$1"	# Text to print
+    if [ -z "$text" ]; then
     	return;
     fi
     local max_len="10"	# Default max length.
@@ -191,16 +191,22 @@ roll_stuff() {
     if [ -n "$3" ]; then
     	speed="$3"
     fi
+
+	# Skip rolling if the output is less than max_len.
+    if [ "${#text}" -le "$max_len" ]; then
+		echo "$text"
+		return
+    fi
     # Anything starting with 0 is an Octal number in Shell,C or Perl,
-    # so we must explicityly state the base of a number using base#number
-    local offset=$((10#$(date +%s) * ${speed} % ${#stuff}))
-    # Truncate stuff.
-    stuff=${stuff:offset}
+    # so we must explicitly state the base of a number using base#number
+    local offset=$((10#$(date +%s) * ${speed} % ${#text}))
+    # Truncate text.
+    text=${text:offset}
     local char	# Character.
     local bytes # The bytes of one character.
     local index
     for ((index=0; index < max_len; index++)); do
-      	char=${stuff:index:1}
+      	char=${text:index:1}
       	bytes=$(echo -n $char | wc -c)
       	# The character will takes twice space
       	# of an alphabet if (bytes > 1).
@@ -208,13 +214,13 @@ roll_stuff() {
             max_len=$((max_len - 1))
       	fi
     done
-    stuff=${stuff:0:max_len}
-    #echo "index=${index} max=${max_len} len=${#stuff}"
+    text=${text:0:max_len}
+    #echo "index=${index} max=${max_len} len=${#text}"
     # How many spaces we need to fill to keep
-    # the length of stuff that will be shown?
-    local fill_count=$((${index} - ${#stuff}))
+    # the length of text that will be shown?
+    local fill_count=$((${index} - ${#text}))
     for ((index=0; index < fill_count; index++)); do
-      	stuff="${stuff} "
+      	text="${text} "
     done
-    echo "${stuff}"
+    echo "${text}"
 }

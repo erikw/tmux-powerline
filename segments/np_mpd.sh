@@ -6,7 +6,7 @@
 # But I decided that I don't want any info about songs if there is nothing playing. Unfortunately I did not find a way of expressing this with mpc (I'm sure there is with idle/idleloop) but I did found a useful library: libmpdclient. I've used version 2.7 when developing my small program. Download the latest version here: http://sourceforge.net/projects/musicpd/files/libmpdclient/
 
 trim_method="trim" 	# Can be {trim or roll).
-max_len=40		# Trim output to this length.
+max_len=40			# Trim output to this length.
 roll_speed=2		# Roll speed in chraacters per second.
 
 segment_path=$(dirname $0)
@@ -29,7 +29,7 @@ if [ -x "np_mpd" ]; then
     if [ -n "$np" ]; then
         case "$trim_method" in
             "roll")
-        		np=$(roll_stuff "${np}" ${max_len} ${roll_speed})
+        		np=$(roll_text "${np}" ${max_len} ${roll_speed})
         		;;
             "trim")
 				np=${np:0:max_len}

@@ -20,7 +20,7 @@ if [ "$?" -eq 0 ] && [ -n "$metadata" ]; then
         np=$(echo "${artist} - ${track}")
         case "$trim_method" in
             "roll")
-        		np=$(roll_stuff "${np}" ${max_len} ${roll_speed})
+        		np=$(roll_text "${np}" ${max_len} ${roll_speed})
         		;;
             "trim")
 				np=${np:0:max_len}

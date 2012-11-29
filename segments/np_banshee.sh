@@ -16,7 +16,7 @@ if [ -n "$banshee_pid" ]; then
 		np=$(banshee --query-artist --query-title | cut  -d ":" -f2 | sed  -e 's/ *$//g' -e 's/^ *//g'| sed -e ':a;N;$!ba;s/\n/ - /g' )
         case "$trim_method" in
             "roll")
-        		np=$(roll_stuff "${np}" ${max_len} ${roll_speed})
+        		np=$(roll_text "${np}" ${max_len} ${roll_speed})
         		;;
             "trim")
 				np=${np:0:max_len}

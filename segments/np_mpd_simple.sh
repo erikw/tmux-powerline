@@ -18,7 +18,7 @@ if [ $? -eq 0 ] && [ -n "$np" ]; then
 
     case "$trim_method" in
         "roll")
-        	np=$(roll_stuff "${np}" ${max_len} 2)
+        	np=$(roll_text "${np}" ${max_len} 2)
         	;;
         "trim")
 			np=${np:0:max_len}

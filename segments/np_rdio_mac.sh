@@ -13,7 +13,7 @@ np=$(osascript $segment_path/np_rdio_mac.script)
 if [ -n "$np" ]; then
     case "$trim_method" in
         "roll")
-        	np=$(roll_stuff "${np}" ${max_len} ${roll_speed})
+        	np=$(roll_text "${np}" ${max_len} ${roll_speed})
         	;;
         "trim")
 			np=${np:0:max_len}
