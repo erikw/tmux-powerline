@@ -5,7 +5,7 @@
 cwd=$(dirname $0)
 
 # Source global configurations.
-source "${cwd}/config.sh"
+source "${cwd}/config/default.sh"
 
 # Source lib functions.
 source "${cwd}/lib.sh"
