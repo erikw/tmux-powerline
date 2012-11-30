@@ -8,7 +8,7 @@ cwd=$(dirname $0)
 source "${cwd}/config/default.sh"
 
 # Source lib functions.
-source "${cwd}/lib.sh"
+source "${cwd}/lib/powerline.sh"
 
 segments_path="${cwd}/${segments_dir}"
 
