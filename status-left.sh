@@ -1,14 +1,8 @@
 #!/usr/bin/env bash
 
-#Print the status-left for tmux.
-#
-# The powerline root directory.
 TMUX_POWERLINE_HOME=$(dirname $0)
 
-# Source global configurations.
 source "$TMUX_POWERLINE_HOME/config/default.sh"
-
-# Source lib functions.
 source "$TMUX_POWERLINE_HOME/lib/powerline.sh"
 
 segments_path="$TMUX_POWERLINE_HOME/${segments_dir}"
