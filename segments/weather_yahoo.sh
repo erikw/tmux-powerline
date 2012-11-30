@@ -82,7 +82,7 @@ read_tmp_file() {
 
 degree=""
 if [ -f "$tmp_file" ]; then
-    if [ "$PLATFORM" == "mac" ]; then
+    if [ "$SHELL_PLATFORM" == "OSX" ]; then
         last_update=$(stat -f "%m" ${tmp_file})
     else
         last_update=$(stat -c "%Y" ${tmp_file})

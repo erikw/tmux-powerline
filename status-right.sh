@@ -35,7 +35,7 @@ mail_count+=(["separator"]="${separator_left_bold}")
 register_segment "mail_count"
 
 declare -A now_playing
-if [ "$PLATFORM" == "linux" ]; then
+if [ "$SHELL_PLATFORM" == "LINUX" ]; then
 	now_playing+=(["script"]="${segments_path}/np_mpd.sh")
 	#now_playing+=(["script"]="${segments_path}/np_mpd_simple.sh")
 	#now_playing+=(["script"]="${segments_path}/np_mocp.sh")
@@ -45,7 +45,7 @@ if [ "$PLATFORM" == "linux" ]; then
 	#now_playing+=(["script"]="${segments_path}/np_banshee.sh")
 	#now_playing+=(["script"]="${segments_path}/np_audacious.sh")
 	#now_playing+=(["script"]="${segments_path}/np_lastfm.sh")
-elif [ "$PLATFORM" == "mac" ]; then
+elif [ "$SHELL_PLATFORM" == "OSX" ]; then
 	now_playing+=(["script"]="${segments_path}/np_itunes_mac.sh")
 	#now_playing+=(["script"]="${segments_path}/np_spotify_mac")
   	#now_playing+=(["script"]="${segments_path}/np_rdio_mac.sh")
@@ -73,7 +73,7 @@ load+=(["separator"]="${separator_left_bold}")
 register_segment "load"
 
 declare -A battery
-if [ "$PLATFORM" == "mac" ]; then
+if [ "$SHELL_PLATFORM" == "OSX" ]; then
 	battery+=(["script"]="${segments_path}/battery_mac.sh")
 else
 	battery+=(["script"]="${segments_path}/battery.sh")
@@ -92,7 +92,7 @@ weather+=(["separator"]="${separator_left_bold}")
 register_segment "weather"
 
 declare -A xkb_layout
-if [ "$PLATFORM" == "linux" ]; then
+if [ "$SHELL_PLATFORM" == "LINUX" ]; then
 	xkb_layout+=(["script"]="${segments_path}/xkb_layout.sh")
 	xkb_layout+=(["foreground"]="colour117")
 	xkb_layout+=(["background"]="colour125")

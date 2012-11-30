@@ -8,7 +8,10 @@ patched_font_in_use () {
   [ -z "$TMUX_POWERLINE_PATCHED_FONT_IN_USE" -o "$TMUX_POWERLINE_PATCHED_FONT_IN_USE" != "false" ];
 }
 
-if [ -z "$PLATFORM" ]; then
-	# You platform \in {linux,bsd,mac}.
-	export PLATFORM="linux"
-fi
+export SHELL_PLATFORM='OTHER'
+
+case "$OSTYPE" in
+  *'linux'*   ) SHELL_PLATFORM='LINUX' ;;
+  *'darwin'*  ) SHELL_PLATFORM='OSX' ;;
+  *'freebsd'* ) SHELL_PLATFORM='BSD' ;;
+esac
