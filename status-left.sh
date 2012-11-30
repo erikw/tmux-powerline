@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
+
 #Print the status-left for tmux.
 #
 # The powerline root directory.
-cwd=$(dirname $0)
+TMUX_POWERLINE_HOME=$(dirname $0)
 
 # Source global configurations.
-source "${cwd}/config/default.sh"
+source "$TMUX_POWERLINE_HOME/config/default.sh"
 
 # Source lib functions.
-source "${cwd}/lib/powerline.sh"
+source "$TMUX_POWERLINE_HOME/lib/powerline.sh"
 
-segments_path="${cwd}/${segments_dir}"
+segments_path="$TMUX_POWERLINE_HOME/${segments_dir}"
 
 # Mute this statusbar?
 mute_status_check "left"
