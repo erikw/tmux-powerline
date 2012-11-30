@@ -3,7 +3,7 @@
 segments_dir="segments"
 declare entries
 
-if [ -n "$USE_PATCHED_FONT" -a "$USE_PATCHED_FONT" == "true" ]; then
+if patched_font_in_use; then
     # Separators (patched font required)
     separator_left_bold="⮂"
     separator_left_thin="⮃"
@@ -48,7 +48,7 @@ print_status_line_right() {
 	# Can't be declared local if we want the exit code.
 	output=$(${script})
 	local exit_code="$?"
-      if [ "$exit_code" -ne 0 ] && [ "$DEBUG_MODE" = "true" ]; then
+      if [ "$exit_code" -ne 0 ] && debug_mode_enabled; then
 	      	local seg_name="${script##*/}"
 	        echo "Segment '${seg_name}' exited with code ${exit_code}. Aborting."
     	    exit 1
