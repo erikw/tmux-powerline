@@ -32,6 +32,13 @@ hostname+=(["background"]="colour33")
 hostname+=(["separator"]="${separator_right_bold}")
 register_segment "hostname"
 
+declare -A ifstat
+ifstat+=(["script"]="${segments_path}/ifstat.sh")
+ifstat+=(["foreground"]="colour255")
+ifstat+=(["background"]="colour30")
+ifstat+=(["separator"]="${separator_right_bold}")
+register_segment "ifstat"
+
 declare -A lan_ip
 lan_ip+=(["script"]="${segments_path}/lan_ip.sh")
 lan_ip+=(["foreground"]="colour255")
