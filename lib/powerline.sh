@@ -18,9 +18,6 @@ print_status_line_right() {
       __ui_right "$prev_bg" "$background" "$foreground" "$separator" "$separator_fg"
       echo -n "$output"
       prev_bg="$background"
-      if [ "$first_segment_right" -eq "1" ]; then
-        first_segment_right=0
-      fi
     fi
   done
 
