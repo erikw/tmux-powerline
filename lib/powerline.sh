@@ -5,10 +5,12 @@ segments_dir="segments"
 print_status_line_right() {
   prev_bg="colour0"
 
-  for entry in ${TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS[@]}; do
-    local script="$TMUX_POWERLINE_HOME/$segments_dir/$entry.sh"
-    local foreground="colour255"
-    local background="colour0"
+  for entry in "${TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS[@]}"; do
+    local entry_items=($entry)
+
+    local script="$TMUX_POWERLINE_HOME/$segments_dir/${entry_items[0]}.sh"
+    local foreground="colour${entry_items[1]}"
+    local background="colour${entry_items[2]}"
     local separator=$TMUX_POWERLINE_SEPARATOR_LEFT_THIN
     local separator_fg="colour255"
 
@@ -29,10 +31,12 @@ print_status_line_left() {
   prev_bg="colour148"
   echo -n "#[fg=colour255, bg=colour0]"
 
-  for entry in ${TMUX_POWERLINE_LEFT_STATUS_SEGMENTS[@]}; do
-    local script="$TMUX_POWERLINE_HOME/$segments_dir/$entry.sh"
-    local foreground="colour255"
-    local background="colour0"
+  for entry in "${TMUX_POWERLINE_LEFT_STATUS_SEGMENTS[@]}"; do
+    local entry_items=($entry)
+
+    local script="$TMUX_POWERLINE_HOME/$segments_dir/${entry_items[0]}.sh"
+    local foreground="colour${entry_items[1]}"
+    local background="colour${entry_items[2]}"
     local separator=$TMUX_POWERLINE_SEPARATOR_RIGHT_THIN
     local separator_fg="colour255"
 

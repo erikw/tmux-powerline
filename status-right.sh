@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
 export TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS=(
-  'pwd'
-  'mail_count'
-  'np_mpd'
-  'cpu'
-  'load'
-  'battery'
-  'weather_yahoo'
-  'date_day'
-  'date_full'
-  'time'
+  'pwd 211 89' \
+  'mail_count 255 9' \
+  'np_mpd 37 234' \
+  'cpu 136 240' \
+  'load 167 237' \
+  'battery 127 137' \
+  'weather_yahoo 255 37' \
+  'date_day 136 235' \
+  'date_full 136 235' \
+  'time 136 235' \
 )
 
 export TMUX_POWERLINE_HOME=$(dirname $0)
