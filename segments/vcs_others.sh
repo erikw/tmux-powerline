@@ -4,7 +4,7 @@
 
 # Source lib to get the function get_tmux_pwd
 segment_path=$(dirname $0)
-source "$segment_path/../lib.sh"
+source "$segment_path/../lib/tmux_adapter.sh"
 
 tmux_path=$(get_tmux_cwd)
 cd "$tmux_path"
