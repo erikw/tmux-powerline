@@ -24,8 +24,6 @@ print_status_line_right() {
     fi
   done
 
-  __ui_right "colour235" "colour235" "red" "$separator_right_bold" "$prev_bg"
-
   # End in a clean state.
   echo "#[default]"
 }
