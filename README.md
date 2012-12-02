@@ -14,6 +14,7 @@ The following segments exists for now:
 * tmux info.
 * CWD in pane.
 * Current X keyboard layout.
+* Network download/upload speed.
 
 Check [segments/](https://github.com/erikw/tmux-powerline/tree/master/segments) for more undocumented segments and details.
 
@@ -56,10 +57,11 @@ Requirements for the lib to work are:
 ## Segment Requirements
 Requirements for some segments. You only need to fullfill the requirements for those segments you want to use.
 
-* WAN IP: curl, bc
-* MPD now playing: [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
-* xkb_layout: X11, XKB
-* GMail count: wget.
+* wan_ip.sh, np_lastfm.sh, weather_yahoo.sh: curl, bc
+* np_mpd.sh: [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
+* xkb_layout.sh: X11, XKB
+* mail_count_gmail.sh: wget.
+* ifstat.sh: ifstat
 
 ## OS X specific requirements
 
