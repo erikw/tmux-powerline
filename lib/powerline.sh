@@ -26,71 +26,61 @@ if [ ! -d "$tp_tmpdir" ]; then
     mkdir "$tp_tmpdir"
 fi
 
-# Register a segment.
-register_segment() {
-    segment_name="$1"
-    entries[${#entries[*]}]="$segment_name"
-
-}
-
 print_status_line_right() {
-    local prev_bg="colour235"
-    for entry in ${entries[*]}; do
-	local script=$(eval echo \${${entry}["script"]})
-	local foreground=$(eval echo \${${entry}["foreground"]})
-	local background=$(eval echo \${${entry}["background"]})
-	local separator=$(eval echo \${${entry}["separator"]})
-	local separator_fg=""
-	if [ $(eval echo \${${entry}["separator_fg"]+_}) ];then
-	    separator_fg=$(eval echo \${${entry}["separator_fg"]})
-	fi
+  prev_bg="colour148"
 
-	# Can't be declared local if we want the exit code.
-	output=$(${script})
-	local exit_code="$?"
-      if [ "$exit_code" -ne 0 ] && debug_mode_enabled; then
-	      	local seg_name="${script##*/}"
-	        echo "Segment '${seg_name}' exited with code ${exit_code}. Aborting."
-    	    exit 1
-    	elif [ -z "$output" ]; then
-	      continue
-    	fi
-	__ui_right "$prev_bg" "$background" "$foreground" "$separator" "$separator_fg"
-	echo -n "$output"
-	unset output
-	prev_bg="$background"
-    done
-    # End in a clean state.
-    echo "#[default]"
+  for entry in ${TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS[@]}; do
+    local script="$TMUX_POWERLINE_HOME/$segments_dir/$entry.sh"
+    local foreground='colour255'
+    local background='colour0'
+    local separator=$separator_left_bold
+    local separator_fg='colour255'
+
+    local output=$(${script})
+
+    if [ -n "$output" ]; then
+      __ui_right "$prev_bg" "$background" "$foreground" "$separator" "$separator_fg"
+      echo -n "$output"
+      prev_bg="$background"
+      if [ "$first_segment_right" -eq "1" ]; then
+        first_segment_right=0
+      fi
+    fi
+  done
+
+  __ui_right "colour235" "colour235" "red" "$separator_right_bold" "$prev_bg"
+
+  # End in a clean state.
+  echo "#[default]"
 }
 
 first_segment_left=1
 print_status_line_left() {
-    prev_bg="colour148"
-    for entry in ${entries[*]}; do
-	local script=$(eval echo \${${entry}["script"]})
-	local foreground=$(eval echo \${${entry}["foreground"]})
-	local background=$(eval echo \${${entry}["background"]})
-	local separator=$(eval echo \${${entry}["separator"]})
-	local separator_fg=""
-	if [ $(eval echo \${${entry}["separator_fg"]+_}) ];then
-	    separator_fg=$(eval echo \${${entry}["separator_fg"]})
-	fi
+  prev_bg="colour148"
 
-	local output=$(${script})
-	if [ -n "$output" ]; then
-            __ui_left "$prev_bg" "$background" "$foreground" "$separator" "$separator_fg"
-            echo -n "$output"
-            prev_bg="$background"
-            if [ "$first_segment_left" -eq "1" ]; then
-                first_segment_left=0
-            fi
-        fi
-    done
-    __ui_left "colour235" "colour235" "red" "$separator_right_bold" "$prev_bg"
+  for entry in ${TMUX_POWERLINE_LEFT_STATUS_SEGMENTS[@]}; do
+    local script="$TMUX_POWERLINE_HOME/$segments_dir/$entry.sh"
+    local foreground='colour255'
+    local background='colour0'
+    local separator=$separator_right_bold
+    local separator_fg='colour255'
 
-    # End in a clean state.
-    echo "#[default]"
+    local output=$(${script})
+
+    if [ -n "$output" ]; then
+      __ui_left "$prev_bg" "$background" "$foreground" "$separator" "$separator_fg"
+      echo -n "$output"
+      prev_bg="$background"
+      if [ "$first_segment_left" -eq "1" ]; then
+        first_segment_left=0
+      fi
+    fi
+  done
+
+  __ui_left "colour235" "colour235" "red" "$separator_right_bold" "$prev_bg"
+
+  # End in a clean state.
+  echo "#[default]"
 }
 
 #Internal printer for right.
