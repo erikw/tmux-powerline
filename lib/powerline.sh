@@ -1,7 +1,6 @@
 # Library functions.
 
 segments_dir="segments"
-declare entries
 
 if patched_font_in_use; then
     # Separators (patched font required)
