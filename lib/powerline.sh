@@ -2,20 +2,6 @@
 
 segments_dir="segments"
 
-if patched_font_in_use; then
-    # Separators (patched font required)
-    separator_left_bold="⮂"
-    separator_left_thin="⮃"
-    separator_right_bold="⮀"
-    separator_right_thin="⮁"
-else
-    # Alternative separators in the normal Unicode table.
-    separator_left_bold="◀"
-    separator_left_thin="❮"
-    separator_right_bold="▶"
-    separator_right_thin="❯"
-fi
-
 print_status_line_right() {
   prev_bg="colour148"
 
@@ -23,7 +9,7 @@ print_status_line_right() {
     local script="$TMUX_POWERLINE_HOME/$segments_dir/$entry.sh"
     local foreground='colour255'
     local background='colour0'
-    local separator=$separator_left_bold
+    local separator=$TMUX_POWERLINE_SEPARATOR_LEFT_BOLD
     local separator_fg='colour255'
 
     local output=$(${script})
@@ -52,7 +38,7 @@ print_status_line_left() {
     local script="$TMUX_POWERLINE_HOME/$segments_dir/$entry.sh"
     local foreground='colour255'
     local background='colour0'
-    local separator=$separator_right_bold
+    local separator=$TMUX_POWERLINE_SEPARATOR_RIGHT_BOLD
     local separator_fg='colour255'
 
     local output=$(${script})
