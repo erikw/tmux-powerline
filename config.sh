@@ -9,13 +9,15 @@ fi
 # You platform \in {linux,mac}.
 if [ -z "$PLATFORM" ]; then
 	platform=$(uname | tr '[:upper:]' '[:lower:]')
-	# TODO support BSD?
 	case "$platform" in
 		linux)
 			# Well, nothing to do.
 			;;
 		darwin)
 			platform="mac"
+			;;
+		*bsd)
+			platform="bsd"
 			;;
 		*)
 			echo "Unknown platform \"${platform}\"" &1>&2
