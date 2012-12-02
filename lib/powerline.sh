@@ -51,35 +51,39 @@ print_status_line_left() {
 
 #Internal printer for right.
 __ui_right() {
-    local bg_left="$1"
-    local bg_right="$2"
-    local fg_right="$3"
-    local separator="$4"
-    local separator_fg
-    if [ -n "$5" ]; then
-	separator_fg="$5"
-    else
-	separator_fg="$bg_right"
-    fi
-    echo -n " #[fg=${separator_fg}, bg=${bg_left}] ${separator}#[fg=${fg_right},bg=${bg_right}] "
+  local bg_left="$1"
+  local bg_right="$2"
+  local fg_right="$3"
+  local separator="$4"
+
+  local separator_fg
+
+  if [ -n "$5" ]; then
+    separator_fg="$5"
+  else
+    separator_fg="$bg_right"
+  fi
+
+  echo -n " #[fg=${separator_fg}, bg=${bg_left}] ${separator}#[fg=${fg_right},bg=${bg_right}] "
 }
 
 # Internal printer for left.
 __ui_left() {
-    local bg_left="$1"
-    local bg_right="$2"
-    local fg_right="$3"
-    local separator="$4"
+  local bg_left="$1"
+  local bg_right="$2"
+  local fg_right="$3"
+  local separator="$4"
 
-    local separator_bg
-    if [ -n "$5" ]; then
-	bg_left="$5"
-	separator_bg="$bg_right"
-    else
-	separator_bg="$bg_right"
-    fi
+  local separator_bg
 
-    echo -n " #[fg=${bg_left}, bg=${separator_bg}]${separator}#[fg=${fg_right},bg=${bg_right}] "
+  if [ -n "$5" ]; then
+    bg_left="$5"
+    separator_bg="$bg_right"
+  else
+    separator_bg="$bg_right"
+  fi
+
+  echo -n " #[fg=${bg_left}, bg=${separator_bg}]${separator}#[fg=${fg_right},bg=${bg_right}] "
 }
 
 # Get the current path in the segment.
