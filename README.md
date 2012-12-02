@@ -61,7 +61,7 @@ Requirements for some segments. You only need to fullfill the requirements for t
 * np_mpd.sh: [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
 * xkb_layout.sh: X11, XKB
 * mail_count_gmail.sh: wget.
-* ifstat.sh: ifstat
+* ifstat.sh: ifstat (there is a simpler segment not using ifstat but samples /sys/class/net)
 
 ## OS X specific requirements
 

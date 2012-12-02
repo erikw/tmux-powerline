@@ -34,6 +34,7 @@ register_segment "hostname"
 
 declare -A ifstat
 ifstat+=(["script"]="${segments_path}/ifstat.sh")
+#ifstat+=(["script"]="${segments_path}/ifstat_sys.sh")
 ifstat+=(["foreground"]="colour255")
 ifstat+=(["background"]="colour30")
 ifstat+=(["separator"]="${separator_right_bold}")
