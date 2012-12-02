@@ -93,6 +93,8 @@ $ echo $SHELL
 /usr/local/Cellar/bash/%INSTALLED_VERSION%/bin/bash
 ```
 
+It is [reported](https://github.com/erikw/tmux-powerline/issues/71) that the `grep` tool is outdatted on OS X 10.8 Mountain Lion so you might have to upgrade it using .e.g homebrew since may segments uses grep with these new features.
+
 # Installation
 Just check out the repository with:
 
