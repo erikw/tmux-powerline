@@ -113,7 +113,8 @@ set-option -g status-left "#(~/path/to/tmux-powerline/status-left.sh)"
 set-option -g status-right "#(~/path/to/tmux-powerline/status-right.sh)"
 ```
 
-Set the maximum lengths to something that suits your configuration of segments and size of terminal (the maximum segments length will be handled better in the future). Don't forget to change the PLATFORM variable in `config.sh` or your `~/.bashrc` to reflect your operating system of choice.
+Set the maximum lengths to something that suits your configuration of segments and size of terminal (the maximum segments length will be handled better in the future). Segments needs to use different tools or options depending on platform. Currently there is only a distinction between Linux systems and OS X systems. `config.sh` tries to detect what machine your're on with `uname`. If needed you can override this setting with the PLATFORM variable there (or wherever you want to define it).
+
 
 Also I recommend you to use the [tmux-colors-solarized](https://github.com/seebi/tmux-colors-solarized) theme (as well as solarized for [everything else](http://ethanschoonover.com/solarized) :)):
 

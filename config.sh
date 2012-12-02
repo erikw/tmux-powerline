@@ -6,9 +6,22 @@ if [ -z "$DEBUG_MODE" ]; then
 	export DEBUG_MODE="false"
 fi
 
+# You platform \in {linux,mac}.
 if [ -z "$PLATFORM" ]; then
-	# You platform \in {linux,bsd,mac}.
-	export PLATFORM="linux"
+	platform=$(uname | tr '[:upper:]' '[:lower:]')
+	# TODO support BSD?
+	case "$platform" in
+		linux)
+			# Well, nothing to do.
+			;;
+		darwin)
+			platform="mac"
+			;;
+		*)
+			echo "Unknown platform \"${platform}\"" &1>2
+	esac
+	export PLATFORM="$platform"
+
 fi
 
 if [ -z "$USE_PATCHED_FONT" ]; then
