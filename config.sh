@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 # Cofigurations for tmux-powerline.
 
 if [ -z "$DEBUG_MODE" ]; then
@@ -18,7 +18,7 @@ if [ -z "$PLATFORM" ]; then
 			platform="mac"
 			;;
 		*)
-			echo "Unknown platform \"${platform}\"" &1>2
+			echo "Unknown platform \"${platform}\"" &1>&2
 	esac
 	export PLATFORM="$platform"
 
