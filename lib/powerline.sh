@@ -9,7 +9,7 @@ print_status_line_right() {
     local script="$TMUX_POWERLINE_HOME/$segments_dir/$entry.sh"
     local foreground='colour255'
     local background='colour0'
-    local separator=$TMUX_POWERLINE_SEPARATOR_LEFT_BOLD
+    local separator=$TMUX_POWERLINE_SEPARATOR_LEFT_THIN
     local separator_fg='colour255'
 
     local output=$(${script})
@@ -38,7 +38,7 @@ print_status_line_left() {
     local script="$TMUX_POWERLINE_HOME/$segments_dir/$entry.sh"
     local foreground='colour255'
     local background='colour0'
-    local separator=$TMUX_POWERLINE_SEPARATOR_RIGHT_BOLD
+    local separator=$TMUX_POWERLINE_SEPARATOR_RIGHT_THIN
     local separator_fg='colour255'
 
     local output=$(${script})
