@@ -3,9 +3,9 @@
 #
 if [ -z $TMUX_POWERLINE_LEFT_STATUS_SEGMENTS ]; then
   export TMUX_POWERLINE_LEFT_STATUS_SEGMENTS=(
-    "tmux_session_info 234 148" \
+    "tmux_session_info 148 234" \
     "hostname 33 0" \
-    "lan_ip 24 255" \
+    "lan_ip 24 255 ${TMUX_POWERLINE_SEPARATOR_RIGHT_THIN}" \
     "wan_ip 24 255" \
     "vcs_branch 29 88" \
     "vcs_compare 60 255" \
@@ -16,17 +16,17 @@ if [ -z $TMUX_POWERLINE_LEFT_STATUS_SEGMENTS ]; then
 fi
 
 if [ -z $TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS ]; then
-  export TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS=(
-    "pwd 234 255" \
-    "mail_count_gmail 33 255" \
+  TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS=(
+    "pwd 89 211" \
+    "mail_count_maildir 9 255" \
     "np_mpd 234 37" \
-    "cpu 24 255" \
-    "load 29 255" \
-    "battery 60 255" \
+    "cpu 240 136" \
+    "load 237 167" \
+    "battery 137 127" \
     "weather_yahoo 37 255" \
-    "date_day 9 255" \
-    "date_full 37 255" \
-    "time 235 255" \
+    "date_day 235 136" \
+    "date_full 235 136 ${TMUX_POWERLINE_SEPARATOR_RIGHT_THIN}" \
+    "time 235 136 ${TMUX_POWERLINE_SEPARATOR_RIGHT_THIN}" \
   )
 fi
 
