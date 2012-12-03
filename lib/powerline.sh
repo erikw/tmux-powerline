@@ -43,9 +43,9 @@ __process_scripts() {
   for segment_index in "${!powerline_segments[@]}"; do
     local powerline_segment=(${powerline_segments[$segment_index]})
     local script="$TMUX_POWERLINE_SEGMENTS_HOME/${powerline_segment[0]}.sh"
-    # local output=$(script)
+    local output=$($script)
 
-    powerline_segment[4]='script'
+    powerline_segment[4]=$output
 
     powerline_segments[$segment_index]="${powerline_segment[@]}"
   done
