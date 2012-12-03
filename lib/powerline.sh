@@ -1,92 +1,95 @@
 # Library functions.
 
-segments_dir="segments"
+print_powerline() {
+  local side="$1"
+  eval "local input_segments=(\"\${TMUX_POWERLINE_${side^^}_STATUS_SEGMENTS[@]}\")"
+  local powerline_segments=()
 
-print_status_line_right() {
-  prev_bg="colour0"
+  __process_segment_defaults
+  __process_scripts
+  __process_colors
 
-  for entry in "${TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS[@]}"; do
-    local entry_items=($entry)
+  for powerline_segment in "${powerline_segments[@]}"; do
+    local powerline_segment=($powerline_segment)
 
-    local script="$TMUX_POWERLINE_HOME/$segments_dir/${entry_items[0]}.sh"
-    local foreground="colour${entry_items[1]}"
-    local background="colour${entry_items[2]}"
-    local separator=$TMUX_POWERLINE_SEPARATOR_LEFT_THIN
-    local separator_fg="colour255"
+    local background_color=${powerline_segment[1]}
+    local foreground_color=${powerline_segment[2]}
+    local separator=${powerline_segment[3]}
+    local content=${powerline_segment[4]}
+    local separator_background_color=${powerline_segment[5]}
+    local separator_foreground_color=${powerline_segment[6]}
 
-    local output=$(${script})
-
-    if [ -n "$output" ]; then
-      __ui_right "$prev_bg" "$background" "$foreground" "$separator" "$separator_fg"
-      echo -n "$output"
-      prev_bg="$background"
-    fi
+    eval "__print_${side}_segment ${content} ${background_color} ${foreground_color} ${separator} ${separator_background_color} ${separator_foreground_color}"
   done
-
-  # End in a clean state.
-  echo "#[default]"
 }
 
-print_status_line_left() {
-  prev_bg="colour148"
-  echo -n "#[fg=colour255, bg=colour0]"
+__process_segment_defaults() {
+  for segment_index in "${!input_segments[@]}"; do
+    local input_segment=(${input_segments[$segment_index]})
+    eval "local default_separator=\$TMUX_POWERLINE_DEFAULT_${side^^}SIDE_SEPARATOR"
 
-  for entry in "${TMUX_POWERLINE_LEFT_STATUS_SEGMENTS[@]}"; do
-    local entry_items=($entry)
+    powerline_segment_with_defaults=(
+      ${input_segment[0]:-"no_script"} \
+      ${input_segment[1]:-$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR} \
+      ${input_segment[2]:-$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR} \
+      ${input_segment[3]:-$default_separator} \
+    )
 
-    local script="$TMUX_POWERLINE_HOME/$segments_dir/${entry_items[0]}.sh"
-    local foreground="colour${entry_items[1]}"
-    local background="colour${entry_items[2]}"
-    local separator=$TMUX_POWERLINE_SEPARATOR_RIGHT_THIN
-    local separator_fg="colour255"
-
-    local output=$(${script})
-
-    if [ -n "$output" ]; then
-      echo -n "$output"
-      __ui_left "$prev_bg" "$background" "$foreground" "$separator" "$separator_fg"
-      prev_bg="$background"
-    fi
+    powerline_segments[$segment_index]="${powerline_segment_with_defaults[@]}"
   done
-
-  # End in a clean state.
-  echo "#[default]"
 }
 
-#Internal printer for right.
-__ui_right() {
-  local bg_left="$1"
-  local bg_right="$2"
-  local fg_right="$3"
-  local separator="$4"
+__process_scripts() {
+  for segment_index in "${!powerline_segments[@]}"; do
+    local powerline_segment=(${powerline_segments[$segment_index]})
+    local script="$TMUX_POWERLINE_SEGMENTS_HOME/${powerline_segment[0]}.sh"
+    # local output=$(script)
 
-  local separator_fg
+    powerline_segment[4]='script'
 
-  if [ -n "$5" ]; then
-    separator_fg="$5"
-  else
-    separator_fg="$bg_right"
-  fi
-
-  echo -n " #[fg=${separator_fg}, bg=${bg_left}] ${separator}#[fg=${fg_right},bg=${bg_right}] "
+    powerline_segments[$segment_index]="${powerline_segment[@]}"
+  done
 }
 
-# Internal printer for left.
-__ui_left() {
-  local bg_left="$1"
-  local bg_right="$2"
-  local fg_right="$3"
-  local separator="$4"
+__process_colors() {
+  for segment_index in "${!powerline_segments[@]}"; do
+    local powerline_segment=(${powerline_segments[$segment_index]})
+    local next_segment=(${powerline_segments[segment_index + 1]})
 
-  local separator_bg
+    if [ $side == 'left' ]; then
+      powerline_segment[5]=${next_segment[1]:-$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR}
+    elif [ $side == 'right' ]; then
+      powerline_segment[5]=${previous_background_color:-$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR}
+    fi
 
-  if [ -n "$5" ]; then
-    bg_left="$5"
-    separator_bg="$bg_right"
-  else
-    separator_bg="$bg_right"
-  fi
+    powerline_segment[6]=${powerline_segment[1]}
 
-  echo -n " #[fg=${bg_left}, bg=${separator_bg}]${separator}#[fg=${fg_right},bg=${bg_right}] "
+    local previous_background_color=${powerline_segment[1]}
+
+    powerline_segments[$segment_index]="${powerline_segment[@]}"
+  done
 }
 
+__print_left_segment() {
+  local content=$1
+  local content_background_color=$2
+  local content_foreground_color=$3
+  local separator=$4
+  local separator_background_color=$5
+  local separator_foreground_color=$6
+
+  __print_colored_content $content $content_background_color $content_foreground_color
+  __print_colored_content $separator $separator_background_color $separator_foreground_color
+}
+
+__print_right_segment() {
+  local content=$1
+  local content_background_color=$2
+  local content_foreground_color=$3
+  local separator=$4
+  local separator_background_color=$5
+  local separator_foreground_color=$6
+
+  __print_colored_content $separator $separator_background_color $separator_foreground_color
+  __print_colored_content $content $content_background_color $content_foreground_color
+}
