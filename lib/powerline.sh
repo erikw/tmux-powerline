@@ -45,7 +45,11 @@ __process_scripts() {
     local script="$TMUX_POWERLINE_SEGMENTS_HOME/${powerline_segment[0]}.sh"
     local output=$($script)
 
-    powerline_segment_contents[$segment_index]=$output
+    if [ -n "$output" ]; then
+      powerline_segment_contents[$segment_index]="$output"
+    else
+      unset -v powerline_segments[$segment_index]
+    fi
   done
 }
 
