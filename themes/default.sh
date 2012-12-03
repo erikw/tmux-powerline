@@ -18,7 +18,7 @@ fi
 if [ -z $TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS ]; then
   export TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS=(
     "pwd 234 255" \
-    "mail_count 33 255" \
+    "mail_count_gmail 33 255" \
     "np_mpd 234 37" \
     "cpu 24 255" \
     "load 29 255" \
