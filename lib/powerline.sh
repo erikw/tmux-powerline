@@ -54,7 +54,11 @@ __process_colors() {
       powerline_segment[4]=${previous_background_color:-$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR}
     fi
 
-    powerline_segment[5]=${powerline_segment[1]}
+    if __segment_separator_is_thin; then
+      powerline_segment[5]=${powerline_segment[2]}
+    else
+      powerline_segment[5]=${powerline_segment[1]}
+    fi
 
     local previous_background_color=${powerline_segment[1]}
 
@@ -98,4 +102,9 @@ __print_right_segment() {
 
   __print_colored_content $separator $separator_background_color $separator_foreground_color
   __print_colored_content "$content" $content_background_color $content_foreground_color
+}
+
+__segment_separator_is_thin() {
+  [[ ${powerline_segment[3]} == $TMUX_POWERLINE_SEPARATOR_LEFT_THIN || \
+     ${powerline_segment[3]} == $TMUX_POWERLINE_SEPARATOR_RIGHT_THIN ]];
 }
