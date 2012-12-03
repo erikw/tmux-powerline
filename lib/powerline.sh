@@ -46,7 +46,7 @@ __process_scripts() {
     local output=$($script)
 
     if [ -n "$output" ]; then
-      powerline_segment_contents[$segment_index]="$output"
+      powerline_segment_contents[$segment_index]=" $output "
     else
       unset -v powerline_segments[$segment_index]
     fi
