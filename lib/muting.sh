@@ -3,19 +3,19 @@
 #
 # In all cases $1 is the side to be muted (eg left/right)
 #
-muted() {
-  [ -e "$(__mute_file $1)" ];
+powerline_muted() {
+  [ -e "$(__powerline_mute_file $1)" ];
 }
 
-toggle_mute_status() {
-  if muted $1; then
-    rm "$(__mute_file $1)"
+toggle_powerline_mute_status() {
+  if powerline_muted $1; then
+    rm "$(__powerline_mute_file $1)"
   else
-    touch "$(__mute_file $1)"
+    touch "$(__powerline_mute_file $1)"
   fi
 }
 
-__mute_file() {
+__powerline_mute_file() {
   local tmux_session=$(tmux display -p "#S")
 
   echo -n "${TMUX_POWERLINE_TEMPORARY_DIRECTORY}/mute_${tmux_session}_$1"

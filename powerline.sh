@@ -35,7 +35,7 @@ source "$TMUX_POWERLINE_HOME/lib/tmux_adapter.sh"
 source "$TMUX_POWERLINE_HOME/lib/formatting.sh"
 source "$TMUX_POWERLINE_HOME/lib/powerline.sh"
 
-if ! muted $1; then
+if ! powerline_muted $1; then
   print_powerline $1
 fi
 
