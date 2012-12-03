@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
-# Toggles the visibility of a statusbar side.
 
-# The powerline root directory.
-cwd=$(dirname $0)
+source "$(dirname $0)/config/paths.sh"
+source "$(dirname $0)/lib/muting.sh"
 
-# Source lib functions.
-source "${cwd}/lib.sh"
-
-side="$1"
-mute_status "$side"
+side=$1
+toggle_powerline_mute_status $side
