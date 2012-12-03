@@ -43,7 +43,7 @@ if [ -z $TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS ]; then
     "battery 137 127" \
     "weather_yahoo 37 255" \
     "date_day 235 136" \
-    "date_full 235 136 ${TMUX_POWERLINE_SEPARATOR_RIGHT_THIN}" \
-    "time 235 136 ${TMUX_POWERLINE_SEPARATOR_RIGHT_THIN}" \
+    "date_full 235 136 ${TMUX_POWERLINE_SEPARATOR_LEFT_THIN}" \
+    "time 235 136 ${TMUX_POWERLINE_SEPARATOR_LEFT_THIN}" \
   )
 fi
