@@ -10,17 +10,7 @@ print_powerline() {
   __process_scripts
   __process_colors
 
-  for segment_index in "${!powerline_segments[@]}"; do
-    local powerline_segment=(${powerline_segments[$segment_index]})
-
-    local background_color=${powerline_segment[1]}
-    local foreground_color=${powerline_segment[2]}
-    local separator=${powerline_segment[3]}
-    local separator_background_color=${powerline_segment[4]}
-    local separator_foreground_color=${powerline_segment[5]}
-
-    eval "__print_${side}_segment ${segment_index} ${background_color} ${foreground_color} ${separator} ${separator_background_color} ${separator_foreground_color}"
-  done
+  __process_powerline
 }
 
 __process_segment_defaults() {
@@ -69,6 +59,20 @@ __process_colors() {
     local previous_background_color=${powerline_segment[1]}
 
     powerline_segments[$segment_index]="${powerline_segment[@]}"
+  done
+}
+
+__process_powerline() {
+  for segment_index in "${!powerline_segments[@]}"; do
+    local powerline_segment=(${powerline_segments[$segment_index]})
+
+    local background_color=${powerline_segment[1]}
+    local foreground_color=${powerline_segment[2]}
+    local separator=${powerline_segment[3]}
+    local separator_background_color=${powerline_segment[4]}
+    local separator_foreground_color=${powerline_segment[5]}
+
+    eval "__print_${side}_segment ${segment_index} ${background_color} ${foreground_color} ${separator} ${separator_background_color} ${separator_foreground_color}"
   done
 }
 
