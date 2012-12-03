@@ -21,7 +21,6 @@ if [ -f "$tmp_file" ]; then
 fi
 
 if [ -z "$wan_ip" ]; then
-  #wan_ip=$(wget --timeout=1 --tries=1 -O - http://formyip.com/ 2>/dev/null | grep -Pzo "(?<=Your IP is )[^<]*")
   wan_ip=$(curl --max-time 2 -s http://whatismyip.akamai.com/)
 
   if [ "$?" -eq "0" ]; then
@@ -32,7 +31,6 @@ if [ -z "$wan_ip" ]; then
 fi
 
 if [ -n "$wan_ip" ]; then
-  #echo "Ⓦ ${wan_ip}"
   echo "ⓦ ${wan_ip}"
 fi
 
