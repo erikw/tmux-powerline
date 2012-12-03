@@ -9,8 +9,6 @@ source "$TMUX_POWERLINE_HOME/config/shell.sh"
 source "$TMUX_POWERLINE_HOME/themes/default.sh"
 
 source "$TMUX_POWERLINE_HOME/lib/muting.sh"
-source "$TMUX_POWERLINE_HOME/lib/text_marquee.sh"
-source "$TMUX_POWERLINE_HOME/lib/tmux_adapter.sh"
 source "$TMUX_POWERLINE_HOME/lib/formatting.sh"
 source "$TMUX_POWERLINE_HOME/lib/powerline.sh"
 
