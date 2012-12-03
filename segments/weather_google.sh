@@ -73,7 +73,7 @@ read_tmp_file() {
 
 degrees=""
 if [ -f "$tmp_file" ]; then
-	if [ "$SHELL_PLATFORM" == "OSX" ]; then
+	if shell_is_osx; then
 		last_update=$(stat -f "%m" ${tmp_file})
 	else
 		last_update=$(stat -c "%Y" ${tmp_file})
@@ -93,7 +93,7 @@ if [ -z "$degrees" ]; then
 		search_unit="$unit"
 	fi
 	# Convert spaces before using this in the URL.
-	if [ "$SHELL_PLATFORM" == "OSX" ]; then
+	if shell_is_osx; then
 		search_location=$(echo "$location" | sed -e 's/[ ]/%20/g')
 	else
 		search_location=$(echo "$location" | sed -e 's/\s/%20/g')
@@ -107,7 +107,7 @@ if [ -z "$degrees" ]; then
 			exit 1
 		fi
 		degrees=$(echo "$weather_data" | sed "s|.*<temp_${search_unit} data=\"\([^\"]*\)\"/>.*|\1|")
-		if [ "$SHELL_PLATFORM" == "OSX" ]; then
+		if shell_is_osx; then
 			conditions=$(echo $weather_data | xpath //current_conditions/condition/@data 2> /dev/null | grep -oe '".*"' | sed "s/\"//g")
 		else
 			conditions=$(echo "$weather_data" | grep -PZo "<current_conditions>(\\n|.)*</current_conditions>" | grep -PZo "(?<=<condition\sdata=\")([^\"]*)")

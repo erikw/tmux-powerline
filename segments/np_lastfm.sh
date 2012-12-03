@@ -15,7 +15,7 @@ max_len=40			# Trim output to this length.
 roll_speed=2		# Roll speed in chraacters per second.
 
 if [ -f "$tmp_file" ]; then
-	if [ "$SHELL_PLATFORM" == "OSX" ]; then
+	if shell_is_osx; then
 		last_update=$(stat -f "%m" ${tmp_file})
 	else
 		last_update=$(stat -c "%Y" ${tmp_file})

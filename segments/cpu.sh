@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # Prints the CPU usage: user% sys% idle.
 
-if [ "$SHELL_PLATFORM" == "LINUX" ] ; then
+if shell_is_linux; then
     cpu_line=$(top -b -n 1 | grep "Cpu(s)" )
     cpu_user=$(echo "$cpu_line" | grep -Po "(\d+(.\d+)?)(?=%?\s?(us(er)?))")
     cpu_system=$(echo "$cpu_line" | grep -Po "(\d+(.\d+)?)(?=%?\s?(sys?))")

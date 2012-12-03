@@ -40,14 +40,14 @@ fi
 
 # Refresh mail count if the tempfile is older than $interval minutes.
 let interval=60*$interval
-if [ "$SHELL_PLATFORM" == "OSX" ]; then
+if shell_is_osx; then
   	last_update=$(stat -f "%m" ${tmp_file})
 else
   	last_update=$(stat -c "%Y" ${tmp_file})
 fi
 if [ "$(( $(date +"%s") - ${last_update} ))" -gt "$interval" ] || [ "$override" == true ]; then
     	if [ -z "$password" ]; then # Get password from keychain if it isn't already set.
-        	if [ "$SHELL_PLATFORM" == "OSX" ]; then
+        	if shell_is_osx; then
             		mac_keychain_get_pass "${username}@${server}" $server
         	else
             		echo "Implement your own sexy password fetching mechanism here."

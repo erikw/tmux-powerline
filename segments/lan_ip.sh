@@ -2,7 +2,7 @@
 # Prints the local network IP address for a staticly defined NIC or search for an IP address on all active NICs.
 
 # TODO fix the mac part so it also can search for interfaces like the Linux one can.
-if [ "$SHELL_PLATFORM" == "OSX" ]; then
+if shell_is_osx; then
 	nic0="en0"
 	nic1="en1"
 
