@@ -2,7 +2,7 @@
 # Prints the WAN IP address. The result is cached and updated according to $update_period.
 
 # Cache file.
-tmp_file="${tp_tmpdir}/wan_ip.txt"
+tmp_file="${TMUX_POWERLINE_TEMPORARY_DIRECTORY}/wan_ip.txt"
 
 wan_ip=""
 if [ -f "$tmp_file" ]; then

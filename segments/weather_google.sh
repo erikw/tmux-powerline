@@ -12,7 +12,7 @@ unit="c"
 update_period=600
 
 # Cach file.
-tmp_file="${tp_tmpdir}/weather_google.txt"
+tmp_file="${TMUX_POWERLINE_TEMPORARY_DIRECTORY}/weather_google.txt"
 
 get_condition_symbol() {
 	local conditions=$(echo "$1" | tr '[:upper:]' '[:lower:]')
