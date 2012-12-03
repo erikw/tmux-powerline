@@ -35,10 +35,8 @@ source "$TMUX_POWERLINE_HOME/lib/tmux_adapter.sh"
 source "$TMUX_POWERLINE_HOME/lib/formatting.sh"
 source "$TMUX_POWERLINE_HOME/lib/powerline.sh"
 
-# Mute this statusbar?
-mute_status_check $1
-
-# Print the status line in the order of registration above.
-print_powerline $1
+if ! muted $1; then
+  print_powerline $1
+fi
 
 exit 0
