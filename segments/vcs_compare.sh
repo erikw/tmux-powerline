@@ -29,8 +29,8 @@ parse_git_stats(){
     # creates global variables $1 and $2 based on left vs. right tracking
     set -- $(git rev-list --left-right --count $tracking_branch...HEAD)
 
-    ahead=$1
-    behind=$2
+    behind=$1
+    ahead=$2
 
     # print out the information
     if [[ $behind -gt 0 ]] ; then
