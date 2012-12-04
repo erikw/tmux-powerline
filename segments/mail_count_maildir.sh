@@ -11,6 +11,11 @@ fi
 
 nbr_new=$(ls "$inbox" | wc -l)
 
+# Fix for mac, otherwise whitespace is left in output
+if [ "$PLATFORM" == "mac" ]; then
+	nbr_new=$(echo "$nbr_new" | sed -e "s/^[ \t]*//")
+fi
+
 if [ "$nbr_new" -gt "0" ]; then
 	echo "✉ ${nbr_new}"
 fi
