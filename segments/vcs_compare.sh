@@ -24,36 +24,20 @@ parse_git_stats(){
     # check if git
     [[ -z $(git rev-parse --git-dir 2> /dev/null) ]] && return
 
-    refs=$(git symbolic-ref HEAD 2> /dev/null)
-    branch=${refs##*/}
-    if [[ -z $branch ]] ; then
-        branch=$(git rev-parse --short HEAD)
-    fi
+    tracking_branch=$(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD))
 
-    # look up this branch in the configuration
-    remote=$(git config branch.$branch.remote)
-    remote_ref=$(git config branch.$branch.merge)
+    # creates global variables $1 and $2 based on left vs. right tracking
+    set -- $(git rev-list --left-right --count $tracking_branch...HEAD)
 
-    # if this branch is not connected to a remote
-    [[ -z $remote ]] && return
-
-    # convert the remote ref into the tracking ref... this is a hack
-    remote_branch=$(expr $remote_ref : 'refs/heads/\(.*\)')
-    tracking_branch=refs/remotes/$remote/$remote_branch
-
-    # make a list of behind/ahead left/right sha's
-    tmpLR=/tmp/$(basename $0).left-right
-    git rev-list --left-right $tracking_branch...HEAD &> $tmpLR
-
-    numAhead=$(grep ">" $tmpLR | wc -l)
-    numBehind=$(grep "<" $tmpLR | wc -l)
+    ahead=$1
+    behind=$2
 
     # print out the information
-    if [[ $numBehind -gt 0 ]] ; then
-        local ret="↓ $numBehind"
+    if [[ $behind -gt 0 ]] ; then
+        local ret="↓ $behind"
     fi
-    if [[ $numAhead -gt 0 ]] ; then
-        local ret="${ret}↑ $numAhead"
+    if [[ $ahead -gt 0 ]] ; then
+        local ret="${ret}↑ $ahead"
     fi
     echo $ret
 }
