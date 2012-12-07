@@ -62,6 +62,7 @@ Requirements for some segments. You only need to fullfill the requirements for t
 * xkb_layout.sh: X11, XKB
 * mail_count_gmail.sh: wget.
 * ifstat.sh: ifstat (there is a simpler segment not using ifstat but samples /sys/class/net)
+* tmux_mem_cpu_load.sh: [tmux-mem-cpu-load](https://github.com/thewtex/tmux-mem-cpu-load)
 
 ## OS X specific requirements
 

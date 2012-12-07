@@ -70,6 +70,13 @@ load+=(["background"]="colour237")
 load+=(["separator"]="${separator_left_bold}")
 register_segment "load"
 
+declare -A tmux_mem_cpu_load
+tmux_mem_cpu_load+=(["script"]="${segments_path}/tmux_mem_cpu_load.sh")
+tmux_mem_cpu_load+=(["foreground"]="colour136")
+tmux_mem_cpu_load+=(["background"]="colour234")
+tmux_mem_cpu_load+=(["separator"]="${separator_left_bold}")
+#register_segment "tmux_mem_cpu_load"
+
 declare -A battery
 if [ "$PLATFORM" == "mac" ]; then
 	battery+=(["script"]="${segments_path}/battery_mac.sh")
