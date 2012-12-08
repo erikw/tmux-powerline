@@ -94,7 +94,12 @@ $ echo $SHELL
 /usr/local/Cellar/bash/%INSTALLED_VERSION%/bin/bash
 ```
 
-It is [reported](https://github.com/erikw/tmux-powerline/issues/71) that the `grep` tool is outdatted on OS X 10.8 Mountain Lion so you might have to upgrade it using .e.g homebrew since may segments uses grep with these new features.
+The `grep` tool is outdatted on OS X 10.8 Mountain Lion so you might have to upgrade it. Unfortunately the main homebrew repo 
+[does not contain grep](https://github.com/mxcl/homebrew/pull/3473) so use the following command to get the lastest version.
+
+```bash
+brew install https://raw.github.com/Homebrew/homebrew-dupes/master/grep.rb
+```
 
 # Installation
 Just check out the repository with:
