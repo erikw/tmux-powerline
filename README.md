@@ -109,6 +109,14 @@ $ cd ~/some/path/
 $ git clone git://github.com/erikw/tmux-powerline.git
 ```
 
+If you have CMake and want to install it with the rest of your system files also do this:
+
+```console
+$ cd tmux-powerline/build
+$ cmake ..
+$ sudo make install
+```
+
 Now edit your `~/.tmux.conf` to use the scripts:
 
 <!-- Close syntax enought. -->
