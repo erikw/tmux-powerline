@@ -16,7 +16,7 @@ The following segments exists for now:
 * Current X keyboard layout.
 * Network download/upload speed.
 
-Check [segments/](https://github.com/erikw/tmux-powerline/tree/master/segments) for more undocumented segments and details.
+Check [src/segments/](https://github.com/erikw/tmux-powerline/tree/master/src/segments) for more undocumented segments and details.
 
 # Screenshots
 **Full screenshot**
