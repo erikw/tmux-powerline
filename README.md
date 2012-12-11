@@ -16,7 +16,7 @@ The following segments exists for now:
 * Current X keyboard layout.
 * Network download/upload speed.
 
-Check [segments/](https://github.com/erikw/tmux-powerline/tree/master/segments) for more undocumented segments and details.
+Check [src/segments/](https://github.com/erikw/tmux-powerline/tree/master/src/segments) for more undocumented segments and details.
 
 # Screenshots
 **Full screenshot**
@@ -107,6 +107,14 @@ Just check out the repository with:
 ```console
 $ cd ~/some/path/
 $ git clone git://github.com/erikw/tmux-powerline.git
+```
+
+If you have CMake and want to install it with the rest of your system files also do this:
+
+```console
+$ cd tmux-powerline/build
+$ cmake ..
+$ sudo make install
 ```
 
 Now edit your `~/.tmux.conf` to use the scripts:
