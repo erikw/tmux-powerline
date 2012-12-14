@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Print Spotify now playing for GNU/Linux running in wine.
 
-trim_method="trim" 	# Can be {trim or roll).
-max_len=40		# Trim output to this length.
+trim_method="trim"	# Can be {trim or roll).
+max_len=40			# Trim output to this length.
 roll_speed=2		# Roll speed in chraacters per second.
 
 segment_path=$(dirname $0)
@@ -15,11 +15,11 @@ echo $spotify_id
 if [ -n "$spotify_id" ]; then
 	np=$(xwininfo -id "$spotify_id" | grep "xwininfo.*Spotify -" | grep -Po "(?<=\"Spotify - ).*(?=\"$)")
 	if [ -n "$np" ]; then
-        case "$trim_method" in
-            "roll")
-        		np=$(roll_text "${np}" ${max_len} ${roll_speed})
-        		;;
-            "trim")
+		case "$trim_method" in
+			"roll")
+				np=$(roll_text "${np}" ${max_len} ${roll_speed})
+				;;
+			"trim")
 				np=${np:0:max_len}
 				;;
 		esac

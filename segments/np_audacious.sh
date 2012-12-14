@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Print Audacious now playing.
 
-trim_method="trim" 	# Can be {trim or roll).
-max_len=40		# Trim output to this length.
-roll_speed=2		# Roll speed in chraacters per second.
+trim_method="trim"	# Can be {trim or roll).
+max_len=40			# Trim output to this length.
+roll_speed=2				# Roll speed in chraacters per second.
 
 segment_path=$(dirname $0)
 source "$segment_path/../lib/text_roll.sh"
@@ -11,16 +11,16 @@ source "$segment_path/../lib/text_roll.sh"
 # Check if audacious is playing and print that song.
 audacious_pid=$(pidof audacious)
 if [ -n "$audacious_pid" ]; then
-    if $(audtool playback-playing); then
-        np=$(audtool current-song)
-        case "$trim_method" in
-            "roll")
-        		np=$(roll_text "${np}" ${max_len} ${roll_speed})
-        		;;
-            "trim")
+	if $(audtool playback-playing); then
+		np=$(audtool current-song)
+		case "$trim_method" in
+			"roll")
+				np=$(roll_text "${np}" ${max_len} ${roll_speed})
+				;;
+			"trim")
 				np=${np:0:max_len}
 				;;
 		esac
 		echo "♫ ${np}"
-    fi
+	fi
 fi

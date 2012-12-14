@@ -2,13 +2,10 @@
 # Print the current working directory (trimmed to max length).
 # NOTE The trimming code's stolen from the web. Courtesy to who ever wrote it.
 
-max_len=40		# Max output length.
+max_len=40			# Max output length.
 
 segment_path=$(dirname $0)
 source "$segment_path/../lib/tmux_adapter.sh"
-
-# Truncate from the right.
-#echo $(get_tmux_cwd | sed -e "s|${HOME}|~|" -e 's/^~$/~\//' -e 's/\(.\{40\}\).*$/\1.../')
 
 # Truncate from the left.
 tcwd=$(get_tmux_cwd)

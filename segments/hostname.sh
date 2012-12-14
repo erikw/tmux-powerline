@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# Prints the hostname
+# Prints the hostname.
 hostname -s
 
 exit 0

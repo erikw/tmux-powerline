@@ -10,9 +10,9 @@ update_period=30
 # Cache file.
 tmp_file="${TMUX_POWERLINE_TEMPORARY_DIRECTORY}/np_lastfm.txt"
 
-trim_method="trim" 	# Can be {trim or roll).
-max_len=40			# Trim output to this length.
-roll_speed=2		# Roll speed in chraacters per second.
+trim_method="trim"	# Can be {trim or roll).
+max_len=40					# Trim output to this length.
+roll_speed=2				# Roll speed in chraacters per second.
 
 if [ -f "$tmp_file" ]; then
 	if shell_is_osx; then
@@ -37,16 +37,16 @@ if [ -z "$np" ]; then
 fi
 
 if [ -n "$np" ]; then
-    case "$trim_method" in
-        "roll")
-        	np=$(roll_text "${np}" ${max_len} ${roll_speed})
-        	;;
-        "trim")
+	case "$trim_method" in
+		"roll")
+			np=$(roll_text "${np}" ${max_len} ${roll_speed})
+			;;
+		"trim")
 			np=${np:0:max_len}
 			;;
 	esac
 	echo "♫ ${np}"
-    exit 0
+	exit 0
 else
 	exit 1
 fi
