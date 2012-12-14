@@ -7,7 +7,7 @@ max_len=40		# Trim output to this length.
 roll_speed=2		# Roll speed in chraacters per second.
 
 segment_path=$(dirname $0)
-source "$segment_path/../lib.sh"
+source "$segment_path/../lib/text_marquee.sh"
 
 np=$(mpc current 2>&1)
 if [ $? -eq 0 ] && [ -n "$np" ]; then

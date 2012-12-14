@@ -6,7 +6,7 @@ max_len=20		# Trim output to this length.
 roll_speed=2		# Roll speed in chraacters per second.
 
 segment_path=$(dirname $0)
-source "$segment_path/../lib.sh"
+source "$segment_path/../lib/text_marquee.sh"
 
 # Check if rhythmbox is playing and print that song.
 mocp_pid=$(pidof mocp)

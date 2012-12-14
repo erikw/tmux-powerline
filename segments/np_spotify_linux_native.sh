@@ -8,7 +8,7 @@ max_len=40		# Trim output to this length.
 roll_speed=2		# Roll speed in chraacters per second.
 
 segment_path=$(dirname $0)
-source "$segment_path/../lib.sh"
+source "$segment_path/../lib/text_marquee.sh"
 
 metadata=$(dbus-send --reply-timeout=42 --print-reply --dest=org.mpris.MediaPlayer2.spotify / org.freedesktop.MediaPlayer2.GetMetadata 2>/dev/null)
 if [ "$?" -eq 0 ] && [ -n "$metadata" ]; then

@@ -3,19 +3,19 @@
 username=""	# Your last.fm username
 
 segment_path=$(dirname $0)
-source "$segment_path/../lib.sh"
+source "$segment_path/../lib/text_marquee.sh"
 
 # Update period in seconds.
 update_period=30
 # Cache file.
-tmp_file="${tp_tmpdir}/np_lastfm.txt"
+tmp_file="${TMUX_POWERLINE_TEMPORARY_DIRECTORY}/np_lastfm.txt"
 
 trim_method="trim" 	# Can be {trim or roll).
 max_len=40			# Trim output to this length.
 roll_speed=2		# Roll speed in chraacters per second.
 
 if [ -f "$tmp_file" ]; then
-	if [ "$PLATFORM" == "mac" ]; then
+	if shell_is_osx; then
 		last_update=$(stat -f "%m" ${tmp_file})
 	else
 		last_update=$(stat -c "%Y" ${tmp_file})

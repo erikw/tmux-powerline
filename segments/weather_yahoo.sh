@@ -14,7 +14,7 @@ unit="f"
 update_period=600
 
 # Cache file.
-tmp_file="${tp_tmpdir}/weather_yahoo.txt"
+tmp_file="${TMUX_POWERLINE_TEMPORARY_DIRECTORY}/weather_yahoo.txt"
 
 # Get symbol for condition. Available conditions: http://developer.yahoo.com/weather/#codes
 get_condition_symbol() {
@@ -82,7 +82,7 @@ read_tmp_file() {
 
 degree=""
 if [ -f "$tmp_file" ]; then
-    if [ "$PLATFORM" == "mac" ]; then
+    if shell_is_osx; then
         last_update=$(stat -f "%m" ${tmp_file})
     else
         last_update=$(stat -c "%Y" ${tmp_file})

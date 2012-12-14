@@ -4,8 +4,8 @@
 
 max_len=40		# Max output length.
 
-segment_cwd=$(dirname $0)
-source "$segment_cwd/../lib.sh"
+segment_path=$(dirname $0)
+source "$segment_path/../lib/tmux_adapter.sh"
 
 # Truncate from the right.
 #echo $(get_tmux_cwd | sed -e "s|${HOME}|~|" -e 's/^~$/~\//' -e 's/\(.\{40\}\).*$/\1.../')
