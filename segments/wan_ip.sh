@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Prints the WAN IP address. The result is cached and updated according to $update_period.
 
 tmp_file="${TMUX_POWERLINE_TEMPORARY_DIRECTORY}/wan_ip.txt"
