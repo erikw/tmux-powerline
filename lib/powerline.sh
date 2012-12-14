@@ -1,4 +1,4 @@
-# Library functions.
+# Library functions
 
 print_powerline() {
   local side="$1"

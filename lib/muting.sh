@@ -1,8 +1,6 @@
-###
 # Muting Logic
-#
-# In all cases $1 is the side to be muted (eg left/right)
-#
+# In all cases $1 is the side to be muted (eg left/right).
+
 powerline_muted() {
   [ -e "$(__powerline_mute_file $1)" ];
 }
