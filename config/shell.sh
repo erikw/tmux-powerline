@@ -1,16 +1,15 @@
-###
 # Shell Configuration
-#
+
 export SHELL_PLATFORM='OTHER'
 
 case "$OSTYPE" in
-  *'linux'*   ) SHELL_PLATFORM='LINUX' ;;
-  *'darwin'*  ) SHELL_PLATFORM='OSX' ;;
-  *'freebsd'* ) SHELL_PLATFORM='BSD' ;;
+  *'linux'*   ) SHELL_PLATFORM='linux' ;;
+  *'darwin'*  ) SHELL_PLATFORM='osx' ;;
+  *'freebsd'* ) SHELL_PLATFORM='bsd' ;;
 esac
 
-shell_is_linux () { [[ $SHELL_PLATFORM == 'BSD' || $SHELL_PLATFORM == 'LINUX' ]]; }
-shell_is_osx   () { [[ $SHELL_PLATFORM == 'OSX' ]]; }
+shell_is_linux () { [[ $SHELL_PLATFORM == 'bsd' || $SHELL_PLATFORM == 'linux' ]]; }
+shell_is_osx   () { [[ $SHELL_PLATFORM == 'osx' ]]; }
 
 export -f shell_is_linux
 export -f shell_is_osx
