@@ -1,6 +1,6 @@
 # Shell Configuration
 
-export SHELL_PLATFORM='OTHER'
+export SHELL_PLATFORM='unknown'
 
 case "$OSTYPE" in
   *'linux'*   ) SHELL_PLATFORM='linux' ;;
