@@ -1,6 +1,5 @@
-###
 # Paths
-#
+
 export TMUX_POWERLINE_SEGMENTS_HOME="$TMUX_POWERLINE_HOME/segments"
 export TMUX_POWERLINE_TEMPORARY_DIRECTORY="/tmp/tmux-powerline"
 

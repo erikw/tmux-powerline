@@ -1,3 +1,5 @@
+# Default configuration.
+
 debug_mode_enabled  () {
   [ -n "$TMUX_POWERLINE_DEBUG_MODE_ENABLED" -a "$TMUX_POWERLINE_DEBUG_MODE_ENABLED" != "false" ];
 }
