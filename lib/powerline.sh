@@ -33,11 +33,19 @@ __process_scripts() {
 	for segment_index in "${!powerline_segments[@]}"; do
 		local powerline_segment=(${powerline_segments[$segment_index]})
 		local script="$TMUX_POWERLINE_SEGMENTS_HOME/${powerline_segment[0]}.sh"
-		local output=$($script)
+		# Can't be declared local if we want the exit code.
+		output=$(${script})
+		local exit_code="$?"
+
+		if [ "$exit_code" -ne 0 ] && debug_mode_enabled ; then
+			local seg_name="${script##*/}"
+			echo "Segment '${seg_name}' exited with code ${exit_code}. Aborting."
+     	 	exit 1
+     	fi
 
 		if [ -n "$output" ]; then
 			powerline_segment_contents[$segment_index]=" $output "
-		else
+     	else
 			unset -v powerline_segments[$segment_index]
 		fi
 	done
@@ -106,5 +114,5 @@ __print_right_segment() {
 
 __segment_separator_is_thin() {
 	[[ ${powerline_segment[3]} == $TMUX_POWERLINE_SEPARATOR_LEFT_THIN || \
-		 ${powerline_segment[3]} == $TMUX_POWERLINE_SEPARATOR_RIGHT_THIN ]];
+		${powerline_segment[3]} == $TMUX_POWERLINE_SEPARATOR_RIGHT_THIN ]];
 }
