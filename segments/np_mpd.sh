@@ -10,7 +10,7 @@ max_len=40			# Trim output to this length.
 roll_speed=2		# Roll speed in chraacters per second.
 
 segment_path=$(dirname $0)
-source "$segment_path/../lib/text_marquee.sh"
+source "$segment_path/../lib/text_roll.sh"
 
 # Source MPD environment variables (MPD_HOST and MPD_PORT). I refactored out this from ~/.bashrc and source this file there as well. This is not needed if you run your MPD server at localhost, no password and on the standard port.
 if [ -f $HOME/.mpd_env ]; then

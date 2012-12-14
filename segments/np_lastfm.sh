@@ -3,7 +3,7 @@
 username=""	# Your last.fm username
 
 segment_path=$(dirname $0)
-source "$segment_path/../lib/text_marquee.sh"
+source "$segment_path/../lib/text_roll.sh"
 
 # Update period in seconds.
 update_period=30

@@ -6,7 +6,7 @@ max_len=40		# Trim output to this length.
 roll_speed=2		# Roll speed in chraacters per second.
 
 segment_path=$(dirname $0)
-source "$segment_path/../lib/text_marquee.sh"
+source "$segment_path/../lib/text_roll.sh"
 
 # Check if banshee is playing and print that song.
 banshee_pid=$(pidof banshee)
