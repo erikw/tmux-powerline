@@ -12,8 +12,8 @@ source "$TMUX_POWERLINE_HOME/lib/muting.sh"
 source "$TMUX_POWERLINE_HOME/lib/formatting.sh"
 source "$TMUX_POWERLINE_HOME/lib/powerline.sh"
 
-if ! powerline_muted $1; then
-  print_powerline $1
+if ! powerline_muted "$1"; then
+  print_powerline "$1"
 fi
 
 exit 0
