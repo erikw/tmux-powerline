@@ -16,5 +16,5 @@ toggle_powerline_mute_status() {
 __powerline_mute_file() {
 	local tmux_session=$(tmux display -p "#S")
 
-	echo -n "${TMUX_POWERLINE_TEMPORARY_DIRECTORY}/mute_${tmux_session}_$1"
+	echo -n "${TMUX_POWERLINE_DIR_TEMPORARY}/mute_${tmux_session}_$1"
 }

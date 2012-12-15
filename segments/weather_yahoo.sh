@@ -14,7 +14,7 @@ unit="f"
 update_period=600
 
 # Cache file.
-tmp_file="${TMUX_POWERLINE_TEMPORARY_DIRECTORY}/weather_yahoo.txt"
+tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_yahoo.txt"
 
 # Get symbol for condition. Available conditions: http://developer.yahoo.com/weather/#codes
 get_condition_symbol() {

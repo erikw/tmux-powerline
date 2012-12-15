@@ -34,7 +34,7 @@ __process_segment_defaults() {
 __process_scripts() {
 	for segment_index in "${!powerline_segments[@]}"; do
 		local powerline_segment=(${powerline_segments[$segment_index]})
-		local script="$TMUX_POWERLINE_SEGMENTS_HOME/${powerline_segment[0]}.sh"
+		local script="$TMUX_POWERLINE_DIR_SEGMENTS/${powerline_segment[0]}.sh"
 		# Can't be declared local if we want the exit code.
 		output=$(${script})
 		local exit_code="$?"

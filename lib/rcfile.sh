@@ -7,7 +7,7 @@ process_settings() {
 	if [ -z "$TMUX_POWERLINE_THEME" ]; then
 		TMUX_POWERLINE_THEME="default"
 	fi
-	source "${TMUX_POWERLINE_THEMES_DIRECTORY}/${TMUX_POWERLINE_THEME}.sh"
+	source "${TMUX_POWERLINE_DIR_THEMES}/${TMUX_POWERLINE_THEME}.sh"
 
 }
 
