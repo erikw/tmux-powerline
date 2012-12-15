@@ -11,7 +11,7 @@
 
 # This script will print the correct layout even if layout is set per window.
 # Exit if platform is not linux as this script is dependant on X11
-if shell_is_linux; then
+if ! shell_is_linux; then
 	exit 1
 fi
 
