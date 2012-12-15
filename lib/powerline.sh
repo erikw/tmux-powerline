@@ -6,6 +6,8 @@ print_powerline() {
 	local powerline_segments=()
 	local powerline_segment_contents=()
 
+	__check_platform
+
 	__process_segment_defaults
 	__process_scripts
 	__process_colors
@@ -116,3 +118,10 @@ __segment_separator_is_thin() {
 	[[ ${powerline_segment[3]} == $TMUX_POWERLINE_SEPARATOR_LEFT_THIN || \
 		${powerline_segment[3]} == $TMUX_POWERLINE_SEPARATOR_RIGHT_THIN ]];
 }
+
+__check_platform() {
+	if [ "$SHELL_PLATFORM" == "unknown" ] && debug_mode_enabled; then
+		 echo "Unknown platform; modify config/shell.sh"  &1>&2
+	fi
+}
+
