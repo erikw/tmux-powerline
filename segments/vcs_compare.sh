@@ -10,10 +10,6 @@ tmux_path=$(get_tmux_cwd)
 cd "$tmux_path"
 
 flat_symbol="⤚"
-git_colour="colour5"
-git_svn_colour="colour34"
-svn_colour="colour220"
-hg_colour="colour45"
 
 parse_git_stats(){
 	type git >/dev/null 2>&1
