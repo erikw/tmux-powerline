@@ -1,6 +1,5 @@
-###
 # Default Theme
-#
+
 if patched_font_in_use; then
 	TMUX_POWERLINE_SEPARATOR_LEFT_BOLD="⮂"
 	TMUX_POWERLINE_SEPARATOR_LEFT_THIN="⮃"
