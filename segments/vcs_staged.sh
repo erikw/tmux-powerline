@@ -17,12 +17,12 @@ parse_git_stats(){
 		return
 	fi
 
-    # check if git
+    # Check if git.
     [[ -z $(git rev-parse --git-dir 2> /dev/null) ]] && return
 
-    # return the number of staged items
+    # Return the number of staged items.
     staged=$(git diff --staged --name-status | wc -l)
-    echo $staged
+    echo "$staged"
 }
 parse_hg_stats(){
 	type svn >/dev/null 2>&1
@@ -50,3 +50,5 @@ fi
 if [[ -n "$stats" && $stats -gt 0 ]]; then
     echo "${staged_symbol}${stats}"
 fi
+
+exit 0

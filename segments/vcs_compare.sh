@@ -35,7 +35,7 @@ parse_git_stats(){
     if [[ $ahead -gt 0 ]] ; then
         local ret="${ret}↑ $ahead"
     fi
-    echo $ret
+    echo "$ret"
 }
 parse_hg_stats(){
 	type svn >/dev/null 2>&1
