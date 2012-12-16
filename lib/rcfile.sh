@@ -35,7 +35,7 @@ EORC
 	for segment in ${TMUX_POWERLINE_DIR_SEGMENTS}/*.sh; do
 		source "$segment"
 		if declare -f generate_segmentrc >/dev/null; then
-			segmentrc=$(generate_segmentrc | sed -e 's/^/\t/g')
+			segmentrc=$(generate_segmentrc | sed -e 's/^/\\t/g')
 			local seg_name="${segment##*/}"
 			rccontents="${rccontents}\n\n# ${seg_name} {\n${segmentrc}\n# }"
 			unset -f generate_segmentrc
