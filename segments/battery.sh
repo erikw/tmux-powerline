@@ -2,9 +2,6 @@
 
 #CUTE_BATTERY_INDICATOR="true"
 
-segment_path=$(dirname $0)
-source "../config/shell.sh"
-
 HEART_FULL=♥
 HEART_EMPTY=♡
 [ -z "$NUM_HEARTS" ] && NUM_HEARTS=5

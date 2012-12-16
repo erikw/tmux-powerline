@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Generate default rc file.
 
-cwd="$(dirname $0)"
-source "${cwd}/config/paths.sh"
-source "${cwd}/lib/rcfile.sh"
+export TMUX_POWERLINE_DIR_HOME="$(dirname $0)"
+source "${TMUX_POWERLINE_DIR_HOME}/config/paths.sh"
+source "${TMUX_POWERLINE_DIR_HOME}/lib/rcfile.sh"
 
 generate_default_rc
 

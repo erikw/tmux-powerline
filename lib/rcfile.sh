@@ -32,8 +32,17 @@ generate_default_rc() {
 # }
 EORC
 
-	# TODO process all segments and call their default_conf function.
-	echo "$rccontents" > "$TMUX_POWERLINE_RCFILE_DEFAULT"
+	for segment in ${TMUX_POWERLINE_DIR_SEGMENTS}/*.sh; do
+		source "$segment"
+		if declare -f generate_segmentrc >/dev/null; then
+			segmentrc=$(generate_segmentrc | sed -e 's/^/\t/g')
+			local seg_name="${segment##*/}"
+			rccontents="${rccontents}\n\n# ${seg_name} {\n${segmentrc}\n# }"
+			unset -f generate_segmentrc
+		fi
+	done
+
+	echo -e "$rccontents" > "$TMUX_POWERLINE_RCFILE_DEFAULT"
 	echo "Default configuration file generated to: ${TMUX_POWERLINE_RCFILE_DEFAULT}"
 	echo "Copy/move it to \"${TMUX_POWERLINE_RCFILE}\" and make your changes."
 }
