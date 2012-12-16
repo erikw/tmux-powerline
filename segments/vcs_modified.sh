@@ -2,8 +2,7 @@
 # or behind the remote branch with which it is tracked
 
 # Source lib to get the function get_tmux_pwd
-#source "${TMUX_POWERLINE_DIR_HOME)/lib/tmux_adapter.sh" # TODO needed now?
-
+source "${TMUX_POWERLINE_DIR_HOME}/lib/tmux_adapter.sh"
 
 mod_symbol="﹢"
 

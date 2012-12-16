@@ -73,6 +73,16 @@ run_segment() {
 	return 0;
 } 
 
+__process_settings() {
+	if [ -z "$TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER" ]; then
+		export TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER="${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER_DEFAULT}"
+	fi
+	if [ -z "$TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_INTERVAL" ]; then
+		export TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_INTERVAL="${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_INTERVAL_DEFAULT}"
+	fi
+}
+
+
 # Get password from OS X keychain.
 __mac_keychain_get_pass() {
 	result=$(security 2>&1 > /dev/null find-internet-password -ga $1 -s $2)

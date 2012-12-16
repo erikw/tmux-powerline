@@ -1,29 +1,55 @@
 # Prints the current weather in Celsius, Fahrenheits or lord Kelvins. The forecast is cached and updated with a period of $update_period.
 
-# You location. Find a code that works for you:
-# 1. Go to Yahoo weather http://weather.yahoo.com/
-# 2. Find the weather for you location
-# 3. Copy the last numbers in that URL. e.g. "http://weather.yahoo.com/united-states/california/newport-beach-12796587/" has the number "12796587"
-location="12796587"
-
-# Can be any of {c,f,k}.
 unit="f"
 
 # The update period in seconds.
 update_period=600
 
+TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT="yahoo"
+TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAULT="c"
+TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT="600"
+
 # Cache file.
 tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_yahoo.txt"
 
-data_provider="yahoo"
+generate_segmentrc() {
+	read -d '' rccontents  << EORC
+# The data provider to use. Currently only "yahoo" is supported.
+export TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER="${TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT}"
+# What unit to use. Can be any of {c,f,k}.
+export TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAULT="${TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAULT}"
+# How often to updat the weahter in seconds.
+export TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT}"
+
+# You location. Find a code that works for you:
+# 1. Go to Yahoo weather http://weather.yahoo.com/
+# 2. Find the weather for you location
+# 3. Copy the last numbers in that URL. e.g. "http://weather.yahoo.com/united-states/california/newport-beach-12796587/" has the number "12796587"
+export TMUX_POWERLINE_SEG_WEATHER_LOCATION=""
+EORC
+	echo "$rccontents"
+}
 
 run_segment() {
+	__process_settings
 	local weather
-	case "$data_provider" in
+	case "$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER" in
 		"yahoo") weather=$(__yahoo_weather) ;;
 	esac
 	if [ -n "$weather" ]; then
 		echo "$weather"
+	fi
+}
+
+__process_settings() {
+	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER" ]; then
+		export TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER="${TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT}"
+	fi
+	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_UNIT" ]; then
+		export TMUX_POWERLINE_SEG_WEATHER_UNIT="${TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAULT_DEFAULT}"
+	fi
+	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD" ]; then
+		export TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT}"
 	fi
 }
 
@@ -39,12 +65,12 @@ __yahoo_weather() {
 
     	up_to_date=$(echo "(${time_now}-${last_update}) < ${update_period}" | bc)
     	if [ "$up_to_date" -eq 1 ]; then
-        	read_tmp_file
+        	__read_tmp_file
     	fi
 	fi
 
 	if [ -z "$degree" ]; then
-    	weather_data=$(curl --max-time 4 -s "http://weather.yahooapis.com/forecastrss?w=${location}&u=${unit}")
+    	weather_data=$(curl --max-time 4 -s "http://weather.yahooapis.com/forecastrss?w=${TMUX_POWERLINE_SEG_WEATHER_LOCATION}&u=${TMUX_POWERLINE_SEG_WEATHER_UNIT}")
     	if [ "$?" -eq "0" ]; then
         	error=$(echo "$weather_data" | grep "problem_cause\|DOCTYPE");
         	if [ -n "$error" ]; then
@@ -60,17 +86,16 @@ __yahoo_weather() {
         	echo "$degree" > $tmp_file
         	echo "$condition" >> $tmp_file
     	elif [ -f "$tmp_file" ]; then
-        	read_tmp_file
+        	__read_tmp_file
     	fi
 	fi
 
 	if [ -n "$degree" ]; then
-    	if [ "$unit" == "k" ]; then
+    	if [ "$TMUX_POWERLINE_SEG_WEATHER_UNIT" == "k" ]; then
         	degree=$(echo "${degree} + 273.15" | bc)
     	fi
-    	unit_upper=$(echo "$unit" | tr '[cfk]' '[CFK]')
     	condition_symbol=$(__get_condition_symbol "$condition")
-    	echo "${condition_symbol} ${degree}°${unit_upper}"
+    	echo "${condition_symbol} ${degree}°${TMUX_POWERLINE_SEG_WEATHER_UNIT^^}"
 	fi
 }
 
@@ -126,7 +151,7 @@ __get_condition_symbol() {
     esac
 }
 
-read_tmp_file() {
+__read_tmp_file() {
     if [ ! -f "$tmp_file" ]; then
         return
     fi
