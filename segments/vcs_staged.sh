@@ -19,6 +19,7 @@ run_segment() {
     	stats="$hg_stats"
 	fi
 	if [[ -n "$stats" && $stats -gt 0 ]]; then
+		stats=$(echo $stats | sed -e "s/^[ \t]*//")
     	echo "${staged_symbol}${stats}"
 	fi
 	return 0
