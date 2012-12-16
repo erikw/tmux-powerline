@@ -31,7 +31,7 @@ export TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_USERNAME=""
 # How often in seconds to update the data from last.fm.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_UPDATE_PERIOD_DEFAULT}"
 EORC
-echo "$rccontents"
+	echo "$rccontents"
 }
 
 run_segment() {

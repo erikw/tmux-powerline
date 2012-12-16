@@ -1,12 +1,23 @@
 # LICENSE This code is not under the same license as the rest of the project as it's "stolen". It's cloned from https://github.com/richoH/dotfiles/blob/master/bin/battery and just some modifications are done so it works for my laptop. Check that URL for more recent versions.
 
-#CUTE_BATTERY_INDICATOR="true"
+TMUX_POWERLINE_SEG_BATTERY_TYPE_DEFAULT="percentage"
+TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS_DEFAULT=5
 
-HEART_FULL=♥
-HEART_EMPTY=♡
-[ -z "$NUM_HEARTS" ] && NUM_HEARTS=5
+HEART_FULL="♥"
+HEART_EMPTY="♡"
+
+generate_segmentrc() {
+	read -d '' rccontents  << EORC
+# How to display battery remaining. Can be {percentage, cute}.
+export TMUX_POWERLINE_SEG_BATTERY_TYPE="${TMUX_POWERLINE_SEG_BATTERY_TYPE_DEFAULT}"
+# How may hearts to show if cute indicators are used.
+export TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS="${TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS_DEFAULT}"
+EORC
+	echo "$rccontents"
+}
 
 run_segment() {
+	__process_settings
 	if shell_is_osx; then
 		battery_status=$(__battery_osx)
 	else
@@ -14,10 +25,24 @@ run_segment() {
 	fi
 	[ -z "$battery_status" ] && return
 
-	if [ -n "$CUTE_BATTERY_INDICATOR" ]; then
-		echo `__cutinate $battery_status`
-	else
-		echo "${HEART_FULL} ${battery_status}%"
+	case "$TMUX_POWERLINE_SEG_BATTERY_TYPE" in
+		"percentage")
+			output="${HEART_FULL} ${battery_status}%"
+			;;
+		"cute")
+			output=$(__cutinate $battery_status)
+	esac
+	if [ -n "$output" ]; then
+		echo "$output"
+	fi
+}
+
+__process_settings() {
+	if [ -z "$TMUX_POWERLINE_SEG_BATTERY_TYPE" ]; then
+		export TMUX_POWERLINE_SEG_BATTERY_TYPE="${TMUX_POWERLINE_SEG_BATTERY_TYPE_DEFAULT}"
+	fi
+	if [ -z "$TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS" ]; then
+		export TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS="${TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS_DEFAULT}"
 	fi
 }
 
