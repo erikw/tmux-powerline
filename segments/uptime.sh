@@ -1,3 +1,6 @@
-#!/usr/bin/env sh
 # Prints the uptime.
-uptime | grep -PZo "(?<=up )[^,]*"
+
+run_segment() {
+	uptime | grep -PZo "(?<=up )[^,]*"
+	return 0
+}

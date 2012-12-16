@@ -1,5 +1,6 @@
-#!/usr/bin/env sh
 # Prints the current time.
-date +"%H:%M "
 
-exit 0
+run_segment() {
+	date +"%H:%M"
+	return 0
+}

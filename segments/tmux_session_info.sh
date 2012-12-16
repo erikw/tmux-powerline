@@ -1,6 +1,7 @@
-#!/usr/bin/env sh
 # Prints tmux session info.
 # Assuems that [ -n "$TMUX"].
-tmux display-message -p '#S:#I.#P'
 
-exit 0
+run_segment() {
+	tmux display-message -p '#S:#I.#P'
+	return 0
+}

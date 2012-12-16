@@ -1,5 +1,5 @@
 # tmux-powerline
-This is a set of scripts (segments) for making a nice and dynamic tmux statusbar where elements can come and disappears depending on events. I really like the look of [Lokaltog/vim-powerline](https://github.com/Lokaltog/vim-powerline) and I decided I wanted the same for tmux.
+This is a set of scripts for making a nice and dynamic tmux statusbar consisting of segments. This is much like [Lokaltog/vim-powerline](https://github.com/Lokaltog/vim-powerline) but for tmux.
 
 The following segments exists for now:
 * LAN & WAN IP addresses.
@@ -15,8 +15,6 @@ The following segments exists for now:
 * CWD in pane.
 * Current X keyboard layout.
 * Network download/upload speed.
-
-Check [segments/](https://github.com/erikw/tmux-powerline/tree/master/segments) for more undocumented segments and details.
 
 # Screenshots
 **Full screenshot**
@@ -55,7 +53,7 @@ Requirements for the lib to work are:
 * A patched font. Follow instructions at [Lokaltog/vim-powerline/fontpatcher](https://github.com/Lokaltog/vim-powerline/tree/develop/fontpatcher) or [download](https://github.com/Lokaltog/vim-powerline/wiki/Patched-fonts) a new one. However you can use other substitute symbols as well; see `config.sh`.
 
 ## Segment Requirements
-Requirements for some segments. You only need to fullfill the requirements for those segments you want to use.
+Requirements for some segments. You only need to fulfill the requirements for those segments you want to use.
 
 * wan_ip.sh, np_lastfm.sh, weather_yahoo.sh: curl, bc
 * np_mpd.sh: [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
@@ -94,7 +92,7 @@ $ echo $SHELL
 /usr/local/Cellar/bash/%INSTALLED_VERSION%/bin/bash
 ```
 
-The `grep` tool is outdatted on OS X 10.8 Mountain Lion so you might have to upgrade it. Unfortunately the main homebrew repo 
+The `grep` tool is outdated on OS X 10.8 Mountain Lion so you might have to upgrade it. Unfortunately the main homebrew repo 
 [does not contain grep](https://github.com/mxcl/homebrew/pull/3473) so use the following command to get the lastest version.
 
 ```bash
@@ -111,7 +109,7 @@ $ git clone git://github.com/erikw/tmux-powerline.git
 
 Now edit your `~/.tmux.conf` to use the scripts:
 
-<!-- Close syntax enought. -->
+<!-- Close syntax enough. -->
 ```vim
 set-option -g status on
 set-option -g status-interval 2
@@ -119,19 +117,14 @@ set-option -g status-utf8 on
 set-option -g status-justify "centre"
 set-option -g status-left-length 60
 set-option -g status-right-length 90
-set-option -g status-left "#(~/path/to/tmux-powerline/status-left.sh)"
-set-option -g status-right "#(~/path/to/tmux-powerline/status-right.sh)"
+set-option -g status-left "#(~/path/to/tmux-powerline/powerline.sh left)"
+set-option -g status-right "#(~/path/to/tmux-powerline/powerline.sh right)"
 ```
 
-Set the maximum lengths to something that suits your configuration of segments and size of terminal (the maximum segments length will be handled better in the future). Segments needs to use different tools or options depending on platform. Currently there is only a distinction between Linux systems and OS X systems. `config.sh` tries to detect what machine your're on with `uname`. If needed you can override this setting with the PLATFORM variable there (or wherever you want to define it).
+Set the maximum lengths to something that suits your configuration of segments and size of terminal (the maximum segments length will be handled better in the future). Segments needs to use different tools or options depending on platform. Currently there is only a distinction between Linux systems and OS X systems. `config.sh` tries to detect what machine you're on with `uname`. If needed you can override this setting with the PLATFORM variable there (or wherever you want to define it).
 
 
-Also I recommend you to use the [tmux-colors-solarized](https://github.com/seebi/tmux-colors-solarized) theme (as well as solarized for [everything else](http://ethanschoonover.com/solarized) :)):
-
-```bash
-source ~/path/to/tmux-colors-solarized/tmuxcolors.conf
-```
-Some segments e.g. cwd and cvs_branch needs to find the current working directory of the active pane. To achive this we let tmux save the path each time the shell prompt is displayed. Put the line below in your `~/.bashrc` or where you define you PS1 variable. zsh users can put it in e.g. `~/.zshrc` and may change `PS1` to `PROMPT` (but that's not necessary).
+Some segments e.g. cwd and cvs_branch needs to find the current working directory of the active pane. To achieve this we let tmux save the path each time the shell prompt is displayed. Put the line below in your `~/.bashrc` or where you define you PS1 variable. zsh users can put it in e.g. `~/.zshrc` and may change `PS1` to `PROMPT` (but that's not necessary).
 
 ```bash
 PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#D" | tr -d %) "$PWD")'
@@ -146,40 +139,37 @@ bind C-] run '~/path/to/tmux-powerline/mute_statusbar.sh right'		# Mute right st
 
 # Configuration
 
-Edit the two status scripts to suit you needs. A number of common segments are included that covers some general functions like time, date, battery etc. The segments can be moved around and does not needs to be in the order (or same file) as they are now. It should be quite easy to add you own segments.
+The default segments that are shown are defined in `themes/default.sh`. You will probably want to change those to fit your needs. To do so you can edit that file directly but preferable, for easier updating of the repo, you can make a copy and edit that one.
 
 ```console
-$ $EDITOR ~/path/to/tmux-powerline/status-left.sh
-$ $EDITOR ~/path/to/tmux-powerline/status-right.sh
-```
+$ cp themes/default.sh themes/mytheme.sh
+$ $EDITOR themes/mytheme.sh
+````
+Now  generate a default configuration file by doing
 
+```console
+$ ./generate_rc.sh
+$ mv ~/.tmux-powerlinerc.default ~/.tmux-powerlinerc
+$ $EDITOR ~/.tmux-powerlinerc```
+````
+and editing theme to use and values for segments you want to use.
 
-Here is one segment configuration explained so you'll know how to make you own.
-
-```bash
-declare -A time 								# The name of the array.
-time+=(["script"]="${segments_path}/time.sh")	# mandatory, the shell script producing the output text to be shown.
-time+=(["foreground"]="colour136")				# mandatory, the text foreground color.
-time+=(["background"]="colour235")				# mandatory, the text background color.
-time+=(["separator"]="${separator_left_thin}")	# mandatory, the separator to use. Can be (as described in `lib.sh`) any of separator_(left|right)_(bold|thin)
-time+=(["separator_fg"]="default")				# optional, overrides the default blending coloring of the separator with a custom colored foreground.
-register_segment "time"							# Registers the name of the array declared above.
-```
 # Debugging
 
-Some segments might not work on your system for various reasons such as missing programs or different versions not having the same options. If a segment fails the printing should be aborted. To investigate further why a segment fails you can run
+Some segments might not work on your system for various reasons such as missing programs or different versions not having the same options. To find out which segment is not working it may help to enable the debug setting in `~/.tmux-powerlinerc`. However this may not be enough to determine the error so you can inspect all executed bash command (will be a long output) by doing
 
-```bash
-$ bash -x ~/path/to/failing/segment.sh
+```console
+$ bash -x powerline.sh (left|right)
 ```
-To see all output even if some segment fails you can set `DEBUG_MODE="true"` in `config.sh`.
+
+If you can not solve the problems you can post an [issue](https://github.com/erikw/tmux-powerline/issues?state=open) and be sure to include relevant information about your system and script output (from bash -x) and/or screenshots if needed.
 
 ## Common problems
 
 ### VCS_branch is not updating
-The issue is probably that the update of the current directory in the active pane is not updated correctly. Make sure that your PS1 or PROMPT variable actually contains the line from the installation step above by simply inspecing the output of `echo $PS1`. You might have placed the PS1 line in you shell confugration such that it is overwritten later. The simplest solution is to put it at the very end to make sure that nothing overwrites it. See [issue #52](https://github.com/erikw/tmux-powerline/issues/52).
+The issue is probably that the update of the current directory in the active pane is not updated correctly. Make sure that your PS1 or PROMPT variable actually contains the line from the installation step above by simply inspecting the output of `echo $PS1`. You might have placed the PS1 line in you shell configuration such that it is overwritten later. The simplest solution is to put it at the very end to make sure that nothing overwrites it. See [issue #52](https://github.com/erikw/tmux-powerline/issues/52).
 
 
 # Hacking
 
-This project can only gain positively from contributions. Fork today and make your own enhancments and segments to share back!
+This project can only gain positively from contributions. Fork today and make your own enhancements and segments to share back!

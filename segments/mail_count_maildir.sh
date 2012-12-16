@@ -1,23 +1,39 @@
-#!/usr/bin/env bash
 # Return the number of new mails in a maildir.
 
-inbox="$HOME/.mail/inbox/new"
+TMUX_POWERLINE_SEG_MAILCOUNT_MAILDIR_INBOX_DEFAULT="$HOME/.mail/inbox/new"
 
-cd "$(dirname $0)"
+generate_segmentrc() {
+	read -d '' rccontents  << EORC
+# Path to the maildir to check.
+export TMUX_POWERLINE_SEG_MAILCOUNT_MAILDIR_INBOX="${TMUX_POWERLINE_SEG_MAILCOUNT_MAILDIR_INBOX_DEFAULT}"
+EORC
+	echo "$rccontents"
+}
 
-if [ ! -d "$inbox" ]; then
-	exit 1
-fi
+run_segment() {
+	__process_settings
+	cd "$(dirname $0)"
 
-nbr_new=$(ls "$inbox" | wc -l)
+	if [ ! -d "$TMUX_POWERLINE_SEG_MAILCOUNT_MAILDIR_INBOX" ]; then
+		return 1
+	fi
 
-# Fix for mac, otherwise whitespace is left in output
-if [ "$PLATFORM" == "mac" ]; then
-	nbr_new=$(echo "$nbr_new" | sed -e "s/^[ \t]*//")
-fi
+	nbr_new=$(ls "$TMUX_POWERLINE_SEG_MAILCOUNT_MAILDIR_INBOX" | wc -l)
 
-if [ "$nbr_new" -gt "0" ]; then
-	echo "✉ ${nbr_new}"
-fi
+	# Fix for mac, otherwise whitespace is left in output
+	if [ "$PLATFORM" == "mac" ]; then
+		nbr_new=$(echo "$nbr_new" | sed -e "s/^[ \t]*//")
+	fi
 
-exit 0;
+	if [ "$nbr_new" -gt "0" ]; then
+		echo "✉ ${nbr_new}"
+	fi
+
+	return 0;
+}
+
+__process_settings() {
+	if [ -z "$TMUX_POWERLINE_SEG_MAILCOUNT_MAILDIR_INBOX" ]; then
+		export TMUX_POWERLINE_SEG_MAILCOUNT_MAILDIR_INBOX="${TMUX_POWERLINE_SEG_MAILCOUNT_MAILDIR_INBOX_DEFAULT}"
+	fi
+}

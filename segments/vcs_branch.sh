@@ -1,21 +1,35 @@
-#!/usr/bin/env bash
 # Prints current branch in a VCS directory if it could be detected.
 
 # Source lib to get the function get_tmux_pwd
-segment_path=$(dirname $0)
-source "$segment_path/../lib.sh"
-
-tmux_path=$(get_tmux_cwd)
-cd "$tmux_path"
+source "${TMUX_POWERLINE_DIR_HOME}/lib/tmux_adapter.sh"
 
 branch_symbol="⭠"
-git_colour="colour5"
-git_svn_colour="colour34"
-svn_colour="colour220"
-hg_colour="colour45"
+git_colour="5"
+svn_colour="220"
+hg_colour="45"
+
+
+run_segment() {
+	tmux_path=$(get_tmux_cwd)
+	cd "$tmux_path"
+	branch=""
+	if [ -n "${git_branch=$(__parse_git_branch)}" ]; then
+		branch="$git_branch"
+	elif [ -n "${svn_branch=$(__parse_svn_branch)}" ]; then
+		branch="$svn_branch"
+	elif [ -n "${hg_branch=$(__parse_hg_branch)}" ]; then
+		branch="$hg_branch"
+	fi
+
+	if [ -n "$branch" ]; then
+		echo "${branch}"
+	fi
+	return 0
+}
+
 
 # Show git banch.
-parse_git_branch() {
+__parse_git_branch() {
 	type git >/dev/null 2>&1
 	if [ "$?" -ne 0 ]; then
 		return
@@ -34,24 +48,14 @@ parse_git_branch() {
 		return
 	fi
 
-    # clean off unnecessary information
+    # Clean off unnecessary information.
     branch=${branch##*/}
 
-    echo "$(git branch --no-color 2>/dev/null)" | grep "remotes/git-svn" &>/dev/null
-	is_gitsvn=$([ "$?" -eq 0 ] && echo 1 || echo 0)
-
-	echo  -n "#[fg="
-	if [ "$is_gitsvn" -eq "0" ]; then
-		echo -n "$git_colour"
-	else
-		echo -n "$git_svn_colour"
-	fi
-	# TODO pass colour arguments as paramters/globals to segments?
-	echo "]${branch_symbol} #[fg=colour42]${branch}"
+	echo  -n "#[fg=colour${git_colour}]${branch_symbol} #[fg=colour${TMUX_POWERLINE_CUR_SEGMENT_FG}]${branch}"
 }
 
 # Show SVN branch.
-parse_svn_branch() {
+__parse_svn_branch() {
 	type svn >/dev/null 2>&1
 	if [ "$?" -ne 0 ]; then
 		return
@@ -66,10 +70,10 @@ parse_svn_branch() {
 	local svn_url=$(svn info 2>/dev/null | sed -ne 's#^URL: ##p')
 
 	local branch=$(echo $svn_url | sed -e 's#^'"${svn_root}"'##g' | egrep -o '(tags|branches)/[^/]+|trunk' | egrep -o '[^/]+$' | awk '{print $1}')
-	echo  "#[fg=${svn_colour}]${branch_symbol} #[fg=colour42]${branch}"
+	echo  "#[fg=colour${svn_colour}]${branch_symbol} #[fg=colour${TMUX_POWERLINE_CUR_SEGMENT_FG}]${branch}"
 }
 
-parse_hg_branch() {
+__parse_hg_branch() {
 	type hg >/dev/null 2>&1
 	if [ "$?" -ne 0 ]; then
 		return
@@ -81,18 +85,5 @@ parse_hg_branch() {
 	fi
 
 	local branch=$(echo "$summary" | grep 'branch:' | cut -d ' ' -f2)
-	echo  "#[fg=${hg_colour}]${branch_symbol} #[fg=colour42]${branch}"
+	echo  "#[fg=colour${hg_colour}]${branch_symbol} #[fg=colour${TMUX_POWERLINE_CUR_SEGMENT_FG}]${branch}"
 }
-
-branch=""
-if [ -n "${git_branch=$(parse_git_branch)}" ]; then
-	branch="$git_branch"
-elif [ -n "${svn_branch=$(parse_svn_branch)}" ]; then
-	branch="$svn_branch"
-elif [ -n "${hg_branch=$(parse_hg_branch)}" ]; then
-	branch="$hg_branch"
-fi
-
-if [ -n "$branch" ]; then
-	echo "${branch}"
-fi
