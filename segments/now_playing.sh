@@ -1,5 +1,7 @@
 # Print current playing song in your music player of choice.
 
+source "${TMUX_POWERLINE_DIR_LIB}/text_roll.sh"
+
 TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER_DEFAULT="mpd"
 TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN_DEFAULT="40"
 TMUX_POWERLINE_SEG_NOW_PLAYING_TRIM_METHOD_DEFAULT="trim"
@@ -218,7 +220,7 @@ __np_rhythmbox() {
 	fi
 }
 
-__spotify() {
+__np_spotify() {
 	if shell_is_linux; then
 		metadata=$(dbus-send --reply-timeout=42 --print-reply --dest=org.mpris.MediaPlayer2.spotify / org.freedesktop.MediaPlayer2.GetMetadata 2>/dev/null)
 		if [ "$?" -eq 0 ] && [ -n "$metadata" ]; then
