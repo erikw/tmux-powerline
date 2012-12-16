@@ -37,18 +37,21 @@ __process_scripts() {
 		local script="$TMUX_POWERLINE_DIR_SEGMENTS/${powerline_segment[0]}.sh"
 		export TMUX_POWERLINE_CUR_SEGMENT_BG="${powerline_segment[1]}"
 		export TMUX_POWERLINE_CUR_SEGMENT_FG="${powerline_segment[2]}"
-		output=$(${script})	# Can't be declared local if we want the exit code.
+		source "$script"
+		local output
+		output=$(run_segment)
 		local exit_code="$?"
+		unset -f run_segment
 
 		if [ "$exit_code" -ne 0 ] && debug_mode_enabled ; then
 			local seg_name="${script##*/}"
 			echo "Segment '${seg_name}' exited with code ${exit_code}. Aborting."
-     	 	exit 1
-     	fi
+			exit 1
+		fi
 
 		if [ -n "$output" ]; then
 			powerline_segment_contents[$segment_index]=" $output "
-     	else
+		else
 			unset -v powerline_segments[$segment_index]
 		fi
 	done

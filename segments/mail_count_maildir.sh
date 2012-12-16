@@ -1,23 +1,24 @@
-#!/usr/bin/env bash
 # Return the number of new mails in a maildir.
 
-inbox="$HOME/.mail/inbox/new"
+run_segment() {
+	inbox="$HOME/.mail/inbox/new"
 
-cd "$(dirname $0)"
+	cd "$(dirname $0)"
 
-if [ ! -d "$inbox" ]; then
-	exit 1
-fi
+	if [ ! -d "$inbox" ]; then
+		return 1
+	fi
 
-nbr_new=$(ls "$inbox" | wc -l)
+	nbr_new=$(ls "$inbox" | wc -l)
 
-# Fix for mac, otherwise whitespace is left in output
-if [ "$PLATFORM" == "mac" ]; then
-	nbr_new=$(echo "$nbr_new" | sed -e "s/^[ \t]*//")
-fi
+	# Fix for mac, otherwise whitespace is left in output
+	if [ "$PLATFORM" == "mac" ]; then
+		nbr_new=$(echo "$nbr_new" | sed -e "s/^[ \t]*//")
+	fi
 
-if [ "$nbr_new" -gt "0" ]; then
-	echo "✉ ${nbr_new}"
-fi
+	if [ "$nbr_new" -gt "0" ]; then
+		echo "✉ ${nbr_new}"
+	fi
 
-exit 0;
+	return 0;
+}

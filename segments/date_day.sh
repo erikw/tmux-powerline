@@ -1,5 +1,6 @@
-#!/usr/bin/env sh
 # Prints the name of the current day.
-date +"%a"
 
-exit 0
+run_segment() {
+	date +"%a"
+	return 0
+}

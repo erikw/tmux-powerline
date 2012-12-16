@@ -1,37 +1,39 @@
-#!/usr/bin/env bash
 # Prints the WAN IP address. The result is cached and updated according to $update_period.
 
 tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/wan_ip.txt"
-wan_ip=""
 
-if [ -f "$tmp_file" ]; then
-  if shell_is_osx; then
-    last_update=$(stat -f "%m" ${tmp_file})
-  else
-    last_update=$(stat -c "%Y" ${tmp_file})
-  fi
+run_segment() {
+	wan_ip=""
 
-  time_now=$(date +%s)
-  update_period=900
-  up_to_date=$(echo "(${time_now}-${last_update}) < ${update_period}" | bc)
+	if [ -f "$tmp_file" ]; then
+  	  if shell_is_osx; then
+    	last_update=$(stat -f "%m" ${tmp_file})
+  	  else
+    	last_update=$(stat -c "%Y" ${tmp_file})
+  	  fi
 
-  if [ "$up_to_date" -eq 1 ]; then
-    wan_ip=$(cat ${tmp_file})
-  fi
-fi
+  	  time_now=$(date +%s)
+  	  update_period=900
+  	  up_to_date=$(echo "(${time_now}-${last_update}) < ${update_period}" | bc)
 
-if [ -z "$wan_ip" ]; then
-  wan_ip=$(curl --max-time 2 -s http://whatismyip.akamai.com/)
+  	  if [ "$up_to_date" -eq 1 ]; then
+    	wan_ip=$(cat ${tmp_file})
+  	  fi
+	fi
 
-  if [ "$?" -eq "0" ]; then
-    echo "${wan_ip}" > $tmp_file
-  elif [ -f "${tmp_file}" ]; then
-    wan_ip=$(cat "$tmp_file")
-  fi
-fi
+	if [ -z "$wan_ip" ]; then
+  	  wan_ip=$(curl --max-time 2 -s http://whatismyip.akamai.com/)
 
-if [ -n "$wan_ip" ]; then
-  echo "ⓦ ${wan_ip}"
-fi
+  	  if [ "$?" -eq "0" ]; then
+    	echo "${wan_ip}" > $tmp_file
+  	  elif [ -f "${tmp_file}" ]; then
+    	wan_ip=$(cat "$tmp_file")
+  	  fi
+	fi
 
-exit 0
+	if [ -n "$wan_ip" ]; then
+  	  echo "ⓦ ${wan_ip}"
+	fi
+
+	return 0
+}

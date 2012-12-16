@@ -1,5 +1,6 @@
-#!/usr/bin/env sh
 # Prints the hostname.
-hostname -s
 
-exit 0
+run_segment() {
+	hostname -s
+	return 0
+}
