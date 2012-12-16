@@ -66,12 +66,12 @@ __battery_osx() {
 				fi
 				charge=$(( 100 * $curcap / $maxcap ))
 				if [[ "$extconnect" == "Yes" ]]; then
-					echo $HEART_FULL "$charge%"
+					echo "$charge"
 				else
 					if [[ $charge -lt 50 ]]; then
 						echo -n "#[fg=red]"
 					fi
-					echo $HEART_EMPTY "$charge%"
+					echo "$charge"
 				fi
 				break
 			fi
@@ -122,15 +122,16 @@ __battery_osx() {
 
 	__cutinate() {
 		perc=$1
-		inc=$(( 100 / $NUM_HEARTS))
+		inc=$(( 100 / $TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS ))
 
 
-		for i in `seq $NUM_HEARTS`; do
+		for i in `seq $TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS`; do
 			if [ $perc -lt 100 ]; then
-				echo $HEART_EMPTY
+				echo -n $HEART_EMPTY
 			else
-				echo $HEART_FULL
+				echo -n $HEART_FULL
 			fi
+			echo -n " "
 			perc=$(( $perc + $inc ))
 		done
 	}
