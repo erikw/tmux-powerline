@@ -14,7 +14,12 @@ process_settings() {
 	if [ -z "$TMUX_POWERLINE_THEME" ]; then
 		export TMUX_POWERLINE_THEME="${TMUX_POWERLINE_DEFAULT}"
 	fi
-	source "${TMUX_POWERLINE_DIR_THEMES}/${TMUX_POWERLINE_THEME}.sh"
+
+        if [ -n "$TMUX_POWERLINE_DIR_USER_THEMES" ] && [ -f "${TMUX_POWERLINE_DIR_USER_THEMES}/${TMUX_POWERLINE_THEME}.sh" ]; then
+		source "${TMUX_POWERLINE_DIR_USER_THEMES}/${TMUX_POWERLINE_THEME}.sh"
+        else
+		source "${TMUX_POWERLINE_DIR_THEMES}/${TMUX_POWERLINE_THEME}.sh"
+	fi
 
 }
 

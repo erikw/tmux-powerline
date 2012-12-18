@@ -34,7 +34,13 @@ __process_segment_defaults() {
 __process_scripts() {
 	for segment_index in "${!powerline_segments[@]}"; do
 		local powerline_segment=(${powerline_segments[$segment_index]})
-		local script="$TMUX_POWERLINE_DIR_SEGMENTS/${powerline_segment[0]}.sh"
+
+		if [ -n "$TMUX_POWERLINE_DIR_USER_SEGMENTS" ] && [ -f "$TMUX_POWERLINE_DIR_USER_SEGMENTS/${powerline_segment[0]}.sh" ] ; then
+			local script="$TMUX_POWERLINE_DIR_USER_SEGMENTS/${powerline_segment[0]}.sh"
+		else
+			local script="$TMUX_POWERLINE_DIR_SEGMENTS/${powerline_segment[0]}.sh"
+		fi
+
 		export TMUX_POWERLINE_CUR_SEGMENT_BG="${powerline_segment[1]}"
 		export TMUX_POWERLINE_CUR_SEGMENT_FG="${powerline_segment[2]}"
 		source "$script"
