@@ -52,17 +52,17 @@ __parse_git_stats() {
 }
 
 __parse_hg_stats() {
-	type svn >/dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
-		return
-	fi
-    # not yet implemented
-}
-
-__parse_svn_stats() {
 	type hg >/dev/null 2>&1
 	if [ "$?" -ne 0 ]; then
 		return
 	fi
-    # not yet implemented
+	# not yet implemented
+}
+
+__parse_svn_stats() {
+	type svn >/dev/null 2>&1
+	if [ "$?" -ne 0 ]; then
+		return
+	fi
+	# not yet implemented
 }
