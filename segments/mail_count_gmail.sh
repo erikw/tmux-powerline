@@ -44,7 +44,7 @@ run_segment() {
 	if [ "$(( $(date +"%s") - ${last_update} ))" -gt "$interval" ] || [ "$override" == true ]; then
 		if [ -z "$TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_PASSWORD" ]; then # Get password from keychain if it isn't already set.
 			if shell_is_osx; then
-				__mac_keychain_get_pass "${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_USERNAME}@${$TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER}" "$TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER"
+				__mac_keychain_get_pass "${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_USERNAME}@${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER}" "$TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER"
 			else
 				echo "Implement your own sexy password fetching mechanism here."
 				return 1
@@ -58,7 +58,7 @@ run_segment() {
 			return 1
 		fi
 
-		mail=$(wget -q -O - https://mail.google.com/a/${$TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER}/feed/atom --http-user="${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_USERNAME}@${$TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER}" --http-password="${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_PASSWORD}" --no-check-certificate | grep fullcount | sed 's/<[^0-9]*>//g')
+		mail=$(wget -q -O - https://mail.google.com/a/${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER}/feed/atom --http-user="${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_USERNAME}@${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER}" --http-password="${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_PASSWORD}" --no-check-certificate | grep fullcount | sed 's/<[^0-9]*>//g')
 
 		if [ "$mail" != "" ]; then
 			echo $mail > $tmp_file
