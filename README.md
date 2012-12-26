@@ -139,20 +139,31 @@ bind C-] run '~/path/to/tmux-powerline/mute_statusbar.sh right'		# Mute right st
 
 # Configuration
 
-The default segments that are shown are defined in `themes/default.sh`. You will probably want to change those to fit your needs. To do so you can edit that file directly but preferable, for easier updating of the repo, you can make a copy and edit that one.
+The default segments that are shown are defined in `themes/default.sh`. You will probably want to change those to fit your needs. To do so you can edit that file directly but preferable, for easier updating of the repo, you can make a copy and edit that one (or see how to use custom themes directory below).
 
 ```console
 $ cp themes/default.sh themes/mytheme.sh
 $ $EDITOR themes/mytheme.sh
-````
+```
 Now  generate a default configuration file by doing
 
 ```console
 $ ./generate_rc.sh
 $ mv ~/.tmux-powerlinerc.default ~/.tmux-powerlinerc
-$ $EDITOR ~/.tmux-powerlinerc```
-````
+$ $EDITOR ~/.tmux-powerlinerc
+```
 and editing theme to use and values for segments you want to use.
+
+## Custom themes and segments
+<!-- TODO: Add better explanation -->
+If you would like to add custom segments or themes but keep the cloned tmux-powerline repository clean in order to update it easily, you can define custom paths to directories containing the themes and segments. Add the following to your ~/.tmux-powerlinerc (e.g. under General):
+
+```bash
+export TMUX_POWERLINE_DIR_USER_THEMES="/path/to/your/custom/themes"
+export TMUX_POWERLINE_DIR_USER_SEGMENTS="/path/to/your/custom/segments"
+```
+
+Once these are defined, tmux-powerline will search these first before looking in the default paths for the themes or segments specified in the rc-file and theme respectively.
 
 # Debugging
 
