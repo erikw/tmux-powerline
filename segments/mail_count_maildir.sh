@@ -21,7 +21,7 @@ run_segment() {
 	nbr_new=$(ls "$TMUX_POWERLINE_SEG_MAILCOUNT_MAILDIR_INBOX" | wc -l)
 
 	# Fix for mac, otherwise whitespace is left in output
-	if [ "$PLATFORM" == "mac" ]; then
+	if shell_is_osx; then
 		nbr_new=$(echo "$nbr_new" | sed -e "s/^[ \t]*//")
 	fi
 
