@@ -183,4 +183,4 @@ The issue is probably that the update of the current directory in the active pan
 
 # Hacking
 
-This project can only gain positively from contributions. Fork today and make your own enhancements and segments to share back!
+This project can only gain positively from contributions. Fork today and make your own enhancements and segments to share back! If you'd like, add your name and E-mail to AUTHORS before making a pull request so you can get some credit for your work :)
