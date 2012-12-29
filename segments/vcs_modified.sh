@@ -18,8 +18,8 @@ run_segment() {
 	elif [ -n "${hg_stats=$(__parse_hg_stats)}" ]; then
     	stats="$hg_stats"
 	fi
-	if [[ -n "$stats" ]]; then
-    	echo "${stats}"
+	if [[ -n "$stats" && $stats -gt 0 ]]; then
+		echo "${mod_symbol}${stats}"
 	fi
 }
 
