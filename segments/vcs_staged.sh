@@ -12,15 +12,15 @@ run_segment() {
 
 	stats=""
 	if [ -n "${git_stats=$(__parse_git_stats)}" ]; then
-    	stats="$git_stats"
+		stats="$git_stats"
 	elif [ -n "${svn_stats=$(__parse_svn_stats)}" ]; then
-    	stats="$svn_stats"
+		stats="$svn_stats"
 	elif [ -n "${hg_stats=$(__parse_hg_stats)}" ]; then
-    	stats="$hg_stats"
+		stats="$hg_stats"
 	fi
 	if [[ -n "$stats" && $stats -gt 0 ]]; then
 		stats=$(echo $stats | sed -e "s/^[ \t]*//")
-    	echo "${staged_symbol}${stats}"
+		echo "${staged_symbol}${stats}"
 	fi
 	return 0
 }
@@ -32,12 +32,12 @@ __parse_git_stats(){
 		return
 	fi
 
-    # Check if git.
-    [[ -z $(git rev-parse --git-dir 2> /dev/null) ]] && return
+	# Check if git.
+	[[ -z $(git rev-parse --git-dir 2> /dev/null) ]] && return
 
-    # Return the number of staged items.
-    staged=$(git diff --staged --name-status | wc -l)
-    echo "$staged"
+	# Return the number of staged items.
+	staged=$(git diff --staged --name-status | wc -l)
+	echo "$staged"
 }
 
 __parse_hg_stats(){
@@ -45,7 +45,7 @@ __parse_hg_stats(){
 	if [ "$?" -ne 0 ]; then
 		return
 	fi
-    # not yet implemented
+	# not yet implemented
 }
 
 __parse_svn_stats(){
@@ -53,5 +53,5 @@ __parse_svn_stats(){
 	if [ "$?" -ne 0 ]; then
 		return
 	fi
-    # not yet implemented
+	# not yet implemented
 }

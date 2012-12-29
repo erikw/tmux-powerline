@@ -10,12 +10,12 @@ run_segment() {
 
 	stats=""
 	if [[ -n "${svn_stats=$(__parse_svn_stats)}" ]]; then
-    	stats="$svn_stats"
+		stats="$svn_stats"
 	elif [[ -n "${hg_stats=$(__parse_hg_stats)}" ]]; then
-    	stats="$hg_stats"
+		stats="$hg_stats"
 	fi
 	if [[ -n "$stats" ]]; then
-    	echo "${stats}"
+		echo "${stats}"
 	fi
 }
 
