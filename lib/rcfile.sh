@@ -31,9 +31,16 @@ generate_default_rc() {
 # }
 
 # General {
+	# Show which segment fails and its exit code.
 	export TMUX_POWERLINE_DEBUG_MODE_ENABLED="${TMUX_POWERLINE_DEBUG_MODE_ENABLED_DEFAULT}"
+	# Use patched font symbols.
 	export TMUX_POWERLINE_PATCHED_FONT_IN_USE="${TMUX_POWERLINE_PATCHED_FONT_IN_USE_DEFAULT}"
+	# The theme to use.
 	export TMUX_POWERLINE_THEME="${TMUX_POWERLINE_THEME_DEFAULT}"
+	# Overlay dirctory to look for themes. There you can put your own themes outside the repo. Fallback will still be the "themes" directory in the repo.
+	export TMUX_POWERLINE_DIR_USER_THEMES=""
+	# Overlay dirctory to look for segments. There you can put your own segments outside the repo. Fallback will still be the "themes" directory in the repo.
+	export TMUX_POWERLINE_DIR_USER_SEGMENTS=""
 # }
 EORC
 
