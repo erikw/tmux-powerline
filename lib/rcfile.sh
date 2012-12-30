@@ -39,7 +39,7 @@ generate_default_rc() {
 	export TMUX_POWERLINE_THEME="${TMUX_POWERLINE_THEME_DEFAULT}"
 	# Overlay dirctory to look for themes. There you can put your own themes outside the repo. Fallback will still be the "themes" directory in the repo.
 	export TMUX_POWERLINE_DIR_USER_THEMES=""
-	# Overlay dirctory to look for segments. There you can put your own segments outside the repo. Fallback will still be the "themes" directory in the repo.
+	# Overlay dirctory to look for segments. There you can put your own segments outside the repo. Fallback will still be the "segments" directory in the repo.
 	export TMUX_POWERLINE_DIR_USER_SEGMENTS=""
 # }
 EORC
