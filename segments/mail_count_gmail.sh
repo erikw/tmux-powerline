@@ -38,7 +38,7 @@ run_segment() {
 	let interval=60*$TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_INTERVAL
 	if shell_is_osx; then
 		last_update=$(stat -f "%m" ${tmp_file})
-	else
+	elif shell_is_linux; then
 		last_update=$(stat -c "%Y" ${tmp_file})
 	fi
 	if [ "$(( $(date +"%s") - ${last_update} ))" -gt "$interval" ] || [ "$override" == true ]; then

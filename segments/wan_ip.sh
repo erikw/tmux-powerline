@@ -8,7 +8,7 @@ run_segment() {
 	if [ -f "$tmp_file" ]; then
   	  if shell_is_osx; then
     	last_update=$(stat -f "%m" ${tmp_file})
-  	  else
+  	  elif shell_is_linux; then
     	last_update=$(stat -c "%Y" ${tmp_file})
   	  fi
 
