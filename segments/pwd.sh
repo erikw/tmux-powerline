@@ -14,6 +14,12 @@ EORC
 	echo "$rccontents"
 }
 
+__process_settings() {
+	if [ -z "$TMUX_POWERLINE_SEG_PWD_MAX_LEN" ]; then
+		export TMUX_POWERLINE_SEG_PWD_MAX_LEN="${TMUX_POWERLINE_SEG_PWD_MAX_LEN_DEFAULT}"
+	fi
+}
+
 run_segment() {
 	__process_settings
 	# Truncate from the left.
@@ -30,10 +36,4 @@ run_segment() {
 	fi
 	echo "$ttcwd"
 	return 0
-}
-
-__process_settings() {
-	if [ -z "$TMUX_POWERLINE_SEG_PWD_MAX_LEN" ]; then
-		export TMUX_POWERLINE_SEG_PWD_MAX_LEN="${TMUX_POWERLINE_SEG_PWD_MAX_LEN_DEFAULT}"
-	fi
 }
