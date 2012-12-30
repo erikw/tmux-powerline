@@ -9,8 +9,6 @@ TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT="yahoo"
 TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAULT="c"
 TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT="600"
 
-# Cache file.
-tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_yahoo.txt"
 
 generate_segmentrc() {
 	read -d '' rccontents  << EORC
@@ -32,6 +30,7 @@ EORC
 
 run_segment() {
 	__process_settings
+	local tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_yahoo.txt"
 	local weather
 	case "$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER" in
 		"yahoo") weather=$(__yahoo_weather) ;;

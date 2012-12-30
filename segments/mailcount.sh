@@ -5,8 +5,6 @@ TMUX_POWERLINE_SEG_MAILCOUNT_MBOX_INBOX_DEFAULT="${MAIL}"
 TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER_DEFAULT="gmail.com"
 TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_INTERVAL_DEFAULT="5"
 
-# TODO local or namespace
-GMAIL_TMP_FILE="${TMUX_POWERLINE_DIR_TEMPORARY}/gmail_count.txt"
 
 generate_segmentrc() {
 	read -d '' rccontents  << EORC
@@ -92,21 +90,21 @@ __count_apple_mail() {
 }
 
 __count_gmail() {
-	__process_settings
-	override_passget=false									# When true a force reloaded will be done.
+	local tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/gmail_count.txt"
+	local override_passget="false"	# When true a force reloaded will be done.
 
 	# Create the cache file if it doesn't exist.
-	if [ ! -f $GMAIL_TMP_FILE ]; then
-		touch $GMAIL_TMP_FILE
+	if [ ! -f $tmp_file ]; then
+		touch $tmp_file
 		override_passget=true
 	fi
 
 	# Refresh mail count if the tempfile is older than $interval minutes.
 	let interval=60*$TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_INTERVAL
 	if shell_is_osx; then
-		last_update=$(stat -f "%m" ${GMAIL_TMP_FILE})
+		last_update=$(stat -f "%m" ${tmp_file})
 	elif shell_is_linux; then
-		last_update=$(stat -c "%Y" ${GMAIL_TMP_FILE})
+		last_update=$(stat -c "%Y" ${tmp_file})
 	fi
 	if [ "$(( $(date +"%s") - ${last_update} ))" -gt "$interval" ] || [ "$override_passget" == true ]; then
 		if [ -z "$TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_PASSWORD" ]; then # Get password from keychain if it isn't already set.
@@ -128,14 +126,14 @@ __count_gmail() {
 		mail=$(wget -q -O - https://mail.google.com/a/${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER}/feed/atom --http-user="${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_USERNAME}@${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER}" --http-password="${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_PASSWORD}" --no-check-certificate | grep fullcount | sed 's/<[^0-9]*>//g')
 
 		if [ "$mail" != "" ]; then
-			echo $mail > $GMAIL_TMP_FILE
+			echo $mail > $tmp_file
 		else
 			return 1
 		fi
 	fi
 
-	# echo "$(( $(date +"%s") - $(stat -f %m $GMAIL_TMP_FILE) ))"
-	count=$(cat $GMAIL_TMP_FILE)
+	# echo "$(( $(date +"%s") - $(stat -f %m $tmp_file) ))"
+	count=$(cat $tmp_file)
 	echo "$count"
 	return 0;
 } 

@@ -9,8 +9,6 @@ TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST_DEFAULT="localhost"
 TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT_DEFAULT="6600"
 TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_UPDATE_PERIOD_DEFAULT="30"
 
-lastfm_tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/np_lastfm.txt" # Cache file.
-
 generate_segmentrc() {
 	read -d '' rccontents  << EORC
 # Music player to use. Can be any of {audacious, banshee, cmus, itunes, lastfm, mocp, mpd, mpd_simple, rdio, rhythmbox, spotify, spotify_wine}.
@@ -157,6 +155,7 @@ __np_itunes() {
 }
 
 __np_lastfm() {
+	local tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/np_lastfm.txt"
 	if [ -f "$tmp_file" ]; then
 		if shell_is_osx; then
 			last_update=$(stat -f "%m" ${tmp_file})

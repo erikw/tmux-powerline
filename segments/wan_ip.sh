@@ -1,9 +1,9 @@
 # Prints the WAN IP address. The result is cached and updated according to $update_period.
 
-tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/wan_ip.txt"
 
 run_segment() {
-	wan_ip=""
+	local tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/wan_ip.txt"
+	local wan_ip
 
 	if [ -f "$tmp_file" ]; then
   	  if shell_is_osx; then
