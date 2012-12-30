@@ -53,9 +53,9 @@ run_segment() {
 		"spotify")  np=$(__np_spotify) ;;
 		"spotify_wine")  np=$(__np_spotify_native) ;;
 	esac
-	local exitcode="$?" # TODO works?
-	if [ "$exitcode" -ne 0 ]; then
-		return exitcode
+	local exitcode="$?"
+	if [ "${exitcode}" -ne 0 ]; then
+		return ${exitcode}
 	fi
 	if [ -n "$np" ]; then
 		case "$TMUX_POWERLINE_SEG_NOW_PLAYING_TRIM_METHOD" in
@@ -101,7 +101,11 @@ __np_mpd() {
 	if [ ! -x "np_mpd" ]; then
 		make clean np_mpd &>/dev/null
 	fi
-	
+
+	if [ ! -x "np_mpd" ]; then
+		return 2
+	fi
+
 	np=$(MPD_HOST="$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST" MPD_PORT="$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT" ./np_mpd)
 	echo "$np"
 }
