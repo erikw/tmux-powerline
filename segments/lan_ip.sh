@@ -1,5 +1,4 @@
 # Prints the local network IPv4 address for a statically defined NIC or search for an IPv4 address on all active NICs.
-# vi: sw=8 ts=8 noet
 
 run_segment() {
 	if shell_is_bsd; then
