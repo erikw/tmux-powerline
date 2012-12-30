@@ -2,7 +2,6 @@
 
 source "${TMUX_POWERLINE_DIR_LIB}/text_roll.sh"
 
-TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER_DEFAULT="mpd"
 TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN_DEFAULT="40"
 TMUX_POWERLINE_SEG_NOW_PLAYING_TRIM_METHOD_DEFAULT="trim"
 TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SPEED_DEFAULT="2"
@@ -15,7 +14,7 @@ lastfm_tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/np_lastfm.txt" # Cache file.
 generate_segmentrc() {
 	read -d '' rccontents  << EORC
 # Music player to use. Can be any of {audacious, banshee, cmus, itunes, lastfm, mocp, mpd, mpd_simple, rdio, rhythmbox, spotify, spotify_wine}.
-export TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER="${TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER_DEFAULT}"
+export TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER=""
 # Maximum output length.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN="${TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN_DEFAULT}"
 # How to handle too long strings. Can be {trim, roll}.
@@ -38,6 +37,11 @@ EORC
 
 run_segment() {
 	__process_settings
+
+	if [ -z "$TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER" ]; then
+		return 1
+	fi
+
 	local np
 	case "$TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER" in
 		"audacious")  np=$(__np_audacious) ;;
@@ -52,8 +56,11 @@ run_segment() {
 		"rhythmbox")  np=$(__np_rhythmbox) ;;
 		"spotify")  np=$(__np_spotify) ;;
 		"spotify_wine")  np=$(__np_spotify_native) ;;
+		*)
+			echo "Unknown music player type [${TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER}]";
+			return 1
 	esac
-	local exitcode="$?" # TODO works?
+	local exitcode="$?"
 	if [ "$exitcode" -ne 0 ]; then
 		return exitcode
 	fi
@@ -72,9 +79,6 @@ run_segment() {
 }
 
 __process_settings() {
-	if [ -z "$TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER" ]; then
-		export TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER="${TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER_DEFAULT}"
-	fi
 	if [ -z "$TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN" ]; then
 		export TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN="${TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN_DEFAULT}"
 	fi

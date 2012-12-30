@@ -8,7 +8,7 @@ end tell
 if process_list contains "Mail" then
 	tell application "Mail"
 		if unread count of inbox > 0 then
-			set a to " " & unread count of inbox
+			set a to unread count of inbox
 		end if
 	end tell
 end if
