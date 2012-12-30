@@ -1,7 +1,7 @@
 # This checks if the current branch is ahead of or behind the remote branch with which it is tracked.
 
 # Source lib to get the function get_tmux_pwd
-source "${TMUX_POWERLINE_DIR_HOME}/lib/tmux_adapter.sh"
+source "${TMUX_POWERLINE_DIR_LIB}/tmux_adapter.sh"
 
 other_symbol="⋯ "
 

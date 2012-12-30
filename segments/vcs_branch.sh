@@ -1,7 +1,7 @@
 # Prints current branch in a VCS directory if it could be detected.
 
 # Source lib to get the function get_tmux_pwd
-source "${TMUX_POWERLINE_DIR_HOME}/lib/tmux_adapter.sh"
+source "${TMUX_POWERLINE_DIR_LIB}/tmux_adapter.sh"
 
 branch_symbol="⭠"
 git_colour="5"

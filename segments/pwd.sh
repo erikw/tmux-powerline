@@ -2,7 +2,7 @@
 # NOTE The trimming code's stolen from the web. Courtesy to who ever wrote it.
 
 # Source lib to get the function get_tmux_pwd
-source "${TMUX_POWERLINE_DIR_HOME}/lib/tmux_adapter.sh"
+source "${TMUX_POWERLINE_DIR_LIB}/tmux_adapter.sh"
 
 TMUX_POWERLINE_SEG_PWD_MAX_LEN_DEFAULT="40"
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-cwd="$(dirname $0)"
-source "${cwd}/config/paths.sh"
-source "${cwd}/lib/muting.sh"
-source "${cwd}/lib/arg_processing.sh"
+export TMUX_POWERLINE_DIR_HOME="$(dirname $0)"
+source "${TMUX_POWERLINE_DIR_HOME}/config/paths.sh"
+source "${TMUX_POWERLINE_DIR_LIB}/muting.sh"
+source "${TMUX_POWERLINE_DIR_LIB}/arg_processing.sh"
 
 side="$1"
 check_arg_side "$side"
