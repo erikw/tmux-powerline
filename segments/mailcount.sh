@@ -57,7 +57,7 @@ run_segment() {
 	__process_settings
 
 	if [ -z "$TMUX_POWERLINE_SEG_MAILCOUNT_MAILBOX_TYPE" ]; then
-		return 1
+		return 2
 	fi
 
 	local count
@@ -85,7 +85,7 @@ run_segment() {
 
 
 __count_apple_mail() {
-	count=$(${TMUX_POWERLINE_DIR_SEGMENTS}/mail_count_apple_mail.script)
+	count=$(${TMUX_POWERLINE_DIR_SEGMENTS}/mailcount_apple_mail.script)
 	echo "$count"
 }
 
