@@ -4,7 +4,7 @@ TMUX_POWERLINE_SEG_HOSTNAME_FORMAT_DEFAULT="short"
 
 generate_segmentrc() {
 	read -d '' rccontents  << EORC
-# Use short or long format for the hostname. Can be "short, long}
+# Use short or long format for the hostname. Can be "short, long"
 export TMUX_POWERLINE_SEG_HOSTNAME_FORMAT="${TMUX_POWERLINE_SEG_HOSTNAME_FORMAT_DEFAULT}"
 EORC
 	echo "$rccontents"
@@ -19,7 +19,11 @@ run_segment() {
 	__process_settings
 	local opts=""
 	if [ "$TMUX_POWERLINE_SEG_HOSTNAME_FORMAT" == "short" ]; then
-		opts="--short"
+		if shell_is_osx; then
+			opts="-s"
+		else
+			opts="--short"
+		fi
 	fi
 
 	hostname ${opts}
