@@ -16,13 +16,13 @@ generate_segmentrc() {
 export TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER="${TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT}"
 # What unit to use. Can be any of {c,f,k}.
 export TMUX_POWERLINE_SEG_WEATHER_UNIT="${TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAULT}"
-# How often to updat the weahter in seconds.
+# How often to update the weather in seconds.
 export TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT}"
 
-# You location. Find a code that works for you:
+# Your location. Find a code that works for you:
 # 1. Go to Yahoo weather http://weather.yahoo.com/
 # 2. Find the weather for you location
-# 3. Copy the last numbers in that URL. e.g. "http://weather.yahoo.com/united-states/california/newport-beach-12796587/" has the number "12796587"
+# 3. Copy the last numbers in that URL. e.g. "http://weather.yahoo.com/united-states/california/newport-beach-12796587/" has the numbers "12796587"
 export TMUX_POWERLINE_SEG_WEATHER_LOCATION=""
 EORC
 	echo "$rccontents"
