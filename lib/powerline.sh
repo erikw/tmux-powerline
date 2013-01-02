@@ -2,7 +2,8 @@
 
 print_powerline() {
 	local side="$1"
-	eval "local input_segments=(\"\${TMUX_POWERLINE_${side^^}_STATUS_SEGMENTS[@]}\")"
+	local upper_side=$(echo "$1" | tr '[:lower:]' '[:upper:]')
+	eval "local input_segments=(\"\${TMUX_POWERLINE_${upper_side}_STATUS_SEGMENTS[@]}\")"
 	local powerline_segments=()
 	local powerline_segment_contents=()
 
@@ -18,7 +19,7 @@ print_powerline() {
 __process_segment_defaults() {
 	for segment_index in "${!input_segments[@]}"; do
 		local input_segment=(${input_segments[$segment_index]})
-		eval "local default_separator=\$TMUX_POWERLINE_DEFAULT_${side^^}SIDE_SEPARATOR"
+		eval "local default_separator=\$TMUX_POWERLINE_DEFAULT_${upper_side}SIDE_SEPARATOR"
 
 		powerline_segment_with_defaults=(
 			${input_segment[0]:-"no_script"} \
