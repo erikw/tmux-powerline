@@ -72,7 +72,7 @@ brew install https://raw.github.com/Homebrew/homebrew-dupes/master/grep.rb
 ```
 
 # Installation
-Just check out the repository with:
+Start with checking out the repository with:
 
 ```console
 $ cd ~/some/path/
@@ -93,20 +93,19 @@ set-option -g status-left "#(~/path/to/tmux-powerline/powerline.sh left)"
 set-option -g status-right "#(~/path/to/tmux-powerline/powerline.sh right)"
 ```
 
-Set the maximum lengths to something that suits your configuration of segments and size of terminal (the maximum segments length will be handled better in the future). Segments needs to use different tools or options depending on platform. Currently there is only a distinction between Linux systems and OS X systems. `config.sh` tries to detect what machine you're on with `uname`. If needed you can override this setting with the PLATFORM variable there (or wherever you want to define it).
-
-
-Some segments e.g. cwd and cvs_branch needs to find the current working directory of the active pane. To achieve this we let tmux save the path each time the shell prompt is displayed. Put the line below in your `~/.bashrc` or where you define you PS1 variable. zsh users can put it in e.g. `~/.zshrc` and may change `PS1` to `PROMPT` (but that's not necessary).
-
-```bash
-PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#D" | tr -d %) "$PWD")'
-```
+Set the maximum lengths to something that suits your configuration of segments and size of terminal (the maximum segments length will be handled better in the future).
 
 You can toggle the visibility of the statusbars by adding the following to your `~/.tmux.conf`:
 
 ```vim
 bind C-[ run '~/path/to/tmux-powerline/mute_powerline.sh left'		# Mute left statusbar.
 bind C-] run '~/path/to/tmux-powerline/mute_powerline.sh right'		# Mute right statusbar.
+```
+
+Some segments e.g. cwd and cvs_branch needs to find the current working directory of the active pane. To achieve this we let tmux save the path each time the shell prompt is displayed. Put the line below in your `~/.bashrc` or where you define you PS1 variable. zsh users can put it in e.g. `~/.zshrc` and may change `PS1` to `PROMPT` (but that's not necessary).
+
+```bash
+PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#D" | tr -d %) "$PWD")'
 ```
 
 # Configuration
@@ -124,18 +123,7 @@ $ ./generate_rc.sh
 $ mv ~/.tmux-powerlinerc.default ~/.tmux-powerlinerc
 $ $EDITOR ~/.tmux-powerlinerc
 ```
-and editing theme to use and values for segments you want to use.
-
-## Custom themes and segments
-<!-- TODO: Add better explanation -->
-If you would like to add custom segments or themes but keep the cloned tmux-powerline repository clean in order to update it easily, you can define custom paths to directories containing the themes and segments. Add the following to your ~/.tmux-powerlinerc (e.g. under General):
-
-```bash
-export TMUX_POWERLINE_DIR_USER_THEMES="/path/to/your/custom/themes"
-export TMUX_POWERLINE_DIR_USER_SEGMENTS="/path/to/your/custom/segments"
-```
-
-Once these are defined, tmux-powerline will search these first before looking in the default paths for the themes or segments specified in the rc-file and theme respectively.
+and change theme to use and values for segments you want to use. If you want to keep the repo checkout clean you can set custom segment and theme paths in the general section and then store your files outside the repo.
 
 # Debugging
 
