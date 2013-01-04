@@ -49,7 +49,7 @@ Remaining battery.
 Requirements for the lib to work are:
 
 * Recent tmux version
-* `bash --version` >= 4.0
+* `bash --version` >= 3.2
 * A patched font. Follow instructions at [Lokaltog/vim-powerline/fontpatcher](https://github.com/Lokaltog/vim-powerline/tree/develop/fontpatcher) or [download](https://github.com/Lokaltog/vim-powerline/wiki/Patched-fonts) a new one. However you can use other substitute symbols as well; see `config.sh`.
 
 ## Segment Requirements
@@ -63,34 +63,6 @@ Requirements for some segments. You only need to fulfill the requirements for th
 * tmux_mem_cpu_load.sh: [tmux-mem-cpu-load](https://github.com/thewtex/tmux-mem-cpu-load)
 
 ## OS X specific requirements
-
-**You still need to follow the first part of these instructions even if you are running zsh or something else as your default shell!**
-
-tmux-powerline uses associative arrays in bash, which were added in bash version 4.0. OS X Lion ships with an antiquated version of bash ( run
-`bash --version` to see your version). In order to use tmux-powerline, you need to install a newer version of bash, fortunately,
-[brew](http://mxcl.github.com/homebrew/) makes this very easy. If you don't have brew, [install it](https://github.com/mxcl/homebrew/wiki/installation). Alternatively the older [MacPorts](http://www.macports.org/) can be used.
-Then follow these steps:
-
-```bash
-$ brew install bash
-```
-
-**If you're using something other than bash (or if you don't want this newer version of bash as your default shell) you should be done now**. If something
-seems broken, try following the last two steps and see if it helps:
-
-```bash
-$ sudo bash -c "echo /usr/local/Cellar/bash/%INSTALLED_VERSION%/bin/bash >> /private/etc/shells"
-$ chsh -s /usr/local/Cellar/bash/%INSTALLED_VERSION%/bin/bash
-```
-
-The first command installs bash through brew, the second registers the new shell with the system and the third changes to the new shell for your user.
-If you later upgrade bash through brew, don't forget to do the last two steps again with the new version number. After doing the above and restarting your
-terminal, running `echo $SHELL` should result in the following:
-
-```bash
-$ echo $SHELL
-/usr/local/Cellar/bash/%INSTALLED_VERSION%/bin/bash
-```
 
 The `grep` tool is outdated on OS X 10.8 Mountain Lion so you might have to upgrade it. Unfortunately the main homebrew repo 
 [does not contain grep](https://github.com/mxcl/homebrew/pull/3473) so use the following command to get the lastest version.
@@ -133,8 +105,8 @@ PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#D" | tr -
 You can toggle the visibility of the statusbars by adding the following to your `~/.tmux.conf`:
 
 ```vim
-bind C-[ run '~/path/to/tmux-powerline/mute_statusbar.sh left'		# Mute left statusbar.
-bind C-] run '~/path/to/tmux-powerline/mute_statusbar.sh right'		# Mute right statusbar.
+bind C-[ run '~/path/to/tmux-powerline/mute_powerline.sh left'		# Mute left statusbar.
+bind C-] run '~/path/to/tmux-powerline/mute_powerline.sh right'		# Mute right statusbar.
 ```
 
 # Configuration
