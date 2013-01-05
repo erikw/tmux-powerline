@@ -55,12 +55,12 @@ Requirements for the lib to work are:
 ## Segment Requirements
 Requirements for some segments. You only need to fulfill the requirements for those segments you want to use.
 
-* wan_ip.sh, np_lastfm.sh, weather_yahoo.sh: curl, bc
-* np_mpd.sh: [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
-* xkb_layout.sh: X11, XKB
-* mail_count_gmail.sh: wget.
-* ifstat.sh: ifstat (there is a simpler segment not using ifstat but samples /sys/class/net)
-* tmux_mem_cpu_load.sh: [tmux-mem-cpu-load](https://github.com/thewtex/tmux-mem-cpu-load)
+* `wan_ip.sh`, `now_playing.sh` (last.fm), `weather_yahoo.sh`: curl, bc
+* `now_playing.sh` (mpd) : [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
+* `xkb_layout.sh`: X11, XKB
+* `mailcount.sh` (gmail): wget.
+* `ifstat.sh`: ifstat (there is a simpler segment not using ifstat but samples /sys/class/net)
+* `tmux_mem_cpu_load.sh`: [tmux-mem-cpu-load](https://github.com/thewtex/tmux-mem-cpu-load)
 
 ## OS X specific requirements
 
