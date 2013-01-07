@@ -95,7 +95,13 @@ set-option -g status-right "#(~/path/to/tmux-powerline/powerline.sh right)"
 
 Set the maximum lengths to something that suits your configuration of segments and size of terminal (the maximum segments length will be handled better in the future).
 
-You can toggle the visibility of the statusbars by adding the following to your `~/.tmux.conf`:
+The window list can be powerlineified if you'd like by adding the following line to the same file:
+
+```vim
+set-window-option -g window-status-current-format "#[fg=colour235, bg=colour27]⮀#[fg=colour255, bg=colour27] #I ⮁ #W#F #[fg=colour27, bg=colour235]⮀"
+```
+
+You can toggle the visibility of the statusbars by adding the following lines:
 
 ```vim
 bind C-[ run '~/path/to/tmux-powerline/mute_powerline.sh left'		# Mute left statusbar.
