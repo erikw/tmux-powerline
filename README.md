@@ -133,7 +133,7 @@ and change theme to use and values for segments you want to use. If you want to 
 
 # Debugging
 
-Some segments might not work on your system for various reasons such as missing programs or different versions not having the same options. To find out which segment is not working it may help to enable the debug setting in `~/.tmux-powerlinerc`. However this may not be enough to determine the error so you can inspect all executed bash command (will be a long output) by doing
+Some segments might not work on your system for various reasons such as missing programs or different versions not having the same options. To find out which segment is not working it may help to enable the debug setting in `~/.tmux-powerlinerc`. However this may not be enough to determine the error so you can inspect all executed bash commands (will be a long output) by doing
 
 ```console
 $ bash -x powerline.sh (left|right)
