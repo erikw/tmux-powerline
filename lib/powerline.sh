@@ -67,7 +67,11 @@ __process_scripts() {
 __process_colors() {
 	for segment_index in "${!powerline_segments[@]}"; do
 		local powerline_segment=(${powerline_segments[$segment_index]})
-		local next_segment=(${powerline_segments[segment_index + 1]})
+	 	# find the next segment that produces content (skip empty segments)
+		for next_segment_index in `seq $(($segment_index + 1)) ${#powerline_segments}` ; do
+			[[ ! -z ${powerline_segment_contents[next_segment_index]} ]] && break
+		done
+		local next_segment=(${powerline_segments[$next_segment_index]})
 
 		if [ $side == 'left' ]; then
 			powerline_segment[4]=${next_segment[1]:-$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR}
