@@ -69,7 +69,7 @@ __process_colors() {
 		local powerline_segment=(${powerline_segments[$segment_index]})
 	 	# find the next segment that produces content (skip empty segments)
 		for next_segment_index in `seq $(($segment_index + 1)) ${#powerline_segments}` ; do
-			[[ ! -z ${powerline_segment_contents[next_segment_index]} ]] && break
+			[[ -n ${powerline_segments[next_segment_index]} ]] && break
 		done
 		local next_segment=(${powerline_segments[$next_segment_index]})
 
