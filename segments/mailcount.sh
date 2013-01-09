@@ -75,7 +75,7 @@ run_segment() {
 	esac
 	local exitcode="$?"
 	if [ "$exitcode" -ne 0 ]; then
-		return exitcode
+		return $exitcode
 	fi
 
 
