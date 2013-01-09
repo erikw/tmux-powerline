@@ -98,7 +98,7 @@ Set the maximum lengths to something that suits your configuration of segments a
 The window list can be powerlineified if you'd like by adding the following line to the same file:
 
 ```vim
-set-window-option -g window-status-current-format "#[fg=colour235, bg=colour27]⮀#[fg=colour255, bg=colour27] #I ⮁ #W#F #[fg=colour27, bg=colour235]⮀"
+set-window-option -g window-status-current-format "#[fg=colour235, bg=colour27]⮀#[fg=colour255, bg=colour27] #I ⮁ #W #[fg=colour27, bg=colour235]⮀"
 ```
 
 You can toggle the visibility of the statusbars by adding the following lines:
