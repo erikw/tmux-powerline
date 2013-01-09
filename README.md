@@ -15,6 +15,7 @@ The following segments exists for now:
 * CWD in pane.
 * Current X keyboard layout.
 * Network download/upload speed.
+* Earthquake warnings.
 
 # Screenshots
 **Full screenshot**
