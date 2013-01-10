@@ -71,7 +71,7 @@ __goo_earthquake() {
 	magnitude=""
 	magnitude_number=""
 	timestamp=""
-	if [[ 1 -eq 0 ]] && [[ -f "$tmp_file" ]]; then
+	if [[ -f "$tmp_file" ]]; then
 		if shell_is_osx; then
 			last_update=$(stat -f "%m" ${tmp_file})
 		elif shell_is_linux; then
