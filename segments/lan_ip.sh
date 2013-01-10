@@ -25,10 +25,6 @@ run_segment() {
 		done
 	fi
 
-	if [ -n "$lan_ip" ]; then
-		echo "ⓛ ${lan_ip}"
-		return 0
-	else
-		return 1
-	fi
-}
+        echo "ⓛ ${lan_ip-N/a}"
+        return 0
+    }
