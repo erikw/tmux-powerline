@@ -119,7 +119,7 @@ __get_condition_symbol() {
         	#echo "☂"
         	echo "☔"
         	;;
-    	"snow" | "mixed snow and sleet" | "snow flurries" | "light snow showers" | "blowing snow" | "sleet" | "hail" | "heavy snow" | "scattered snow showers" | "snow showers" | "light snow")
+    	"snow" | "mixed snow and sleet" | "snow flurries" | "light snow showers" | "blowing snow" | "sleet" | "hail" | "heavy snow" | "scattered snow showers" | "snow showers" | "light snow" | "snow/windy" )
         	#echo "☃"
         	echo "❅"
         	;;
