@@ -80,16 +80,16 @@ __yahoo_weather() {
             	exit 1
         	fi
 
-            # You gonna need textproc/gnugrep with --enable-perl-regexp and PCRE compiled.
             if shell_is_bsd; then
-    		    unit=$(echo "$weather_data" | /usr/local/bin/grep -PZo "<yweather:units [^<>]*/>" | sed 's/.*temperature="\([^"]*\)".*/\1/')
-    		    condition=$(echo "$weather_data" | /usr/local/bin/grep -PZo "<yweather:condition [^<>]*/>")
+            	# You will need textproc/gnugrep with --enable-perl-regexp and PCRE compiled.
+            	gnugrep="/usr/local/bin/grep"
             else
-			    # <yweather:units temperature="F" distance="mi" pressure="in" speed="mph"/>
-    		    unit=$(echo "$weather_data" | grep -PZo "<yweather:units [^<>]*/>" | sed 's/.*temperature="\([^"]*\)".*/\1/')
-    		    condition=$(echo "$weather_data" | grep -PZo "<yweather:condition [^<>]*/>")
-			    # <yweather:condition  text="Clear"  code="31"  temp="66"  date="Mon, 01 Oct 2012 8:00 pm CST" />
+            	gnugrep="grep"
             fi
+			# <yweather:units temperature="F" distance="mi" pressure="in" speed="mph"/>
+    		unit=$(echo "$weather_data" | "$gnugrep" -PZo "<yweather:units [^<>]*/>" | sed 's/.*temperature="\([^"]*\)".*/\1/')
+    		condition=$(echo "$weather_data" | "$gnugrep" -PZo "<yweather:condition [^<>]*/>")
+			# <yweather:condition  text="Clear"  code="31"  temp="66"  date="Mon, 01 Oct 2012 8:00 pm CST" />
     		degree=$(echo "$condition" | sed 's/.*temp="\([^"]*\)".*/\1/')
     		condition=$(echo "$condition" | sed 's/.*text="\([^"]*\)".*/\1/')
         	echo "$degree" > $tmp_file
