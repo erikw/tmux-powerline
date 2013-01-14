@@ -62,6 +62,7 @@ Requirements for some segments. You only need to fulfill the requirements for th
 * `mailcount.sh` (gmail): wget.
 * `ifstat.sh`: ifstat (there is a simpler segment not using ifstat but samples /sys/class/net)
 * `tmux_mem_cpu_load.sh`: [tmux-mem-cpu-load](https://github.com/thewtex/tmux-mem-cpu-load)
+* `weather.sh`: GNU `grep` with Perl regexp enabled (FreeBSD specific)
 
 ## OS X specific requirements
 
@@ -71,6 +72,11 @@ The `grep` tool is outdated on OS X 10.8 Mountain Lion so you might have to upgr
 ```bash
 brew install https://raw.github.com/Homebrew/homebrew-dupes/master/grep.rb
 ```
+
+## FreeBSD specific requirements
+
+Preinstalled `grep` in FreeBSD doesn't support Perl regexp. Solution is rather simple -- you need to use `textproc/gnugrep` port instead. You also need to make sure, that it has support for PCRE and is compiled with `--enable-perl-regexp` flag.
+
 
 # Installation
 Start with checking out the repository with:
