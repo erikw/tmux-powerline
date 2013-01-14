@@ -58,7 +58,7 @@ __process_settings() {
 __yahoo_weather() {
 	degree=""
 	if [ -f "$tmp_file" ]; then
-    	if shell_is_osx; then
+    	if shell_is_osx || shell_is_bsd; then
         	last_update=$(stat -f "%m" ${tmp_file})
     	elif shell_is_linux; then
         	last_update=$(stat -c "%Y" ${tmp_file})
