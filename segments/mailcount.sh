@@ -104,7 +104,7 @@ __count_gmail() {
 
 	# Refresh mail count if the tempfile is older than $interval minutes.
 	let interval=60*$TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_INTERVAL
-	if shell_is_osx; then
+	if shell_is_osx || shell_is_bsd; then
 		last_update=$(stat -f "%m" ${tmp_file})
 	elif shell_is_linux; then
 		last_update=$(stat -c "%Y" ${tmp_file})
