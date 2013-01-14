@@ -161,7 +161,7 @@ __np_itunes() {
 __np_lastfm() {
 	local tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/np_lastfm.txt"
 	if [ -f "$tmp_file" ]; then
-		if shell_is_osx; then
+		if shell_is_osx || shell_is_bsd; then
 			last_update=$(stat -f "%m" ${tmp_file})
 		elif shell_is_linux; then
 			last_update=$(stat -c "%Y" ${tmp_file})
