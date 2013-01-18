@@ -17,9 +17,11 @@ run_segment() {
 				;;
 			wlan*) type="☫"
 				;;
+			en*) type=" "
+				;;
 		esac
 		if [ -n "${type}" ]; then
-			formate=$(echo "${formate} ${type} ⇊ %.2f⇈ %.2f")
+			formate=$(echo "${formate} ${type} ⇊ %.2f ⇈ %.2f")
 			holder=$(echo "${holder},\$$((index)),\$$((index+1))")
 		fi
 		index=$((index+2))
