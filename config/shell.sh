@@ -9,9 +9,9 @@ case "$OSTYPE" in
 	*'bsd'*		) SHELL_PLATFORM='bsd'		;;
 esac
 
-shell_is_linux() { [[ $SHELL_PLATFORM == 'linux' ]] || $SHELL_PLATFORM == 'bsd' ]]; }
+shell_is_linux() { [[ $SHELL_PLATFORM == 'linux' || $SHELL_PLATFORM == 'bsd' ]]; }
 shell_is_osx()   { [[ $SHELL_PLATFORM == 'osx' ]]; }
-shell_is_bsd()   { [[ $SHELL_PLATFORM == 'bsd' ]] || $SHELL_PLATFORM == 'osx' ]]; }
+shell_is_bsd()   { [[ $SHELL_PLATFORM == 'bsd' || $SHELL_PLATFORM == 'osx' ]]; }
 
 export -f shell_is_linux
 export -f shell_is_osx
