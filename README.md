@@ -20,31 +20,31 @@ The following segments exists for now:
 # Screenshots
 **Full screenshot**
 
-![Full screenshot](https://github.com/erikw/tmux-powerline/raw/master/img/full.png)
+![Full screenshot](img/full.png)
 
 **left-status**
 
 Current tmux session, window and pane, hostname and LAN & WAN IP address.
 
-![left-status](https://github.com/erikw/tmux-powerline/raw/master/img/left-status.png)
+![left-status](img/left-status.png)
 
 **right-status**
 
 New mails, now playing, average load, weather, date and time.
 
-![right-status](https://github.com/erikw/tmux-powerline/raw/master/img/right-status.png)
+![right-status](img/right-status.png)
 
 Now I've read my inbox so the mail segment disappears!
 
-![right-status, no mail](https://github.com/erikw/tmux-powerline/raw/master/img/right-status_no_mail.png)
+![right-status, no mail](img/right-status_no_mail.png)
 
 After pausing the music there's no need for showing NP anymore. Also the weather has become much nicer!
 
-![right-status, no mpd](https://github.com/erikw/tmux-powerline/raw/master/img/right-status_no_mpd.png)
+![right-status, no mpd](img/right-status_no_mpd.png)
 
 Remaining battery.
 
-![right-status, weather and battery](https://github.com/erikw/tmux-powerline/raw/master/img/right-status_weather_battery.png)
+![right-status, weather and battery](img/right-status_weather_battery.png)
 
 # Requirements
 Requirements for the lib to work are:
