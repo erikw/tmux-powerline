@@ -73,6 +73,13 @@ The `grep` tool is outdated on OS X 10.8 Mountain Lion so you might have to upgr
 brew install https://raw.github.com/Homebrew/homebrew-dupes/master/grep.rb
 ```
 
+or if you have heightened security set up, just tap the homebrew dupes and install grep
+
+```bash
+brew tap homebrew/dupes
+brew install homebrew/dupes/grep
+```
+
 ## FreeBSD specific requirements
 
 Preinstalled `grep` in FreeBSD doesn't support Perl regexp. Solution is rather simple -- you need to use `textproc/gnugrep` port instead. You also need to make sure, that it has support for PCRE and is compiled with `--enable-perl-regexp` flag.
