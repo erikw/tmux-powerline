@@ -197,7 +197,7 @@ __np_mocp() {
 # Simple np script for mpd. Works with streams!
 # Only tested on OS X... should work the same way on other platforms though.
 __np_mpd_simple() {
-	np=$(mpc current 2>&1)
+	np=$(MPD_HOST="$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST" MPD_PORT="$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT" mpc current 2>&1)
 	if [ $? -eq 0 ] && [ -n "$np" ]; then
 		mpc | grep "paused" > /dev/null
 		if [ $? -eq 0 ]; then
