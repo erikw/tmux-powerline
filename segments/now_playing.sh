@@ -8,7 +8,7 @@ TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SPEED_DEFAULT="2"
 TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST_DEFAULT="localhost"
 TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT_DEFAULT="6600"
 TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_UPDATE_PERIOD_DEFAULT="30"
-TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT_DEFAULT="%name%: %title%"
+TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT_DEFAULT="%artist% - %title%"
 
 generate_segmentrc() {
 	read -d '' rccontents  << EORC
@@ -25,7 +25,7 @@ export TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SPEED="${TMUX_POWERLINE_SEG_NOW_PLAYI
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST="${TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST_DEFAULT}"
 # Port the MPD server is running on.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT="${TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT_DEFAULT}"
-# Song display format for mpd_simple. See \`man mpc\` for delimiters.
+# Song display format for mpd_simple. See mpc(1) for delimiters.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT="${TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT_DEFAULT}"
 
 # Username for Last.fm if that music player is used.
@@ -118,6 +118,18 @@ __np_mpd() {
 	echo "$np"
 }
 
+__np_mpd_simple() {
+	np=$(MPD_HOST="$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST" MPD_PORT="$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT" mpc current -f "$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT" 2>&1)
+	if [ $? -eq 0 ] && [ -n "$np" ]; then
+		mpc | grep "paused" > /dev/null
+		if [ $? -eq 0 ]; then
+			return 1
+		fi
+		echo "$np"
+	fi
+}
+
+
 __np_audacious() {
 	audacious_pid=$(pidof audacious)
 	if [ -n "$audacious_pid" ]; then
@@ -197,19 +209,6 @@ __np_mocp() {
 		if [ -n "$np" -a "$mocp_paused" != "PAUSE" ]; then
         	echo "$np"
     	fi
-	fi
-}
-
-# Simple np script for mpd. Works with streams!
-# Only tested on OS X... should work the same way on other platforms though.
-__np_mpd_simple() {
-	np=$(MPD_HOST="$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST" MPD_PORT="$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT" mpc current -f "$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT" 2>&1)
-	if [ $? -eq 0 ] && [ -n "$np" ]; then
-		mpc | grep "paused" > /dev/null
-		if [ $? -eq 0 ]; then
-			return 1
-		fi
-		echo "$np"
 	fi
 }
 
