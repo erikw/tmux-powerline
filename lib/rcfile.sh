@@ -50,9 +50,9 @@ EORC
 		source "$segment"
 		if declare -f generate_segmentrc >/dev/null; then
 			segmentrc=$(generate_segmentrc | sed -e 's/^/\\t/g')
+			unset -f generate_segmentrc
 			local seg_name="${segment##*/}"
 			rccontents="${rccontents}\n\n# ${seg_name} {\n${segmentrc}\n# }"
-			unset -f generate_segmentrc
 		fi
 	done
 
