@@ -205,7 +205,6 @@ __np_mpd_simple() {
 		fi
 		echo "$np"
 	fi
-	return 1
 }
 
 __np_rdio() {
