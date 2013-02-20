@@ -53,6 +53,10 @@ __process_settings() {
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD" ]; then
 		export TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT}"
 	fi
+	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_LOCATION" ]; then
+		echo "No weather location specified.";
+		exit 8
+	fi
 }
 
 __yahoo_weather() {
