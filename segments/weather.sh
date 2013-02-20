@@ -80,12 +80,9 @@ __yahoo_weather() {
             	exit 1
         	fi
 
-            if shell_is_bsd; then
-            	# You will need textproc/gnugrep with --enable-perl-regexp and PCRE compiled.
-            	gnugrep="/usr/local/bin/grep"
-            else
+            	# Assume latest grep is in PATH
             	gnugrep="grep"
-            fi
+
 			# <yweather:units temperature="F" distance="mi" pressure="in" speed="mph"/>
     		unit=$(echo "$weather_data" | "$gnugrep" -PZo "<yweather:units [^<>]*/>" | sed 's/.*temperature="\([^"]*\)".*/\1/')
     		condition=$(echo "$weather_data" | "$gnugrep" -PZo "<yweather:condition [^<>]*/>")
