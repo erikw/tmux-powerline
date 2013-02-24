@@ -12,7 +12,7 @@ run_segment() {
 		sed="gsed"
 	fi
 
-	data=$(ifstat -S -q 1 1)
+	data=$(ifstat -z -S -q 1 1)
 	interfaces=$(echo -e "${data}" | head -n 1)
 	flow_data=$(echo -e "${data}" | tail -n 1 | ${sed} "s/\s\{1,\}/,/g")
 	index=1
