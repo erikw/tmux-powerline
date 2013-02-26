@@ -6,7 +6,8 @@ run_segment() {
 		return
 	fi
 
-	stats=$(rainbarf --tmux $TMUX_POWERLINE_SEG_RAINBARF_PARAMS)
+    # Customize via ~/.rainbarf.conf
+	stats=$(rainbarf --tmux)
 	if [ -n "$stats" ]; then
 		echo "$stats";
 	fi
