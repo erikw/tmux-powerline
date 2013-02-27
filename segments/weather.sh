@@ -76,25 +76,21 @@ __yahoo_weather() {
 	if [ -z "$degree" ]; then
 		weather_data=$(curl --max-time 4 -s "http://weather.yahooapis.com/forecastrss?w=${TMUX_POWERLINE_SEG_WEATHER_LOCATION}&u=${TMUX_POWERLINE_SEG_WEATHER_UNIT}")
 		if [ "$?" -eq "0" ]; then
-		error=$(echo "$weather_data" | grep "problem_cause\|DOCTYPE");
-		if [ -n "$error" ]; then
-			echo "error"
-			exit 1
-		fi
+			error=$(echo "$weather_data" | grep "problem_cause\|DOCTYPE");
+			if [ -n "$error" ]; then
+				echo "error"
+				exit 1
+			fi
 
-		# Assume latest grep is in PATH
-		gnugrep="grep"
+			# Assume latest grep is in PATH
+			gnugrep="grep"
 
-		# <yweather:units temperature="F" distance="mi" pressure="in" speed="mph"/>
-		unit=$(echo "$weather_data" | "$gnugrep" -PZo "<yweather:units [^<>]*/>" | sed 's/.*temperature="\([^"]*\)".*/\1/')
-		condition=$(echo "$weather_data" | "$gnugrep" -PZo "<yweather:condition [^<>]*/>")
-		# <yweather:condition  text="Clear"  code="31"  temp="66"  date="Mon, 01 Oct 2012 8:00 pm CST" />
-		degree=$(echo "$condition" | sed 's/.*temp="\([^"]*\)".*/\1/')
-		condition=$(echo "$condition" | sed 's/.*text="\([^"]*\)".*/\1/')
-		echo "$degree" > $tmp_file
-		echo "$condition" >> $tmp_file
-		elif [ -f "$tmp_file" ]; then
-		__read_tmp_file
+			# <yweather:units temperature="F" distance="mi" pressure="in" speed="mph"/>
+			unit=$(echo "$weather_data" | "$gnugrep" -PZo "<yweather:units [^<>]*/>" | sed 's/.*temperature="\([^"]*\)".*/\1/')
+			condition=$(echo "$weather_data" | "$gnugrep" -PZo "<yweather:condition [^<>]*/>")
+			# <yweather:condition  text="Clear"  code="31"  temp="66"  date="Mon, 01 Oct 2012 8:00 pm CST" />
+			degree=$(echo "$condition" | sed 's/.*temp="\([^"]*\)".*/\1/')
+			condition=$(echo "$condition" | sed 's/.*text="\([^"]*\)".*/\1/')
 		fi
 	fi
 
