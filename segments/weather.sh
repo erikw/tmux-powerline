@@ -105,7 +105,7 @@ __yahoo_weather() {
 		degree=$(echo "${degree} + 273.15" | bc)
 		fi
 		condition_symbol=$(__get_condition_symbol "$condition" "$sunrise" "$sunset") 
-		echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')" | tee "{$tmp_file}"
+		echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')" | tee "${tmp_file}"
 	fi
 }
 
