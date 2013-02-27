@@ -98,8 +98,8 @@ __yahoo_weather() {
 		if [ "$TMUX_POWERLINE_SEG_WEATHER_UNIT" == "k" ]; then
 		degree=$(echo "${degree} + 273.15" | bc)
 		fi
-                condition_symbol=$(__get_condition_symbol "$condition")
-		echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')"
+		condition_symbol=$(__get_condition_symbol "$condition") 
+		echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')" | tee "{$tmp_file}"
 	fi
 }
 
@@ -157,12 +157,8 @@ __get_condition_symbol() {
 
 __read_tmp_file() {
 	if [ ! -f "$tmp_file" ]; then
-	return
+		return
 	fi
-	IFS_bak="$IFS"
-	IFS=$'\n'
-	lines=($(cat ${tmp_file}))
-	IFS="$IFS_bak"
-	degree="${lines[0]}"
-	condition="${lines[1]}"
+	cat "${tmp_file}"
+	exit
 }
