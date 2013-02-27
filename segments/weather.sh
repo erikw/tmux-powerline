@@ -33,7 +33,7 @@ run_segment() {
 	case "$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER" in
 		"yahoo") weather=$(__yahoo_weather) ;;
 		*)
-			echo "Unknown weahter provider [${$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER}]";
+			echo "Unknown weather provider [${$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER}]";
 			return 1
 	esac
 	if [ -n "$weather" ]; then
