@@ -95,6 +95,8 @@ __yahoo_weather() {
 			# <yweather:astronomy sunrise="6:56 am"   sunset="6:21 pm"/>
 			sunrise=$(date -d"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^\(.*\)sunset.*/\1/' | sed 's/^.*sunrise="\(.*m\)".*/\1/')" +%H%M)
 			sunset=$(date -d"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^.*sunset="\(.*m\)".*/\1/')" +%H%M)
+		elif [ -f "${tmp_file}" ]; then
+			__read_tmp_file
 		fi
 	fi
 
