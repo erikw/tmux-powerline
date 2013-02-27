@@ -12,7 +12,7 @@ TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT_DEFAULT="%artist% - %title%"
 
 generate_segmentrc() {
 	read -d '' rccontents  << EORC
-# Music player to use. Can be any of {audacious, banshee, cmus, itunes, lastfm, mocp, mpd, mpd_simple, rdio, rhythmbox, spotify, spotify_wine}.
+# Music player to use. Can be any of {audacious, banshee, cmus, itunes, lastfm, mocp, mpd, mpd_simple, pithos, rdio, rhythmbox, spotify, spotify_wine}.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER=""
 # Maximum output length.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN="${TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN_DEFAULT}"
@@ -53,6 +53,7 @@ run_segment() {
 		"mocp")  np=$(__np_mocp) ;;
 		"mpd")  np=$(__np_mpd) ;;
 		"mpd_simple")  np=$(__np_mpd_simple) ;;
+		"pithos") np=$(__np_pithos) ;;
 		"rdio")  np=$(__np_rdio) ;;
 		"rhythmbox")  np=$(__np_rhythmbox) ;;
 		"spotify")  np=$(__np_spotify) ;;
@@ -199,6 +200,13 @@ __np_lastfm() {
 		fi
 	fi
 	echo "$np"
+}
+
+__np_pithos() {
+	if [ "$(dbus-send --reply-timeout=10 --print-reply --dest=net.kevinmehall.Pithos /net/kevinmehall/Pithos net.kevinmehall.Pithos.IsPlaying 2>/dev/null | grep boolean | cut -d' ' -f5)" == "true" ]; then
+		np=$(${TMUX_POWERLINE_DIR_SEGMENTS}/np_pithos.py)
+		echo "$np"
+	fi
 }
 
 __np_mocp() {
