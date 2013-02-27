@@ -148,8 +148,8 @@ __get_condition_symbol() {
 		echo "⚑"
 		;;
 		"clear" | "fair" | "cold")
-		hour=$(date +%H)
-		if [ "$hour" -ge "22" -o "$hour" -le "5" ]; then
+		hourmin=$(date +%H%M)
+		if [ "$hourmin" -ge "$sunset" -o "$hourmin" -le "$sunrise" ]; then
 			echo "☾"
 		else
 			echo "〇"
