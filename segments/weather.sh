@@ -91,6 +91,10 @@ __yahoo_weather() {
 			# <yweather:condition  text="Clear"  code="31"  temp="66"  date="Mon, 01 Oct 2012 8:00 pm CST" />
 			degree=$(echo "$condition" | sed 's/.*temp="\([^"]*\)".*/\1/')
 			condition=$(echo "$condition" | sed 's/.*text="\([^"]*\)".*/\1/')
+			# Pull the times for sunrise and sunset so we know when to change the day/night indicator
+			# <yweather:astronomy sunrise="6:56 am"   sunset="6:21 pm"/>
+			sunrise=$(date -d"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^\(.*\)sunset.*/\1/' | sed 's/^.*sunrise="\(.*m\)".*/\1/')" +%H%M)
+			sunset=$(date -d"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^.*sunset="\(.*m\)".*/\1/')" +%H%M)
 		fi
 	fi
 
@@ -98,7 +102,7 @@ __yahoo_weather() {
 		if [ "$TMUX_POWERLINE_SEG_WEATHER_UNIT" == "k" ]; then
 		degree=$(echo "${degree} + 273.15" | bc)
 		fi
-		condition_symbol=$(__get_condition_symbol "$condition") 
+		condition_symbol=$(__get_condition_symbol "$condition" "$sunrise" "$sunset") 
 		echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')" | tee "{$tmp_file}"
 	fi
 }
@@ -106,10 +110,12 @@ __yahoo_weather() {
 # Get symbol for condition. Available conditions: http://developer.yahoo.com/weather/#codes
 __get_condition_symbol() {
 	local condition=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+        local sunrise="$2"
+        local sunset="$3"
 	case "$condition" in
 		"sunny" | "hot")
-		hour=$(date +%H)
-		if [ "$hour" -ge "22" -o "$hour" -le "5" ]; then
+		hourmin=$(date +%H%M)
+		if [ "$hourmin" -ge "$sunset" -o "$hourmin" -le "$sunrise" ]; then
 			#echo "☽"
 			echo "☾"
 		else
