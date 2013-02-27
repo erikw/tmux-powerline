@@ -12,7 +12,7 @@ TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT_DEFAULT="%artist% - %title%"
 
 generate_segmentrc() {
 	read -d '' rccontents  << EORC
-# Music player to use. Can be any of {audacious, banshee, cmus, itunes, lastfm, mocp, mpd, mpd_simple, rdio, rhythmbox, spotify, spotify_wine}.
+# Music player to use. Can be any of {audacious, banshee, cmus, itunes, lastfm, mocp, mpd, mpd_simple, pithos, rdio, rhythmbox, spotify, spotify_wine}.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER=""
 # Maximum output length.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN="${TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN_DEFAULT}"
