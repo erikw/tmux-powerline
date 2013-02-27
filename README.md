@@ -167,6 +167,8 @@ You have edited `~/.tmux.conf` but no powerline is displayed. This might be beca
 ```console
 $ tmux source-file ~/.tmux.conf
 ```
+### Multiple lines in bash or no powerline in zsh using iTerm (OS X)
+If your tmux looks like [this](https://github.com/erikw/tmux-powerline/issues/125) then you may have to in iTerm uncheck [Unicode East Asian Ambiguous characters are wide] in Preferences -> Settings -> Advanced.
 
 # Hacking
 
