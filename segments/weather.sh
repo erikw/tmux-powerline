@@ -61,15 +61,15 @@ __yahoo_weather() {
 	degree=""
 	if [ -f "$tmp_file" ]; then
 		if shell_is_osx || shell_is_bsd; then
-		last_update=$(stat -f "%m" ${tmp_file})
+			last_update=$(stat -f "%m" ${tmp_file})
 		elif shell_is_linux; then
-		last_update=$(stat -c "%Y" ${tmp_file})
+			last_update=$(stat -c "%Y" ${tmp_file})
 		fi
 		time_now=$(date +%s)
 
 		up_to_date=$(echo "(${time_now}-${last_update}) < ${update_period}" | bc)
 		if [ "$up_to_date" -eq 1 ]; then
-		__read_tmp_file
+			__read_tmp_file
 		fi
 	fi
 
@@ -102,7 +102,7 @@ __yahoo_weather() {
 
 	if [ -n "$degree" ]; then
 		if [ "$TMUX_POWERLINE_SEG_WEATHER_UNIT" == "k" ]; then
-		degree=$(echo "${degree} + 273.15" | bc)
+			degree=$(echo "${degree} + 273.15" | bc)
 		fi
 		condition_symbol=$(__get_condition_symbol "$condition" "$sunrise" "$sunset") 
 		echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')" | tee "${tmp_file}"
@@ -112,54 +112,54 @@ __yahoo_weather() {
 # Get symbol for condition. Available conditions: http://developer.yahoo.com/weather/#codes
 __get_condition_symbol() {
 	local condition=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-        local sunrise="$2"
-        local sunset="$3"
+    local sunrise="$2"
+    local sunset="$3"
 	case "$condition" in
 		"sunny" | "hot")
-		hourmin=$(date +%H%M)
-		if [ "$hourmin" -ge "$sunset" -o "$hourmin" -le "$sunrise" ]; then
-			#echo "☽"
-			echo "☾"
-		else
-			#echo "☀"
-			echo "☼"
-		fi
-		;;
+			hourmin=$(date +%H%M)
+			if [ "$hourmin" -ge "$sunset" -o "$hourmin" -le "$sunrise" ]; then
+				#echo "☽"
+				echo "☾"
+			else
+				#echo "☀"
+				echo "☼"
+			fi
+			;;
 		"rain" | "mixed rain and snow" | "mixed rain and sleet" | "freezing drizzle" | "drizzle" | "light drizzle" | "freezing rain" | "showers" | "mixed rain and hail" | "scattered showers" | "isolated thundershowers" | "thundershowers" | "light rain with thunder" | "light rain" | "rain and snow")
-		#echo "☂"
-		echo "☔"
-		;;
+			#echo "☂"
+			echo "☔"
+			;;
 		"snow" | "mixed snow and sleet" | "snow flurries" | "light snow showers" | "blowing snow" | "sleet" | "hail" | "heavy snow" | "scattered snow showers" | "snow showers" | "light snow" | "snow/windy" | "snow grains" | "snow/fog")
-		#echo "☃"
-		echo "❅"
-		;;
+			#echo "☃"
+			echo "❅"
+			;;
 		"cloudy" | "mostly cloudy" | "partly cloudy" | "partly cloudy/windy")
-		echo "☁"
-		;;
+			echo "☁"
+			;;
 		"tornado" | "tropical storm" | "hurricane" | "severe thunderstorms" | "thunderstorms" | "isolated thunderstorms" | "scattered thunderstorms")
-		#echo "⚡"
-		echo "☈"
-		;;
+			#echo "⚡"
+			echo "☈"
+			;;
 		"dust" | "foggy" | "fog" | "haze" | "smoky" | "blustery" | "mist")
-		#echo "♨"
-		#echo "﹌"
-		echo "〰"
-		;;
+			#echo "♨"
+			#echo "﹌"
+			echo "〰"
+			;;
 		"windy" | "fair/windy")
-		#echo "⚐"
-		echo "⚑"
-		;;
+			#echo "⚐"
+			echo "⚑"
+			;;
 		"clear" | "fair" | "cold")
-		hourmin=$(date +%H%M)
-		if [ "$hourmin" -ge "$sunset" -o "$hourmin" -le "$sunrise" ]; then
-			echo "☾"
-		else
-			echo "〇"
-		fi
-		;;
+			hourmin=$(date +%H%M)
+			if [ "$hourmin" -ge "$sunset" -o "$hourmin" -le "$sunrise" ]; then
+				echo "☾"
+			else
+				echo "〇"
+			fi
+			;;
 		*)
-		echo "?"
-		;;
+			echo "?"
+			;;
 	esac
 }
 
