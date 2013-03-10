@@ -97,7 +97,7 @@ __count_gmail() {
 	local override_passget="false"	# When true a force reloaded will be done.
 
 	# Create the cache file if it doesn't exist.
-	if [ ! -f $tmp_file ]; then
+	if [ ! -f "$tmp_file" ]; then
 		touch $tmp_file
 		override_passget=true
 	fi
@@ -135,7 +135,6 @@ __count_gmail() {
 		fi
 	fi
 
-	# echo "$(( $(date +"%s") - $(stat -f %m $tmp_file) ))"
 	count=$(cat $tmp_file)
 	echo "$count"
 	return 0;
