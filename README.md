@@ -67,7 +67,7 @@ Requirements for some segments. You only need to fulfill the requirements for th
 
 ## OS X specific requirements
 
-The `grep` tool is outdated on OS X 10.8 Mountain Lion so you might have to upgrade it. Unfortunately the main homebrew repo 
+The `grep` tool is outdated on OS X 10.8 Mountain Lion so you might have to upgrade it. Unfortunately the main homebrew repo
 [does not contain grep](https://github.com/mxcl/homebrew/pull/3473) so use the following command to get the lastest version.
 
 ```bash
@@ -154,6 +154,22 @@ Some segments might not work on your system for various reasons such as missing 
 $ bash -x powerline.sh (left|right)
 ```
 
+To debug smaller portions of code, say if you think the problem lies in a specific segment, insert these lines at the top and bottom of that file (or region you want to inspect there)
+
+```bash
+set -x
+exec 2>/tmp/tmux-powerline.log
+<code to debug>
+set +x
+```
+
+and then inspect the outputs like
+
+```console
+less /tmp/tmux-powerline.log
+tail -f /tmp/tmux-powerline.log # or follow output like this.
+```
+
 If you can not solve the problems you can post an [issue](https://github.com/erikw/tmux-powerline/issues?state=open) and be sure to include relevant information about your system and script output (from bash -x) and/or screenshots if needed.
 
 ## Common problems
@@ -179,4 +195,4 @@ If you want to (of course you do!) send a pull request for a cool segment you wr
 
 Usage of helper function to organize the work of a segment is encourage and should be named in the format `__helper_func`. If a segment has settings it should have a function `generate_rc` which outputs default values of all settings and a short explanation of the setting and its values. Study e.g. `segments/now_playing.sh` to see how it is done. A segment having settings should typically call a helper function `__process_settings` as the first statement in `run_segment` that sets default values to the settings that has not been set by the user.
 
-Also, don't use bash4 features as requiring bash4 complicates installation for OS X user quite a bit. Use tabs for indentation ([discussion](https://github.com/erikw/tmux-powerline/pull/92)), 
+Also, don't use bash4 features as requiring bash4 complicates installation for OS X user quite a bit. Use tabs for indentation ([discussion](https://github.com/erikw/tmux-powerline/pull/92)),
