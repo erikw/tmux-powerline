@@ -154,7 +154,7 @@ Some segments might not work on your system for various reasons such as missing 
 $ bash -x powerline.sh (left|right)
 ```
 
-To debug smaller portions of code, say if you think the problem lies in a specific segment, insert these lines at the top and bottom of that file (or region you want to inspect there)
+To debug smaller portions of code, say if you think the problem lies in a specific segment, insert these lines at the top and bottom of the relevant code portions e.g. inside a function:
 
 ```bash
 set -x
