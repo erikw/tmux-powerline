@@ -4,7 +4,7 @@ This is a set of scripts for making a nice and dynamic tmux statusbar consisting
 The following segments exists for now:
 * LAN & WAN IP addresses.
 * Now Playing for MPD, Spotify (GNU/Linux native or wine, OS X), iTunes (OS X), Rhythmbox, Banshee, MOC, Audacious, Rdio (OS X), cmus, Pithos and Last.fm (last scrobbled track).
-* New mail count for GMail, Maildir, mbox and Apple Mail.
+* New mail count for GMail, Maildir, mbox, mailcheck, and Apple Mail.
 * GNU/Linux and Macintosh OS X battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery)).
 * Weather in Celsius, Fahrenheit and Kelvin using Yahoo Weather.
 * System load, cpu usage and uptime.
@@ -59,7 +59,7 @@ Requirements for some segments. You only need to fulfill the requirements for th
 * `wan_ip.sh`, `now_playing.sh` (last.fm), `weather_yahoo.sh`: curl, bc
 * `now_playing.sh` (mpd) : [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
 * `xkb_layout.sh`: X11, XKB
-* `mailcount.sh` (gmail): wget.
+* `mailcount.sh` (gmail): wget, (mailcheck): [mailcheck](http://packages.debian.org/sid/mailcheck).
 * `ifstat.sh`: ifstat (there is a simpler segment not using ifstat but samples /sys/class/net)
 * `tmux_mem_cpu_load.sh`: [tmux-mem-cpu-load](https://github.com/thewtex/tmux-mem-cpu-load)
 * `rainbarf.sh`: [rainbarf](https://github.com/creaktive/rainbarf)
