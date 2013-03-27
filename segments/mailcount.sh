@@ -2,13 +2,14 @@
 
 TMUX_POWERLINE_SEG_MAILCOUNT_MAILDIR_INBOX_DEFAULT="$HOME/.mail/inbox/new"
 TMUX_POWERLINE_SEG_MAILCOUNT_MBOX_INBOX_DEFAULT="${MAIL}"
+TMUX_POWERLINE_SEG_MAILCOUNT_MAILCHECKRC_DEFAULT="${HOME}/.mailcheckrc"
 TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER_DEFAULT="gmail.com"
 TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_INTERVAL_DEFAULT="5"
 
 
 generate_segmentrc() {
 	read -d '' rccontents  << EORC
-# Mailbox type to use. Can be any of {apple_mail, gmail, maildir, mbox}
+# Mailbox type to use. Can be any of {apple_mail, gmail, maildir, mbox, mailcheck}
 export TMUX_POWERLINE_SEG_MAILCOUNT_MAILBOX_TYPE=""
 
 ## Gmail
@@ -33,6 +34,10 @@ export TMUX_POWERLINE_SEG_MAILCOUNT_MAILDIR_INBOX="${TMUX_POWERLINE_SEG_MAILCOUN
 ## mbox
 # Path to the mbox to check.
 export TMUX_POWERLINE_SEG_MAILCOUNT_MBOX_INBOX="${TMUX_POWERLINE_SEG_MAILCOUNT_MBOX_INBOX_DEFAULT}"
+
+## mailcheck
+# Optional path to mailcheckrc
+export TMUX_POWERLINE_SEG_MAILCOUNT_MAILCHECKRC="${TMUX_POWERLINE_SEG_MAILCOUNT_MAILCHECKRC_DEFAULT}"
 EORC
 	echo "${rccontents}"
 }
@@ -54,6 +59,12 @@ __process_settings() {
 	if [ -z "${TMUX_POWERLINE_SEG_MAILCOUNT_MBOX_INBOX}" ]; then
 		export TMUX_POWERLINE_SEG_MAILCOUNT_MBOX_INBOX="${TMUX_POWERLINE_SEG_MAILCOUNT_MBOX_INBOX_DEFAULT}"
 	fi
+
+	eval TMUX_POWERLINE_SEG_MAILCOUNT_MAILCHECKRC="$TMUX_POWERLINE_SEG_MAILCOUNT_MAILCHECKRC"
+	if [ -z "${TMUX_POWERLINE_SEG_MAILCOUNT_MAILCHECKRC}" ]; then
+		export TMUX_POWERLINE_SEG_MAILCOUNT_MAILCHECKRC="${TMUX_POWERLINE_SEG_MAILCOUNT_MAILCHECKRC_DEFAULT}"
+	fi
+
 }
 
 run_segment() {
@@ -69,6 +80,7 @@ run_segment() {
 		"gmail")  count=$(__count_gmail) ;;
 		"maildir")  count=$(__count_maildir) ;;
 		"mbox")  count=$(__count_mbox) ;;
+		"mailcheck")  count=$(__count_mailcheck) ;;
 		*)
 			echo "Unknown mailbox type [${TMUX_POWERLINE_SEG_MAILCOUNT_MAILBOX_TYPE}]";
 			return 1
@@ -176,4 +188,13 @@ __mac_keychain_get_pass() {
 		return 0
 	fi
 	return 1
+}
+
+__count_mailcheck() {
+	count=$(mailcheck -f ${TMUX_POWERLINE_SEG_MAILCOUNT_MAILCHECKRC} | awk '{ if (/new/) { print $3; exit } else { print 0; exit } }')
+	if [ $? -eq 0 ]; then
+		echo "$count"
+		return 0
+	fi
+	return 1;
 }
