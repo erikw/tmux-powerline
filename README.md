@@ -170,9 +170,10 @@ less /tmp/tmux-powerline.log
 tail -f /tmp/tmux-powerline.log # or follow output like this.
 ```
 
-If you can not solve the problems you can post an [issue](https://github.com/erikw/tmux-powerline/issues?state=open) and be sure to include relevant information about your system and script output (from bash -x) and/or screenshots if needed.
+If you can not solve the problems you can post an [issue](https://github.com/erikw/tmux-powerline/issues?state=open) and be sure to include relevant information about your system and script output (from bash -x) and/or screenshots if needed.  Be sure to search in the [resolved issues](https://github.com/erikw/tmux-powerline/issues?page=1&state=closed) section for similar problems you're experiencing before posting.
 
 ## Common problems
+
 
 ### VCS_branch / PWD is not updating
 The issue is probably that the update of the current directory in the active pane is not updated correctly. Make sure that your PS1 or PROMPT variable actually contains the line from the installation step above by simply inspecting the output of `echo $PS1`. You might have placed the PS1 line in you shell configuration such that it is overwritten later. The simplest solution is to put it at the very end to make sure that nothing overwrites it. See [issue #52](https://github.com/erikw/tmux-powerline/issues/52).
