@@ -6,6 +6,7 @@ update_period=600
 TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT="yahoo"
 TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAULT="c"
 TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT="600"
+TMUX_POWERLINE_SEG_WEATHER_GREP_DEFAULT="grep"
 
 
 generate_segmentrc() {
@@ -16,6 +17,8 @@ export TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER="${TMUX_POWERLINE_SEG_WEATHER_DA
 export TMUX_POWERLINE_SEG_WEATHER_UNIT="${TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAULT}"
 # How often to update the weather in seconds.
 export TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT}"
+# Name of GNU grep binary if in PATH, or path to it.
+export TMUX_POWERLINE_SEG_WEATHER_GREP="${TMUX_POWERLINE_SEG_WEATHER_GREP_DEFAULT}"
 
 # Your location. Find a code that works for you:
 # 1. Go to Yahoo weather http://weather.yahoo.com/
@@ -51,6 +54,9 @@ __process_settings() {
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD" ]; then
 		export TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT}"
 	fi
+	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_GREP" ]; then
+		export TMUX_POWERLINE_SEG_WEATHER_GREP="${TMUX_POWERLINE_SEG_WEATHER_GREP_DEFAULT}"
+	fi
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_LOCATION" ]; then
 		echo "No weather location specified.";
 		exit 8
@@ -83,7 +89,7 @@ __yahoo_weather() {
 			fi
 
 			# Assume latest grep is in PATH
-			gnugrep="grep"
+			gnugrep="${TMUX_POWERLINE_SEG_WEATHER_GREP}"
 
 			# <yweather:units temperature="F" distance="mi" pressure="in" speed="mph"/>
 			unit=$(echo "$weather_data" | "$gnugrep" -PZo "<yweather:units [^<>]*/>" | sed 's/.*temperature="\([^"]*\)".*/\1/')
