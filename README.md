@@ -1,3 +1,6 @@
+# DEPRECATION WARNING
+This project is in a maintenance mode and no future functionality is likely to be added. tmux-powerline, with all other powerline projects, is replaced by the new unifying [powerline](https://github.com/Lokaltog/powerline). However this project is still functional and can serve as a lightweight alternative for non-python users.
+
 # tmux-powerline
 This is a set of scripts for making a nice and dynamic tmux statusbar consisting of segments. This is much like [Lokaltog/vim-powerline](https://github.com/Lokaltog/vim-powerline) but for tmux.
 
