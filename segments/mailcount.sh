@@ -105,6 +105,7 @@ __count_apple_mail() {
 
 __count_gmail() {
 	local tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/gmail_count.txt"
+	local tmp_wgetrc="${TMUX_POWERLINE_DIR_TEMPORARY}/tmp_wgetrc.txt"
 	local override_passget="false"	# When true a force reloaded will be done.
 
 	# Create the cache file if it doesn't exist.
@@ -137,7 +138,12 @@ __count_gmail() {
 			return 1
 		fi
 
-		mail=$(wget -q -O - https://mail.google.com/a/${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER}/feed/atom --http-user="${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_USERNAME}@${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER}" --http-password="${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_PASSWORD}" --no-check-certificate | grep fullcount | sed 's/<[^0-9]*>//g')
+    echo "user=${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_USERNAME}@${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER}
+    password=${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_PASSWORD}" > $tmp_wgetrc
+
+		mail=$(wget -q -O - https://mail.google.com/a/${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER}/feed/atom --config $tmp_wgetrc | grep fullcount | sed 's/<[^0-9]*>//g')
+
+		rm $tmp_wgetrc
 
 		if [ "$mail" != "" ]; then
 			echo $mail > $tmp_file
