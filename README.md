@@ -94,7 +94,7 @@ Start with checking out the repository with:
 
 ```console
 $ cd ~/some/path/
-$ git clone git://github.com/erikw/tmux-powerline.git
+$ git clone https://github.com/erikw/tmux-powerline.git
 ```
 
 Now edit your `~/.tmux.conf` to use the scripts:
