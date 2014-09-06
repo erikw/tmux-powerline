@@ -3,18 +3,26 @@
 
 run_segment() {
 	sleeptime="0.5"
-	iface="wlan0"
+    iface="eth0"
 	RXB=$(</sys/class/net/"$iface"/statistics/rx_bytes)
 	TXB=$(</sys/class/net/"$iface"/statistics/tx_bytes)
-	sleep "$sleeptime" 
+	sleep "$sleeptime"
 	RXBN=$(</sys/class/net/"$iface"/statistics/rx_bytes)
 	TXBN=$(</sys/class/net/"$iface"/statistics/tx_bytes)
-	RXDIF=$(echo $((RXBN - RXB)) )
-	TXDIF=$(echo $((TXBN - TXB)) )
+	RXDIF=$(echo "$((RXBN - RXB)) / 1024 / ${sleeptime}" | bc )
+	TXDIF=$(echo "$((TXBN - TXB)) / 1024 / ${sleeptime}" | bc )
 
-	rx=$(echo "${RXDIF} / 1024 / ${sleeptime}" | bc)
-	tx=$(echo "${TXDIF} / 1024 / ${sleeptime}" | bc)
-	echo -e "⇊ ${rx}K/s ⇈ ${tx}K/s"
+    if [ $RXDIF -gt 1024 ]; then
+        RXDIF_ECHO="↓ $(echo "scale=1;${RXDIF} / 1024" | bc)M/s"
+    else
+        RXDIF_ECHO="↓ ${RXDIF}K/s"
+    fi
+    if [ $TXDIF -gt 1024 ]; then
+        TXDIF_ECHO="↑ $(echo "scale=1;${TXDIF} / 1024" | bc)M/s"
+    else
+        TXDIF_ECHO="↑ ${TXDIF}K/s"
+    fi
 
+	echo -e "${RXDIF_ECHO} ${TXDIF_ECHO}"
 	return 0
 }
