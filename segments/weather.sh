@@ -104,16 +104,12 @@ __yahoo_weather() {
 			# Pull the times for sunrise and sunset so we know when to change the day/night indicator
 			# <yweather:astronomy sunrise="6:56 am"   sunset="6:21 pm"/>
                         if shell_is_osx || shell_is_bsd; then
-                            # date -j -f "%H:%M%p" 8:19pm +%H%M
-                            sunrise=$(date -j -f "%H:%M %p" "$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^\(.*\)sunset.*/\1/' | sed 's/^.*sunrise="\(.*m\)".*/\1/')" +%H%M)
+                            date_arg='-j -f "%H:%M %p "'
                         else
-                            sunrise=$(date -d"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^\(.*\)sunset.*/\1/' | sed 's/^.*sunrise="\(.*m\)".*/\1/')" +%H%M)
+                            date_arg='-d'
                         fi
-                        if shell_is_osx || shell_is_bsd; then
-			    			sunset=$(date -j -f "%H:%M %p" "$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^.*sunset="\(.*m\)".*/\1/')" +%H%M)
-                        else
-			    			sunset=$(date -d"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^.*sunset="\(.*m\)".*/\1/')" +%H%M)
-                        fi
+                        sunrise=$(date ${date_arg}"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^\(.*\)sunset.*/\1/' | sed 's/^.*sunrise="\(.*m\)".*/\1/')" +%H%M)
+                        sunset=$(date ${date_arg}"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^.*sunset="\(.*m\)".*/\1/')" +%H%M)
 		elif [ -f "${tmp_file}" ]; then
 			__read_tmp_file
 		fi
