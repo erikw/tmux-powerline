@@ -96,15 +96,20 @@ __yahoo_weather() {
 			gnugrep="${TMUX_POWERLINE_SEG_WEATHER_GREP}"
 
 			# <yweather:units temperature="F" distance="mi" pressure="in" speed="mph"/>
-			unit=$(echo "$weather_data" | "$gnugrep" -PZo "<yweather:units [^<>]*/>" | sed 's/.*temperature="\([^"]*\)".*/\1/')
-			condition=$(echo "$weather_data" | "$gnugrep" -PZo "<yweather:condition [^<>]*/>")
+			unit=$(echo "$weather_data" | "$gnugrep" -Zo "<yweather:units [^<>]*/>" | sed 's/.*temperature="\([^"]*\)".*/\1/')
+			condition=$(echo "$weather_data" | "$gnugrep" -Zo "<yweather:condition [^<>]*/>")
 			# <yweather:condition  text="Clear"  code="31"  temp="66"  date="Mon, 01 Oct 2012 8:00 pm CST" />
 			degree=$(echo "$condition" | sed 's/.*temp="\([^"]*\)".*/\1/')
 			condition=$(echo "$condition" | sed 's/.*text="\([^"]*\)".*/\1/')
 			# Pull the times for sunrise and sunset so we know when to change the day/night indicator
 			# <yweather:astronomy sunrise="6:56 am"   sunset="6:21 pm"/>
-			sunrise=$(date -d"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^\(.*\)sunset.*/\1/' | sed 's/^.*sunrise="\(.*m\)".*/\1/')" +%H%M)
-			sunset=$(date -d"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^.*sunset="\(.*m\)".*/\1/')" +%H%M)
+                        if shell_is_osx || shell_is_bsd; then
+                            date_arg='-j -f "%H:%M %p "'
+                        else
+                            date_arg='-d'
+                        fi
+                        sunrise=$(date ${date_arg}"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^\(.*\)sunset.*/\1/' | sed 's/^.*sunrise="\(.*m\)".*/\1/')" +%H%M)
+                        sunset=$(date ${date_arg}"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^.*sunset="\(.*m\)".*/\1/')" +%H%M)
 		elif [ -f "${tmp_file}" ]; then
 			__read_tmp_file
 		fi
