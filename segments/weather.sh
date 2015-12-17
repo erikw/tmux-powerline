@@ -7,9 +7,9 @@ TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT="yahoo"
 TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAULT="c"
 TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT="600"
 if shell_is_bsd; then
-    TMUX_POWERLINE_SEG_WEATHER_GREP_DEFAULT="/usr/local/bin/grep"
+	TMUX_POWERLINE_SEG_WEATHER_GREP_DEFAULT="/usr/local/bin/grep"
 else
-    TMUX_POWERLINE_SEG_WEATHER_GREP_DEFAULT="grep"
+	TMUX_POWERLINE_SEG_WEATHER_GREP_DEFAULT="grep"
 fi
 
 
@@ -103,13 +103,13 @@ __yahoo_weather() {
 			condition=$(echo "$condition" | sed 's/.*text="\([^"]*\)".*/\1/')
 			# Pull the times for sunrise and sunset so we know when to change the day/night indicator
 			# <yweather:astronomy sunrise="6:56 am"   sunset="6:21 pm"/>
-                        if shell_is_osx || shell_is_bsd; then
-                            date_arg='-j -f "%H:%M %p "'
-                        else
-                            date_arg='-d'
-                        fi
-                        sunrise=$(date ${date_arg}"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^\(.*\)sunset.*/\1/' | sed 's/^.*sunrise="\(.*m\)".*/\1/')" +%H%M)
-                        sunset=$(date ${date_arg}"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^.*sunset="\(.*m\)".*/\1/')" +%H%M)
+			if shell_is_osx || shell_is_bsd; then
+				date_arg='-j -f "%H:%M %p "'
+			else
+				date_arg='-d'
+			fi
+			sunrise=$(date ${date_arg}"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^\(.*\)sunset.*/\1/' | sed 's/^.*sunrise="\(.*m\)".*/\1/')" +%H%M)
+			sunset=$(date ${date_arg}"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^.*sunset="\(.*m\)".*/\1/')" +%H%M)
 		elif [ -f "${tmp_file}" ]; then
 			__read_tmp_file
 		fi
@@ -127,8 +127,8 @@ __yahoo_weather() {
 # Get symbol for condition. Available conditions: http://developer.yahoo.com/weather/#codes
 __get_condition_symbol() {
 	local condition=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-    local sunrise="$2"
-    local sunset="$3"
+	local sunrise="$2"
+	local sunset="$3"
 	case "$condition" in
 		"sunny" | "hot")
 			hourmin=$(date +%H%M)
