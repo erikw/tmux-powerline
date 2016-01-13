@@ -130,8 +130,8 @@ __np_mpd() {
 
 __np_file() {
 
-	np=`cat $TMUX_POWERLINE_SEG_NOW_PLAYING_FILE_NAME`
-	echo "$np"
+       np=$(cat $TMUX_POWERLINE_SEG_NOW_PLAYING_FILE_NAME)
+       echo "$np"
 }
 
 
