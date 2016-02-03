@@ -6,10 +6,10 @@ run_segment() {
 	if shell_is_osx; then
 		iface="en0"
 		RXB=$(netstat -i -b | grep -m 1 $iface | awk '{print $7}')
-		TXB=$(netstat -i -b | grep -m 1 $iface | awk '{print %10}')
+		TXB=$(netstat -i -b | grep -m 1 $iface | awk '{print $10}')
 		sleep "$sleeptime"
 		RXBN=$(netstat -i -b | grep -m 1 $iface | awk '{print $7}')
-		TXBN=$(netstat -i -b | grep -m 1 $iface | awk '{print %10}')
+		TXBN=$(netstat -i -b | grep -m 1 $iface | awk '{print $10}')
 	else
 		iface="eth0"
 		RXB=$(</sys/class/net/"$iface"/statistics/rx_bytes)
