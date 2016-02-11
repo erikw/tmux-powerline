@@ -3,6 +3,7 @@
 run_segment() {
 	type rainbarf >/dev/null 2>&1
 	if [ "$?" -ne 0 ]; then
+		echo 'rainbarf was not found'
 		return
 	fi
 
