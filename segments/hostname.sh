@@ -26,6 +26,8 @@ run_segment() {
 		fi
 	fi
 
-	hostname ${opts}
-	return 0
+    HST=$(hostname ${opts})
+    USR=$(whoami)
+    echo "${USR}@${HST}"
+    return 0
 }
