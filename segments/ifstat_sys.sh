@@ -12,6 +12,10 @@ run_segment() {
 		TXBN=$(netstat -i -b | grep -m 1 $iface | awk '{print $10}')
 	else
 		iface="eth0"
+        test_iface=$(netstat -i | tail -n1 | awk '{print $1}')
+        if [ $iface != $test_iface ]; then
+            iface=$test_iface
+        fi
 		RXB=$(</sys/class/net/"$iface"/statistics/rx_bytes)
 		TXB=$(</sys/class/net/"$iface"/statistics/tx_bytes)
 		sleep "$sleeptime"
