@@ -52,26 +52,33 @@ run_segment() {
 	fi
 
 	local np
-	case "$TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER" in
-		"audacious")  np=$(__np_audacious) ;;
-		"banshee")  np=$(__np_banshee) ;;
-		"cmus")  np=$(__np_cmus) ;;
-		"itunes")  np=$(__np_itunes) ;;
-		"lastfm")  np=$(__np_lastfm) ;;
-		"mocp")  np=$(__np_mocp) ;;
-		"mpd")  np=$(__np_mpd) ;;
-		"mpd_simple")  np=$(__np_mpd_simple) ;;
-		"pithos") np=$(__np_pithos) ;;
-		"rdio")  np=$(__np_rdio) ;;
-		"rhythmbox")  np=$(__np_rhythmbox) ;;
-		"spotify")  np=$(__np_spotify) ;;
-		"file")  np=$(__np_file) ;;
-		"spotify_wine")  np=$(__np_spotify_native) ;;
-		*)
-			echo "Unknown music player type [${TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER}]";
-			return 1
-	esac
-	local exitcode="$?"
+	local app_exit
+	IFS=',' read -ra PLAYERS <<< "$TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER"
+	for i in "${PLAYERS[@]}"; do
+		case "$i" in
+			"audacious")  np=$(__np_audacious) ;;
+			"banshee")  np=$(__np_banshee) ;;
+			"cmus")  np=$(__np_cmus) ;;
+			"itunes")  np=$(__np_itunes) ;;
+			"lastfm")  np=$(__np_lastfm) ;;
+			"mocp")  np=$(__np_mocp) ;;
+			"mpd")  np=$(__np_mpd) ;;
+			"mpd_simple")  np=$(__np_mpd_simple) ;;
+			"pithos") np=$(__np_pithos) ;;
+			"rdio")  np=$(__np_rdio) ;;
+			"rhythmbox")  np=$(__np_rhythmbox) ;;
+			"spotify")  np=$(__np_spotify) ;;
+			"file")  np=$(__np_file) ;;
+			"spotify_wine")  np=$(__np_spotify_native) ;;
+			*)
+				echo "Unknown music player type [${TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER}]";
+				return 1
+		esac
+		app_exit="$?"
+		[ -n "$np" ] && break
+	done
+
+	local exitcode="$app_exit"
 	if [ "${exitcode}" -ne 0 ]; then
 		return ${exitcode}
 	fi
@@ -234,17 +241,17 @@ __np_pithos() {
 __np_mocp() {
 	mocp_pid=$(pidof mocp)
 	if [ -n "$mocp_pid" ]; then
-    	np=$(mocp -i | grep ^Title | sed "s/^Title://")
-    	mocp_paused=$(mocp -i | grep ^State | sed "s/^State: //")
+		np=$(mocp -i | grep ^Title | sed "s/^Title://")
+		mocp_paused=$(mocp -i | grep ^State | sed "s/^State: //")
 		if [ -n "$np" -a "$mocp_paused" != "PAUSE" ]; then
-        	echo "$np"
-    	fi
+			echo "$np"
+		fi
 	fi
 }
 
 __np_rdio() {
 	[ ! shell_is_osx ] && return 1
-	np=$(osascript ${TMUX_POWERLINE_DIR_SEGMENTS}/np_rdio_mac.script) 
+	np=$(osascript ${TMUX_POWERLINE_DIR_SEGMENTS}/np_rdio_mac.script)
 	echo "$np"
 }
 
