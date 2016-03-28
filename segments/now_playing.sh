@@ -9,6 +9,7 @@ TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST_DEFAULT="localhost"
 TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT_DEFAULT="6600"
 TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_UPDATE_PERIOD_DEFAULT="30"
 TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT_DEFAULT="%artist% - %title%"
+TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT_DEFAULT="%aa - %tt"
 TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR_DEFAULT="♫"
 
 generate_segmentrc() {
@@ -30,6 +31,8 @@ export TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST="${TMUX_POWERLINE_SEG_NOW_PLAYING
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT="${TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT_DEFAULT}"
 # Song display format for mpd_simple. See mpc(1) for delimiters.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT="${TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT_DEFAULT}"
+# Song display format for rhythmbox. see "FORMATS" in rhythmbox-client(1).
+export TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT="${TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT_DEFAULT}"
 
 # Username for Last.fm if that music player is used.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_USERNAME=""
@@ -111,6 +114,9 @@ __process_settings() {
 	if [ -z "$TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR" ]; then
 		export TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR="${TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR_DEFAULT}"
 	fi
+	if [ -z $TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT ]; then
+		export TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT="${TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT}"
+	fi;
 }
 
 __np_mpd() {
@@ -245,7 +251,7 @@ __np_rdio() {
 __np_rhythmbox() {
 	rhythmbox_pid=$(pidof rhythmbox)
 	if [ -n "$rhythmbox_pid" ]; then
-		np=$(rhythmbox-client --no-start --print-playing)		# Does not tell if the music is playing or paused.
+		np=$(rhythmbox-client --no-start --print-playing-format="$TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT")
 		rhythmbox_paused=$(xwininfo -root -tree | grep "$np" | sed "s/${np}//;s/ //g" | cut -f2 -d '"')
 		# TODO I cant produce the output "Not playing", using rhythmbox 2.97.
 		#STATUS=$(rhythmbox-client --no-start --print-playing)
