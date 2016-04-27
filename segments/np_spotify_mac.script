@@ -24,6 +24,4 @@ if process_list contains "Spotify" then
 			end if
 		end if
 	end tell
-else
-	return "Stopped"
 end if
