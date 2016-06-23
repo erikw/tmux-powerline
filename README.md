@@ -132,6 +132,13 @@ Some segments e.g. cwd and cvs_branch needs to find the current working director
 PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#D" | tr -d %) "$PWD")'
 ```
 
+
+If the active shell is Fish, PS1 is not being set normally. Instead, it has a `fish_prompt` function that is being called when prompt rendering is required. This means that one can append the following command at the end of the function in `fish_prompt.fish` file:
+
+```fish
+if set -q TMUX; tmux setenv TMUXPWD_(tmux display -p "#D" | tr -d '%') $PWD; end
+```
+
 # Configuration
 
 The default segments that are shown are defined in `themes/default.sh`. You will probably want to change those to fit your needs. To do so you can edit that file directly but preferable, for easier updating of the repo, you can make a copy and edit that one (or see how to use custom themes directory below). A palette of colors that can be used can be obtained by running the script `color_palette.sh`.
