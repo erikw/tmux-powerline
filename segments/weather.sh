@@ -160,6 +160,10 @@ __get_condition_symbol() {
 			#echo "﹌"
 			echo "〰"
 			;;
+		"breezy")
+			#echo "🌬"
+			echo "🍃"
+			;;
 		"windy" | "fair/windy")
 			#echo "⚐"
 			echo "⚑"
