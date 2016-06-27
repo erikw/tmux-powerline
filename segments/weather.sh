@@ -155,11 +155,15 @@ __get_condition_symbol() {
 			#echo "⚡"
 			echo "☈"
 			;;
-		"dust" | "foggy" | "fog" | "haze" | "smoky" | "blustery" | "mist" | "breezy")
+		"dust" | "foggy" | "fog" | "haze" | "smoky" | "blustery" | "mist")
 			#echo "♨"
 			#echo "﹌"
 			echo "〰"
 			;;
+        "breezy")
+            #echo "🌬"
+            echo "🍃"
+            ;;
 		"windy" | "fair/windy")
 			#echo "⚐"
 			echo "⚑"
