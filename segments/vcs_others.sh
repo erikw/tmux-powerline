@@ -31,8 +31,8 @@ __parse_git_stats(){
 	# check if git
 	[[ -z $(git rev-parse --git-dir 2> /dev/null) ]] && return
 
-	# return the number of staged items
-	other=$(git ls-files --others --exclude-standard | wc -l)
+	# return the number of untracked items
+	other=$(git status -s | awk '$1 == "??" { print $1  }' | wc -l)
 	echo $other
 }
 __parse_hg_stats(){
