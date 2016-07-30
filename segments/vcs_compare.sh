@@ -33,7 +33,10 @@ __parse_git_stats() {
 	# check if git
 	[[ -z $(git rev-parse --git-dir 2> /dev/null) ]] && return
 
-	tracking_branch=$(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD))
+	symbolic_ref=$(git symbolic-ref -q HEAD)
+	[[ -z "${symbolic_ref}" ]] && return
+
+	tracking_branch=$(git for-each-ref --format='%(upstream:short)' ${symbolic_ref})
 
 	# creates global variables $1 and $2 based on left vs. right tracking
 	set -- $(git rev-list --left-right --count $tracking_branch...HEAD)

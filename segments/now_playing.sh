@@ -9,12 +9,15 @@ TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST_DEFAULT="localhost"
 TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT_DEFAULT="6600"
 TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_UPDATE_PERIOD_DEFAULT="30"
 TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT_DEFAULT="%artist% - %title%"
+TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT_DEFAULT="%aa - %tt"
 TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR_DEFAULT="♫"
 
 generate_segmentrc() {
 	read -d '' rccontents  << EORC
-# Music player to use. Can be any of {audacious, banshee, cmus, itunes, lastfm, mocp, mpd, mpd_simple, pithos, rdio, rhythmbox, spotify, spotify_wine}.
+# Music player to use. Can be any of {audacious, banshee, cmus, itunes, lastfm, mocp, mpd, mpd_simple, pithos, rdio, rhythmbox, spotify, spotify_wine, file}.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER=""
+# File to be read in case the song is being read from a file
+export TMUX_POWERLINE_SEG_NOW_PLAYING_FILE_NAME=""
 # Maximum output length.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN="${TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN_DEFAULT}"
 # How to handle too long strings. Can be {trim, roll}.
@@ -28,6 +31,8 @@ export TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST="${TMUX_POWERLINE_SEG_NOW_PLAYING
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT="${TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT_DEFAULT}"
 # Song display format for mpd_simple. See mpc(1) for delimiters.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT="${TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT_DEFAULT}"
+# Song display format for rhythmbox. see "FORMATS" in rhythmbox-client(1).
+export TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT="${TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT_DEFAULT}"
 
 # Username for Last.fm if that music player is used.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_USERNAME=""
@@ -47,25 +52,33 @@ run_segment() {
 	fi
 
 	local np
-	case "$TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER" in
-		"audacious")  np=$(__np_audacious) ;;
-		"banshee")  np=$(__np_banshee) ;;
-		"cmus")  np=$(__np_cmus) ;;
-		"itunes")  np=$(__np_itunes) ;;
-		"lastfm")  np=$(__np_lastfm) ;;
-		"mocp")  np=$(__np_mocp) ;;
-		"mpd")  np=$(__np_mpd) ;;
-		"mpd_simple")  np=$(__np_mpd_simple) ;;
-		"pithos") np=$(__np_pithos) ;;
-		"rdio")  np=$(__np_rdio) ;;
-		"rhythmbox")  np=$(__np_rhythmbox) ;;
-		"spotify")  np=$(__np_spotify) ;;
-		"spotify_wine")  np=$(__np_spotify_native) ;;
-		*)
-			echo "Unknown music player type [${TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER}]";
-			return 1
-	esac
-	local exitcode="$?"
+	local app_exit
+	IFS=',' read -ra PLAYERS <<< "$TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER"
+	for i in "${PLAYERS[@]}"; do
+		case "$i" in
+			"audacious")  np=$(__np_audacious) ;;
+			"banshee")  np=$(__np_banshee) ;;
+			"cmus")  np=$(__np_cmus) ;;
+			"itunes")  np=$(__np_itunes) ;;
+			"lastfm")  np=$(__np_lastfm) ;;
+			"mocp")  np=$(__np_mocp) ;;
+			"mpd")  np=$(__np_mpd) ;;
+			"mpd_simple")  np=$(__np_mpd_simple) ;;
+			"pithos") np=$(__np_pithos) ;;
+			"rdio")  np=$(__np_rdio) ;;
+			"rhythmbox")  np=$(__np_rhythmbox) ;;
+			"spotify")  np=$(__np_spotify) ;;
+			"file")  np=$(__np_file) ;;
+			"spotify_wine")  np=$(__np_spotify_native) ;;
+			*)
+				echo "Unknown music player type [${TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER}]";
+				return 1
+		esac
+		app_exit="$?"
+		[ -n "$np" ] && break
+	done
+
+	local exitcode="$app_exit"
 	if [ "${exitcode}" -ne 0 ]; then
 		return ${exitcode}
 	fi
@@ -108,6 +121,9 @@ __process_settings() {
 	if [ -z "$TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR" ]; then
 		export TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR="${TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR_DEFAULT}"
 	fi
+	if [ -z "$TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT" ]; then
+		export TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT="${TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT}"
+	fi;
 }
 
 __np_mpd() {
@@ -124,6 +140,13 @@ __np_mpd() {
 	np=$(MPD_HOST="$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST" MPD_PORT="$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT" ./np_mpd)
 	echo "$np"
 }
+
+__np_file() {
+
+        np=$(cat $TMUX_POWERLINE_SEG_NOW_PLAYING_FILE_NAME | tr '\n' '|')
+        echo "$np"
+}
+
 
 __np_mpd_simple() {
 	np=$(MPD_HOST="$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST" MPD_PORT="$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT" mpc current -f "$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT" 2>&1)
@@ -218,24 +241,24 @@ __np_pithos() {
 __np_mocp() {
 	mocp_pid=$(pidof mocp)
 	if [ -n "$mocp_pid" ]; then
-    	np=$(mocp -i | grep ^Title | sed "s/^Title://")
-    	mocp_paused=$(mocp -i | grep ^State | sed "s/^State: //")
+		np=$(mocp -i | grep ^Title | sed "s/^Title://")
+		mocp_paused=$(mocp -i | grep ^State | sed "s/^State: //")
 		if [ -n "$np" -a "$mocp_paused" != "PAUSE" ]; then
-        	echo "$np"
-    	fi
+			echo "$np"
+		fi
 	fi
 }
 
 __np_rdio() {
 	[ ! shell_is_osx ] && return 1
-	np=$(osascript ${TMUX_POWERLINE_DIR_SEGMENTS}/np_rdio_mac.script) 
+	np=$(osascript ${TMUX_POWERLINE_DIR_SEGMENTS}/np_rdio_mac.script)
 	echo "$np"
 }
 
 __np_rhythmbox() {
 	rhythmbox_pid=$(pidof rhythmbox)
 	if [ -n "$rhythmbox_pid" ]; then
-		np=$(rhythmbox-client --no-start --print-playing)		# Does not tell if the music is playing or paused.
+		np=$(rhythmbox-client --no-start --print-playing-format="$TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT")
 		rhythmbox_paused=$(xwininfo -root -tree | grep "$np" | sed "s/${np}//;s/ //g" | cut -f2 -d '"')
 		# TODO I cant produce the output "Not playing", using rhythmbox 2.97.
 		#STATUS=$(rhythmbox-client --no-start --print-playing)

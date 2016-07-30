@@ -54,7 +54,7 @@ Requirements for the lib to work are:
 
 * Recent tmux version
 * `bash --version` >= 3.2 (Does not have to be your default shell.)
-* A patched font. Follow instructions at [Lokaltog/vim-powerline/fontpatcher](https://github.com/Lokaltog/vim-powerline/tree/develop/fontpatcher) or [download](https://github.com/Lokaltog/vim-powerline/wiki/Patched-fonts) a new one. However you can use other substitute symbols as well; see `config.sh`.
+* A patched font. Follow instructions at [Powerline Installation](http://powerline.readthedocs.org/en/latest/installation/linux.html) or [download](https://github.com/powerline/fonts) a new one. However you can use other substitute symbols as well; see `config.sh`.
 
 ## Segment Requirements
 Requirements for some segments. You only need to fulfill the requirements for those segments you want to use.
@@ -94,7 +94,7 @@ Start with checking out the repository with:
 
 ```console
 $ cd ~/some/path/
-$ git clone git://github.com/erikw/tmux-powerline.git
+$ git clone https://github.com/erikw/tmux-powerline.git
 ```
 
 Now edit your `~/.tmux.conf` to use the scripts:
@@ -130,6 +130,13 @@ Some segments e.g. cwd and cvs_branch needs to find the current working director
 
 ```bash
 PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#D" | tr -d %) "$PWD")'
+```
+
+
+If the active shell is Fish, PS1 is not being set normally. Instead, it has a `fish_prompt` function that is being called when prompt rendering is required. This means that one can append the following command at the end of the function in `fish_prompt.fish` file:
+
+```fish
+if set -q TMUX; tmux setenv TMUXPWD_(tmux display -p "#D" | tr -d '%') $PWD; end
 ```
 
 # Configuration
