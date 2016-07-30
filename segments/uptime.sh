@@ -22,6 +22,7 @@ EORC
 }
 
 run_segment() {
+    __process_settings
     # Assume latest grep is in PATH
     gnugrep="${TMUX_POWERLINE_SEG_UPTIME_GREP}"
     uptime | $gnugrep -PZo "(?<=up )[^,]*"
