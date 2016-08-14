@@ -101,7 +101,7 @@ __process_powerline() {
 		local separator_background_color=${powerline_segment[4]}
 		local separator_foreground_color=${powerline_segment[5]}
 
-		eval "__print_${side}_segment ${segment_index} ${background_color} ${foreground_color} ${separator} ${separator_background_color} ${separator_foreground_color}"
+		eval "__print_${side}_segment \"${segment_index}\" \"${background_color}\" \"${foreground_color}\" \"${separator}\" \"${separator_background_color}\" \"${separator_foreground_color}\""
 	done
 }
 
@@ -113,8 +113,8 @@ __print_left_segment() {
 	local separator_background_color=$5
 	local separator_foreground_color=$6
 
-	__print_colored_content "$content" $content_background_color $content_foreground_color
-	__print_colored_content $separator $separator_background_color $separator_foreground_color
+	__print_colored_content "$content" "$content_background_color" "$content_foreground_color"
+	__print_colored_content "$separator" "$separator_background_color" "$separator_foreground_color"
 }
 
 __print_right_segment() {
@@ -125,8 +125,8 @@ __print_right_segment() {
 	local separator_background_color=$5
 	local separator_foreground_color=$6
 
-	__print_colored_content $separator $separator_background_color $separator_foreground_color
-	__print_colored_content "$content" $content_background_color $content_foreground_color
+	__print_colored_content "$separator" "$separator_background_color" "$separator_foreground_color"
+	__print_colored_content "$content" "$content_background_color" "$content_foreground_color"
 }
 
 __segment_separator_is_thin() {
