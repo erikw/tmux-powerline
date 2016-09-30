@@ -33,7 +33,7 @@ __parse_git_stats(){
 	[[ -z $(git rev-parse --git-dir 2> /dev/null) ]] && return
 
 	# return the number of modified but not staged items
-	modified=$(git status -s | cut -c 2 | awk '$1 != "" && $1 != "?" { print $1  }' | wc -l)
+	modified=$(git ls-files --modified `git rev-parse --show-cdup` | wc -l)
 	echo $modified
 }
 __parse_hg_stats(){
