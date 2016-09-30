@@ -32,7 +32,7 @@ __parse_git_stats(){
 	[[ -z $(git rev-parse --git-dir 2> /dev/null) ]] && return
 
 	# return the number of untracked items
-	other=$(git status -s | awk '$1 == "??" { print $1  }' | wc -l)
+	other=$(git ls-files --others --exclude-standard `git rev-parse --show-cdup` | wc -l)
 	echo $other
 }
 __parse_hg_stats(){
