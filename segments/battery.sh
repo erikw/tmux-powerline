@@ -66,7 +66,7 @@ __battery_osx() {
 				if [[ "$curcap" == "$maxcap" || "$fully_charged" == "Yes" && $extconnect == "Yes"  ]]; then
 					return
 				fi
-				charge=$(( 100 * $curcap / $maxcap ))
+				charge=`pmset -g batt | grep -o "[0-9][0-9]*\%" | rev | cut -c 2- | rev`
 				if [[ "$extconnect" == "Yes" ]]; then
 					echo "$charge"
 				else
