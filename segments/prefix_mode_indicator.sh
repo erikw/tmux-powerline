@@ -8,4 +8,5 @@ prefix_mode_indicator_bg="colour68"
 
 run_segment() {
         echo "#[bg=${prefix_mode_indicator_bg}]#{?client_prefix,#[fg=${prefix_mode_fg}]${prefix_mode_text},#[fg=${normal_mode_fg}]${normal_mode_text}}"
+        return 0
 }
