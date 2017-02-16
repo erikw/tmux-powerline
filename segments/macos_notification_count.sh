@@ -1,8 +1,8 @@
 # Report macOS notification counts for given app ids (banner notifications only)
 # Based on http://www.ign.com/boards/threads/a-crumby-way-to-get-an-unread-count-of-imessages-into-applescript.453061379/
 
-TMUX_POWERLINE_SEG_OSX_NOTIFICATION_COUNT_APPIDS_DEFAULT="5"
-TMUX_POWERLINE_SEG_OSX_NOTIFICATION_COUNT_CHAR_DEFAULT="💬"
+TMUX_POWERLINE_SEG_MACOS_NOTIFICATION_COUNT_APPIDS_DEFAULT="5"
+TMUX_POWERLINE_SEG_MACOS_NOTIFICATION_COUNT_CHAR_DEFAULT="💬"
 
 generate_segmentrc() {
 	read -d '' rccontents  << EORC
@@ -12,19 +12,19 @@ generate_segmentrc() {
 # The first column contains the app ids
 # "5" is the app id of Messages.app
 # Only "banner" notifications are supported (see settings in the notification center)
-export TMUX_POWERLINE_SEG_OSX_NOTIFICATION_COUNT_APPIDS="${TMUX_POWERLINE_SEG_OSX_NOTIFICATION_COUNT_APPIDS_DEFAULT}"
+export TMUX_POWERLINE_SEG_MACOS_NOTIFICATION_COUNT_APPIDS="${TMUX_POWERLINE_SEG_MACOS_NOTIFICATION_COUNT_APPIDS_DEFAULT}"
 # Notification symbol
-export TMUX_POWERLINE_SEG_OSX_NOTIFICATION_COUNT_CHAR="${TMUX_POWERLINE_SEG_OSX_NOTIFICATION_COUNT_CHAR_DEFAULT}"
+export TMUX_POWERLINE_SEG_MACOS_NOTIFICATION_COUNT_CHAR="${TMUX_POWERLINE_SEG_MACOS_NOTIFICATION_COUNT_CHAR_DEFAULT}"
 EORC
 	echo "${rccontents}"
 }
 
 __process_settings() {
-	if [ -z "$TMUX_POWERLINE_SEG_OSX_NOTIFICATION_COUNT_APPIDS" ]; then
-        export TMUX_POWERLINE_SEG_OSX_NOTIFICATION_COUNT_APPIDS="${TMUX_POWERLINE_SEG_OSX_NOTIFICATION_COUNT_APPIDS_DEFAULT}"
+	if [ -z "$TMUX_POWERLINE_SEG_MACOS_NOTIFICATION_COUNT_APPIDS" ]; then
+        export TMUX_POWERLINE_SEG_MACOS_NOTIFICATION_COUNT_APPIDS="${TMUX_POWERLINE_SEG_MACOS_NOTIFICATION_COUNT_APPIDS_DEFAULT}"
 	fi
-	if [ -z "$TMUX_POWERLINE_SEG_OSX_NOTIFICATION_COUNT_CHAR" ]; then
-		export TMUX_POWERLINE_SEG_OSX_NOTIFICATION_COUNT_CHAR="${TMUX_POWERLINE_SEG_OSX_NOTIFICATION_COUNT_CHAR_DEFAULT}"
+	if [ -z "$TMUX_POWERLINE_SEG_MACOS_NOTIFICATION_COUNT_CHAR" ]; then
+		export TMUX_POWERLINE_SEG_MACOS_NOTIFICATION_COUNT_CHAR="${TMUX_POWERLINE_SEG_MACOS_NOTIFICATION_COUNT_CHAR_DEFAULT}"
 	fi
 }
 
@@ -33,7 +33,7 @@ run_segment() {
 
 	local db_location app_ids_array query_condition query_string count
 	db_location="$(getconf DARWIN_USER_DIR)/com.apple.notificationcenter/db/db"
-	app_ids_array=(${TMUX_POWERLINE_SEG_OSX_NOTIFICATION_COUNT_APPIDS})
+	app_ids_array=(${TMUX_POWERLINE_SEG_MACOS_NOTIFICATION_COUNT_APPIDS})
 	query_condition="where app_id=${app_ids_array[0]}"
 	for app_id in "${app_ids_array[@]:1}"; do
 		query_condition="${query_condition} OR app_id=${app_id}"
@@ -47,7 +47,7 @@ run_segment() {
 	fi
 
 	if [[ -n "$count"  && "$count" -gt 0 ]]; then
-		echo "${TMUX_POWERLINE_SEG_OSX_NOTIFICATION_COUNT_CHAR} ${count}"
+		echo "${TMUX_POWERLINE_SEG_MACOS_NOTIFICATION_COUNT_CHAR} ${count}"
 	fi
 
 	return 0
