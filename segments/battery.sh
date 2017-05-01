@@ -141,6 +141,9 @@ __battery_osx() {
 	__linux_get_bat() {
 		bf=$(cat $BAT_FULL)
 		bn=$(cat $BAT_NOW)
+		if [ $bn -gt $bf ]; then
+			bn=$bf
+		fi
 		echo $(( 100 * $bn / $bf ))
 	}
 
