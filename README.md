@@ -14,7 +14,7 @@ The following segments exists for now:
 * Git, SVN and Mercurial branch in CWD.
 * Date and time.
 * Hostname.
-* tmux info.
+* Tmux info.
 * CWD in pane.
 * Current X keyboard layout.
 * Network download/upload speed.
