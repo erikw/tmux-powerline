@@ -3,5 +3,4 @@ __print_colored_content() {
 	[ "${3:0:1}" = "#" ] && FGCOLOR="$3" || FGCOLOR="colour$3"
 	echo -n "#[fg=${FGCOLOR},bg=${BGCOLOR}]"
 	echo -n "$1"
-	echo -n "#[default]"
 }
