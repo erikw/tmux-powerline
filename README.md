@@ -70,18 +70,10 @@ Requirements for some segments. You only need to fulfill the requirements for th
 
 ## OS X specific requirements
 
-The `grep` tool is outdated on OS X 10.8 Mountain Lion so you might have to upgrade it. Unfortunately the main homebrew repo
-[does not contain grep](https://github.com/mxcl/homebrew/pull/3473) so use the following command to get the lastest version.
+The `grep` tool is outdated on OS X 10.8 Mountain Lion so you might have to upgrade it.
 
 ```bash
-brew install https://raw.github.com/Homebrew/homebrew-dupes/master/grep.rb
-```
-
-or if you have heightened security set up, just tap the homebrew dupes and install grep
-
-```bash
-brew tap homebrew/dupes
-brew install homebrew/dupes/grep
+brew install grep
 ```
 
 ## FreeBSD specific requirements
