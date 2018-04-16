@@ -1,3 +1,7 @@
 segments/np_mpd
 segments/xkb_layout
 *.swp
+
+# ignore all themes, only default.sh
+themes/*
+!themes/default.sh
