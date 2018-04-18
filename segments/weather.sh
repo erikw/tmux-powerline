@@ -11,7 +11,7 @@ TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT="600"
 # 1. Go to Yahoo weather http://weather.yahoo.com/
 # 2. Find the weather for you location
 # 3. Copy the last numbers in that URL. e.g. "http://weather.yahoo.com/united-states/california/newport-beach-12796587/" has the numbers "12796587"
-TMUX_POWERLINE_SEG_WEATHER_LOCATION=""
+TMUX_POWERLINE_SEG_WEATHER_LOCATION_DEFAULT=""
 
 if shell_is_bsd  && [ -f /user/local/bin/grep  ]; then
 	TMUX_POWERLINE_SEG_WEATHER_GREP_DEFAULT="/usr/local/bin/grep"
@@ -68,8 +68,11 @@ __process_settings() {
 		export TMUX_POWERLINE_SEG_WEATHER_GREP="${TMUX_POWERLINE_SEG_WEATHER_GREP_DEFAULT}"
 	fi
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_LOCATION" ]; then
-		echo "No weather location specified.";
-		exit 8
+		if [ -z "$TMUX_POWERLINE_SEG_WEATHER_LOCATION_DEFAULT" ]; then
+			echo "No weather location specified.";
+			exit 8
+		fi
+		export TMUX_POWERLINE_SEG_WEATHER_LOCATION=${TMUX_POWERLINE_SEG_WEATHER_LOCATION_DEFAULT}
 	fi
 }
 
