@@ -12,7 +12,7 @@ run_segment() {
 		RXBN=$(netstat -i -b | grep -m 1 $iface | awk '{print $7}')
 		TXBN=$(netstat -i -b | grep -m 1 $iface | awk '{print $10}')
 	else
-		iface=$(/bin/cat /proc/net/dev | /usr/bin/awk '{if($2>0 && NR > 2) print substr($1, 0, index($1, ":") - 1)}' | /bin/sed '/^lo$/d')
+		iface="eth0"
 		type="⎆" # "☫" for wlan
 		RXB=$(</sys/class/net/"$iface"/statistics/rx_bytes)
 		TXB=$(</sys/class/net/"$iface"/statistics/tx_bytes)
@@ -37,6 +37,6 @@ run_segment() {
 	fi
 
 	# NOTE: '%5.01' for fixed length always
-	printf " 下载:%5.01f${RXDIF_UNIT} 上传:%5.01f${TXDIF_UNIT}"  ${RXDIF} ${TXDIF}
+	printf "${type} ⇊ %5.01f${RXDIF_UNIT} ⇈ %5.01f${TXDIF_UNIT}"  ${RXDIF} ${TXDIF}
 	return 0
 }
