@@ -12,7 +12,7 @@ run_segment() {
 		RXBN=$(netstat -i -b | grep -m 1 $iface | awk '{print $7}')
 		TXBN=$(netstat -i -b | grep -m 1 $iface | awk '{print $10}')
 	else
-		iface="eth0"
+		iface=$(/bin/cat /proc/net/dev | /usr/bin/awk '{if($2>0 && NR > 2) print substr($1, 0, index($1, ":") - 1)}' | /bin/sed '/^lo$/d')
 		type="⎆" # "☫" for wlan
 		RXB=$(</sys/class/net/"$iface"/statistics/rx_bytes)
 		TXB=$(</sys/class/net/"$iface"/statistics/tx_bytes)
