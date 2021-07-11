@@ -72,8 +72,8 @@ Requirements for some segments. You only need to fulfill the requirements for th
 
 The `grep` tool is outdated on OS X 10.8 Mountain Lion so you might have to upgrade it.
 
-```bash
-brew install grep
+```console
+$ brew install grep
 ```
 
 ## FreeBSD specific requirements
@@ -121,7 +121,7 @@ bind C-] run '~/path/to/tmux-powerline/mute_powerline.sh right'		# Mute right st
 
 Some segments e.g. cwd and cvs_branch needs to find the current working directory of the active pane. To achieve this we let tmux save the path each time the shell prompt is displayed. Put the line below in your `~/.bashrc` or where you define you PS1 variable. zsh users can put it in e.g. `~/.zshrc` and may change `PS1` to `PROMPT` (but that's not necessary).
 
-```bash
+```console
 PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#D" | tr -d %) "$PWD")'
 ```
 
@@ -161,7 +161,7 @@ $ bash -x powerline.sh (left|right)
 
 To debug smaller portions of code, say if you think the problem lies in a specific segment, insert these lines at the top and bottom of the relevant code portions e.g. inside a function:
 
-```bash
+```console
 set -x
 exec 2>/tmp/tmux-powerline.log
 <code to debug>
