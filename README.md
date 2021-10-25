@@ -146,7 +146,7 @@ Now  generate a default configuration file by doing
 
 ```console
 $ ./generate_rc.sh
-$ mv ~/.tmux-powerlinerc.default ~/.tmux-powerlinerc
+$ mv ~/.tmux-powerlinerc.default ~/.tmux-powerlinerc   # or to $XDG_CONFIG_HOME/tmux-powerline/config.sh
 $ $EDITOR ~/.tmux-powerlinerc
 ```
 and change theme to use and values for segments you want to use. If you want to keep the repo checkout clean you can set custom segment and theme paths in the general section and then store your files outside the repo.
