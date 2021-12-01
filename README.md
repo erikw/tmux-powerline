@@ -1,8 +1,8 @@
-# DEPRECATION WARNING
-This project is in a maintenance mode and no future functionality is likely to be added. tmux-powerline, with all other powerline projects, is replaced by the new unifying [powerline](https://github.com/Lokaltog/powerline). However this project is still functional and can serve as a lightweight alternative for non-python users.
-
 # tmux-powerline
-This is a set of scripts for making a nice and dynamic tmux statusbar consisting of segments. This is much like [Lokaltog/vim-powerline](https://github.com/Lokaltog/vim-powerline) but for tmux.
+
+
+
+This is a hackable set of scripts for making a nice and dynamic tmux statusbar consisting of segments. This is much like [Lokaltog/vim-powerline](https://github.com/Lokaltog/vim-powerline) but for tmux.
 
 The following segments exists for now:
 * LAN & WAN IP addresses.
@@ -48,6 +48,10 @@ After pausing the music there's no need for showing NP anymore. Also the weather
 Remaining battery.
 
 ![right-status, weather and battery](img/right-status_weather_battery.png)
+
+# Project Status
+This project is in a maintenance mode and no future functionality is likely to be added. tmux-powerline, with all other powerline projects, is replaced by the new unifying [powerline](https://github.com/Lokaltog/powerline). However this project is still functional and can serve as a lightweight alternative for non-python users.
+
 
 # Requirements
 Requirements for the lib to work are:
