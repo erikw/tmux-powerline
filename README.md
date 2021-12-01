@@ -23,7 +23,7 @@ The following segments exists for now:
 # Screenshots
 **Full screenshot**
 
-<a href="img/full.png" target="_blank" title="Full screenshot"><img src="img/full.png" width="850" alt="Full screenshot"></a>
+<a href="img/full.png" title="Full screenshot"><img src="img/full.png" width="850" alt="Full screenshot"></a>
 
 **left-status**
 
