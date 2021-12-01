@@ -1,4 +1,7 @@
 # tmux-powerline
+
+[![GitHub Stars](https://img.shields.io/github/stars/erikw/tmux-powerline?style=social)](#)
+[![GitHub Forks](https://img.shields.io/github/forks/erikw/tmux-powerline?style=social)](#)
 [![SLOC](https://img.shields.io/tokei/lines/github/erikw/tmux-powerline)](#)
 [![License](https://img.shields.io/badge/license-BSD--3-blue)](LICENSE.txt)
 [![Number of programming languages used](https://img.shields.io/github/languages/count/erikw/tmux-powerline)](#)
@@ -6,19 +9,20 @@
 [![Open issues](https://img.shields.io/github/issues/erikw/tmux-powerline)](https://github.com/erikw/tmux-powerline/issues)
 [![Closed issues](https://img.shields.io/github/issues-closed/erikw/tmux-powerline?color=success)](https://github.com/erikw/tmux-powerline/issues?q=is%3Aissue+is%3Aclosed)
 [![Closed PRs](https://img.shields.io/github/issues-pr-closed/erikw/tmux-powerline?color=success)](https://github.com/erikw/tmux-powerline/pulls?q=is%3Apr+is%3Aclosed)
-[![Project status](https://img.shields.io/badge/project%20status-maintained-yellow)](#)
 [![OSS Lifecycle](https://img.shields.io/osslifecycle/erikw/tmux-powerline)](https://github.com/Netflix/osstracker)
+[![Latest tag](https://img.shields.io/github/v/tag/erikw/tmux-powerline)](https://github.com/erikw/tmux-powerline/tags)
 
 
-Contributors:
-
+<br>
+[![Contributors](https://img.shields.io/github/contributors/erikw/tmux-powerline)](https://img.shields.io/github/contributors/erikw/tmux-powerline)
+including :
 <a href = "https://github.com/erikw/tmux-powerline/graphs/contributors">
 <img src = "https://contrib.rocks/image?repo=erikw/tmux-powerline&max=24"/>
 </a>
+<br>
 
 
-
-
+# Intro
 This is a hackable set of scripts for making a nice and dynamic tmux statusbar consisting of segments. This is much like [Lokaltog/vim-powerline](https://github.com/Lokaltog/vim-powerline) but for tmux.
 
 The following segments exists for now:
