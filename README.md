@@ -14,12 +14,10 @@
 
 
 <br>
-[![Contributors](https://img.shields.io/github/contributors/erikw/tmux-powerline)](https://img.shields.io/github/contributors/erikw/tmux-powerline)
-including :
+[![Contributors](https://img.shields.io/github/contributors/erikw/tmux-powerline)](https://github.com/erikw/tmux-powerline/graphs/contributors) including:
 <a href = "https://github.com/erikw/tmux-powerline/graphs/contributors">
 <img src = "https://contrib.rocks/image?repo=erikw/tmux-powerline&max=24"/>
 </a>
-<br>
 
 
 # Intro
