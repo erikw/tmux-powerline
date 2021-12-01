@@ -1,4 +1,9 @@
 # tmux-powerline
+[![SLOC](https://img.shields.io/tokei/lines/github/erikw/tmux-powerline)](#)
+[![License](https://img.shields.io/badge/license-BSD--3-blue)](LICENSE.txt)
+[![Number of programming languages used](https://img.shields.io/github/languages/count/erikw/tmux-powerline)](#)
+[![Top programming languages used](https://img.shields.io/github/languages/top/erikw/tmux-powerline)](#)
+
 
 
 
