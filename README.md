@@ -11,9 +11,8 @@
 [![License](https://img.shields.io/badge/license-BSD--3-blue)](LICENSE.txt)
 [![OSS Lifecycle](https://img.shields.io/osslifecycle/erikw/tmux-powerline)](https://github.com/Netflix/osstracker)
 [![Latest tag](https://img.shields.io/github/v/tag/erikw/tmux-powerline)](https://github.com/erikw/tmux-powerline/tags)
-
-
 <br>
+
 [![Contributors](https://img.shields.io/github/contributors/erikw/tmux-powerline)](#) including:
 <a href = "https://github.com/erikw/tmux-powerline/graphs/contributors">
 <img src = "https://contrib.rocks/image?repo=erikw/tmux-powerline&max=24"/>
