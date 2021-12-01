@@ -7,6 +7,7 @@
 [![Closed issues](https://img.shields.io/github/issues-closed/erikw/tmux-powerline?color=success)](https://github.com/erikw/tmux-powerline/issues?q=is%3Aissue+is%3Aclosed)
 [![Closed PRs](https://img.shields.io/github/issues-pr-closed/erikw/tmux-powerline?color=success)](https://github.com/erikw/tmux-powerline/pulls?q=is%3Apr+is%3Aclosed)
 [![Project status](https://img.shields.io/badge/project%20status-maintained-yellow)](#)
+[![OSS Lifecycle](https://img.shields.io/osslifecycle/erikw/tmux-powerline)](https://github.com/Netflix/osstracker)
 
 
 Contributors:
