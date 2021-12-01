@@ -3,6 +3,17 @@
 [![License](https://img.shields.io/badge/license-BSD--3-blue)](LICENSE.txt)
 [![Number of programming languages used](https://img.shields.io/github/languages/count/erikw/tmux-powerline)](#)
 [![Top programming languages used](https://img.shields.io/github/languages/top/erikw/tmux-powerline)](#)
+[![Open issues](https://img.shields.io/github/issues/erikw/tmux-powerline)](https://github.com/erikw/tmux-powerline/issues)
+[![Closed issues](https://img.shields.io/github/issues-closed/erikw/tmux-powerline?color=success)](https://github.com/erikw/tmux-powerline/issues?q=is%3Aissue+is%3Aclosed)
+[![Closed PRs](https://img.shields.io/github/issues-pr-closed/erikw/tmux-powerline?color=success)](https://github.com/erikw/tmux-powerline/pulls?q=is%3Apr+is%3Aclosed)
+[![Project status](https://img.shields.io/badge/project%20status-maintained-yellow)](#)
+
+
+Contributors:
+
+<a href = "https://github.com/erikw/tmux-powerline/graphs/contributors">
+<img src = "https://contrib.rocks/image?repo=erikw/tmux-powerline&max=24"/>
+</a>
 
 
 
