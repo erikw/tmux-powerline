@@ -16,6 +16,54 @@ print_powerline() {
 	__process_powerline
 }
 
+format() {
+    local type="$1"
+
+    case $type in
+	inverse)
+		echo "fg=colour$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR,bg=colour$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR,nobold,noitalics,nounderscore"
+		;;
+	regular)
+		echo "fg=colour$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR,bg=colour$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR,nobold,noitalics,nounderscore"
+		;;
+	*)
+		;;
+    esac
+}
+
+init_powerline() {
+	if [ -z $TMUX_POWERLINE_WINDOW_STATUS_CURRENT ]; then
+		TMUX_POWERLINE_WINDOW_STATUS_CURRENT=(
+			"#[$(format inverse)]" \
+			"$TMUX_POWERLINE_DEFAULT_LEFTSIDE_SEPARATOR" \
+			" #I#F " \
+			"$TMUX_POWERLINE_SEPARATOR_RIGHT_THIN" \
+			" #W " \ "#[$(format regular)]" \
+			"$TMUX_POWERLINE_DEFAULT_LEFTSIDE_SEPARATOR"
+		)
+	fi
+
+	if [ -z $TMUX_POWERLINE_WINDOW_STATUS_STYLE ]; then
+		TMUX_POWERLINE_WINDOW_STATUS_STYLE=(
+			"$(format regular)"
+		)
+	fi
+
+	if [ -z $TMUX_POWERLINE_WINDOW_STATUS_STYLE ]; then
+		TMUX_POWERLINE_WINDOW_STATUS_FORMAT=(
+			"#[$(format regular)]" \
+			"  #I#{?window_flags,#F, } " \
+			"$TMUX_POWERLINE_SEPARATOR_RIGHT_THIN" \
+			" #W "
+		)
+	fi
+
+	tmux set-option -g window-status-current-format "$(printf '%s' "${TMUX_POWERLINE_WINDOW_STATUS_CURRENT[@]}")"
+	tmux set-option -g window-status-format "$(printf '%s' "${TMUX_POWERLINE_WINDOW_STATUS_FORMAT[@]}")"
+	tmux set-option -g window-status-style "$(printf '%s' "${TMUX_POWERLINE_WINDOW_STATUS_STYLE[@]}")"
+	tmux set-option -g status-style "fg=colour$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR,bg=colour$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR"
+}
+
 __process_segment_defaults() {
 	for segment_index in "${!input_segments[@]}"; do
 		local input_segment=(${input_segments[$segment_index]})
@@ -139,4 +187,3 @@ __check_platform() {
 		 echo "Unknown platform; modify config/shell.sh"  &1>&2
 	fi
 }
-
