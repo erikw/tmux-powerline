@@ -122,15 +122,12 @@ set-option -g status-left-length 60
 set-option -g status-right-length 90
 set-option -g status-left "#(~/path/to/tmux-powerline/powerline.sh left)"
 set-option -g status-right "#(~/path/to/tmux-powerline/powerline.sh right)"
+set-hook -g session-created 'run-shell "~/path/to/tmux-powerline/powerline.sh init"' # prettifies the window-status segments
 ```
 
 Set the maximum lengths to something that suits your configuration of segments and size of terminal (the maximum segments length will be handled better in the future).
 
-The window list can be powerlineified if you'd like by adding the following line to the same file:
-
-```vim
-set-window-option -g window-status-current-format "#[fg=colour235, bg=colour27]⮀#[fg=colour255, bg=colour27] #I ⮁ #W #[fg=colour27, bg=colour235]⮀"
-```
+The window-status configuration is run only when a session is created, so re-running init is required to refresh the window status formats.
 
 You can toggle the visibility of the statusbars by adding the following lines:
 
