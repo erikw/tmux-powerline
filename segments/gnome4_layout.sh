@@ -9,5 +9,8 @@ run_segment() {
 	fi
 
 cur_layout=$(gsettings get org.gnome.desktop.input-sources mru-sources | awk -F"'" '{print $4}')
+	ecode=$? 
+        test $ecode -eq 0 || return $ecode
 	echo "⌨  $cur_layout"
+	return 0
 }
