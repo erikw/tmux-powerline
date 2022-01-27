@@ -2,7 +2,7 @@
 [![GitHub Stars](https://img.shields.io/github/stars/erikw/tmux-powerline?style=social)](#)
 [![GitHub Forks](https://img.shields.io/github/forks/erikw/tmux-powerline?style=social)](#)
 <br>
-[![SLOC](https://img.shields.io/tokei/lines/github/erikw/tmux-powerline)](#)
+[![SLOC](https://img.shields.io/tokei/lines/github/erikw/tmux-powerline?logo=codefactor&logoColor=lightgrey)](#)
 [![Number of programming languages used](https://img.shields.io/github/languages/count/erikw/tmux-powerline)](#)
 [![Top programming languages used](https://img.shields.io/github/languages/top/erikw/tmux-powerline)](#)
 [![Open issues](https://img.shields.io/github/issues/erikw/tmux-powerline)](https://github.com/erikw/tmux-powerline/issues)
