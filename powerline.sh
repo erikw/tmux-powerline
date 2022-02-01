@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export TMUX_POWERLINE_DIR_HOME="$(dirname $0)"
+export TMUX_POWERLINE_DIR_HOME="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 source "${TMUX_POWERLINE_DIR_HOME}/config/helpers.sh"
 source "${TMUX_POWERLINE_DIR_HOME}/config/paths.sh"
