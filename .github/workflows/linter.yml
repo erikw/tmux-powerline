@@ -1,6 +1,8 @@
 name: Lint Code Base
 
 on:
+  workflow_dispatch:
+    branches: master
   push:
     branches: master
     paths-ignore:
