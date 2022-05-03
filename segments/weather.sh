@@ -3,7 +3,8 @@
 # The update period in seconds.
 update_period=600
 
-TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT="yahoo"
+TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT="yrno"
+TMUX_POWERLINE_SEG_WEATHER_JSON_DEFAULT="jq"
 TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAULT="c"
 TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT="600"
 
@@ -30,21 +31,22 @@ export TMUX_POWERLINE_SEG_WEATHER_UNIT="${TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAUL
 export TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT}"
 # Name of GNU grep binary if in PATH, or path to it.
 export TMUX_POWERLINE_SEG_WEATHER_GREP="${TMUX_POWERLINE_SEG_WEATHER_GREP_DEFAULT}"
-# Your location. Find a code that works for you:
-# 1. Go to Yahoo weather http://weather.yahoo.com/
-# 2. Find the weather for you location
-# 3. Copy the last numbers in that URL. e.g. "http://weather.yahoo.com/united-states/california/newport-beach-12796587/" has the numbers "12796587"
-TMUX_POWERLINE_SEG_WEATHER_LOCATION=""
+# Location of the JSON parser, jq
+export TMUX_POWERLINE_SEG_WEATHER_JSON="${TMUX_POWERLINE_SEG_WEATHER_JSON_DEFAULT}"
+# Your location
+# Latitude and Longtitude for use with yr.no
+TMUX_POWERLINE_SEG_WEATHER_LAT""
+TMUX_POWERLINE_SEG_WEATHER_LON=""
 EORC
 	echo "$rccontents"
 }
 
 run_segment() {
 	__process_settings
-	local tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_yahoo.txt"
+	local tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/temp_weather_file.txt"
 	local weather
 	case "$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER" in
-		"yahoo") weather=$(__yahoo_weather) ;;
+		"yrno") weather=$(__yrno) ;;
 		*)
 			echo "Unknown weather provider [${$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER}]";
 			return 1
@@ -67,13 +69,16 @@ __process_settings() {
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_GREP" ]; then
 		export TMUX_POWERLINE_SEG_WEATHER_GREP="${TMUX_POWERLINE_SEG_WEATHER_GREP_DEFAULT}"
 	fi
-	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_LOCATION" ]; then
-		echo "No weather location specified.";
+	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_JSON" ]; then
+		export TMUX_POWERLINE_SEG_WEATHER_JSON="${TMUX_POWERLINE_SEG_WEATHER_JSON_DEFAULT}"
+	fi
+	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_LON" ] && [ -z "$TMUX_POWERLINE_SEG_WEATHER_LAT" ]; then
+		echo "No location defined.";
 		exit 8
 	fi
 }
 
-__yahoo_weather() {
+__yrno() {
 	degree=""
 	if [ -f "$tmp_file" ]; then
 		if shell_is_osx || shell_is_bsd; then
@@ -90,23 +95,19 @@ __yahoo_weather() {
 	fi
 
 	if [ -z "$degree" ]; then
-		weather_data=$(curl --max-time 4 -s "https://query.yahooapis.com/v1/public/yql?format=xml&q=SELECT%20*%20FROM%20weather.forecast%20WHERE%20u=%27${TMUX_POWERLINE_SEG_WEATHER_UNIT}%27%20AND%20woeid%20=%20%27${TMUX_POWERLINE_SEG_WEATHER_LOCATION}%27")
+		weather_data=$(curl --max-time 4 -s "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}")
 		if [ "$?" -eq "0" ]; then
-			error=$(echo "$weather_data" | grep "problem_cause\|DOCTYPE");
+		grep=$TMUX_POWERLINE_SEG_WEATHER_GREP_DEFAULT
+			error=$(echo "$weather_data" | $grep -i "error");
 			if [ -n "$error" ]; then
 				echo "error"
 				exit 1
 			fi
 
-			# Assume latest grep is in PATH
-			gnugrep="${TMUX_POWERLINE_SEG_WEATHER_GREP}"
-
-			# <yweather:units temperature="F" distance="mi" pressure="in" speed="mph"/>
-			unit=$(echo "$weather_data" | "$gnugrep" -Zo "<yweather:units [^<>]*/>" | sed 's/.*temperature="\([^"]*\)".*/\1/')
-			condition=$(echo "$weather_data" | "$gnugrep" -Zo "<yweather:condition [^<>]*/>")
-			# <yweather:condition  text="Clear"  code="31"  temp="66"  date="Mon, 01 Oct 2012 8:00 pm CST" />
-			degree=$(echo "$condition" | sed 's/.*temp="\([^"]*\)".*/\1/')
-			condition=$(echo "$condition" | sed 's/.*text="\([^"]*\)".*/\1/')
+			jsonparser="${TMUX_POWERLINE_SEG_WEATHER_JSON}"
+			unit=$(echo "$weather_data" | $jsonparser -r .properties.meta.units.air_temperature)
+			degree=$(echo "$weather_data" | $jsonparser -r .properties.timeseries[0].data.instant.details.air_temperature)
+			condition=$(echo "$weather_data" | $jsonparser -r .properties.timeseries[0].data.next_1_hours.summary.symbol_code)
 			# Pull the times for sunrise and sunset so we know when to change the day/night indicator
 			# <yweather:astronomy sunrise="6:56 am"   sunset="6:21 pm"/>
 			if shell_is_osx || shell_is_bsd; then
@@ -114,8 +115,13 @@ __yahoo_weather() {
 			else
 				date_arg='-d'
 			fi
-			sunrise=$(date ${date_arg}"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^\(.*\)sunset.*/\1/' | sed 's/^.*sunrise="\(.*m\)".*/\1/')" +%H%M)
-			sunset=$(date ${date_arg}"$(echo "$weather_data" | "$gnugrep" "yweather:astronomy" | sed 's/^.*sunset="\(.*m\)".*/\1/')" +%H%M)
+
+    		# # https://api.sunrise-sunset.org/json?lat=$TMUX_POWERLINE_SEG_WEATHER_LAT&lng=$TMUX_POWERLINE_SEG_WEATHER_LON&date=today
+			# suntimes=$(curl --max-time 4 -s "https://api.sunrise-sunset.org/json?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lng=${TMUX_POWERLINE_SEG_WEATHER_LON}&date=today")
+			# sunrise=$(echo $suntimes | $jsonparser -r .results.sunrise | cut -d " " -f1)
+			# sunrise=$(date %H%M -d $sunrise)
+			# sunset=$(echo $suntimes | $jsonparser -r .results.sunset | cut -d " " -f1)
+			# sunset=$(date %H%M -d $sunset)
 		elif [ -f "${tmp_file}" ]; then
 			__read_tmp_file
 		fi
@@ -125,62 +131,60 @@ __yahoo_weather() {
 		if [ "$TMUX_POWERLINE_SEG_WEATHER_UNIT" == "k" ]; then
 			degree=$(echo "${degree} + 273.15" | bc)
 		fi
-		condition_symbol=$(__get_condition_symbol "$condition" "$sunrise" "$sunset") 
-		echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')" | tee "${tmp_file}"
+		if [ "$TMUX_POWERLINE_SEG_WEATHER_UNIT" == "f" ]; then
+			degree=$(echo "${degree} * 9 / 5 + 32" | bc)
+		fi
+		# condition_symbol=$(__get_yrno_condition_symbol "$condition" "$sunrise" "$sunset")
+		condition_symbol=$(__get_yrno_condition_symbol "$condition")
+	    echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')" | tee "${tmp_file}"
 	fi
 }
 
-# Get symbol for condition. Available conditions: http://developer.yahoo.com/weather/#codes
-__get_condition_symbol() {
-	local condition=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-	local sunrise="$2"
-	local sunset="$3"
+# Get symbol for condition. Available symbol names: https://api.met.no/weatherapi/weathericon/2.0/documentation#List_of_symbols
+__get_yrno_condition_symbol() {
+	# local condition=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+	# local sunrise="$2"
+	# local sunset="$3"
+	local condition=$1
 	case "$condition" in
-		"sunny" | "hot")
-			hourmin=$(date +%H%M)
-			if [ "$hourmin" -ge "$sunset" -o "$hourmin" -le "$sunrise" ]; then
-				#echo "☽"
-				echo "☾"
-			else
-				#echo "☀"
-				echo "☼"
-			fi
+		"clearsky_day")
+			echo "🌣"
 			;;
-		"rain" | "mixed rain and snow" | "mixed rain and sleet" | "freezing drizzle" | "drizzle" | "light drizzle" | "freezing rain" | "showers" | "mixed rain and hail" | "scattered showers" | "isolated thundershowers" | "thundershowers" | "light rain with thunder" | "light rain" | "rain and snow")
-			#echo "☂"
-			echo "☔"
+		"clearsky_night")
+			echo "☾"
 			;;
-		"snow" | "mixed snow and sleet" | "snow flurries" | "light snow showers" | "blowing snow" | "sleet" | "hail" | "heavy snow" | "scattered snow showers" | "snow showers" | "light snow" | "snow/windy" | "snow grains" | "snow/fog")
-			#echo "☃"
+		"rain" | "lightrain" | "heavyrain" | "sleet" | "lightsleet" | "heavysleet")
+			echo "🌧"
+			;;
+		"lightrainshowers" | "rainshowers" | "heavyrainshowers")
+			echo "🌦"
+			;;
+		"snow" | "lightsnow" | "heavysnow")
 			echo "❅"
 			;;
-		"cloudy" | "mostly cloudy" | "partly cloudy" | "partly cloudy/windy")
-			echo "☁"
+		"lightsnowshowers" | "heavysnowshowers" | "snowshowers")
+			echo "🌨"
 			;;
-		"tornado" | "tropical storm" | "hurricane" | "severe thunderstorms" | "thunderstorms" | "isolated thunderstorms" | "scattered thunderstorms")
-			#echo "⚡"
-			echo "☈"
+		"cloudy")
+			echo "☁️"
 			;;
-		"dust" | "foggy" | "fog" | "haze" | "smoky" | "blustery" | "mist")
-			#echo "♨"
-			#echo "﹌"
-			echo "〰"
+		"partlycloudy_day")
+			echo "🌤"
 			;;
-		"breezy")
-			#echo "🌬"
-			echo "🍃"
+		"partlycloudy_night")
+			echo "☾☁"
 			;;
-		"windy" | "fair/windy")
-			#echo "⚐"
-			echo "⚑"
+		"lightrainshowersandthunder" | "rainshowersandthunder" | "heavyrainshowersandthunder" | "lightsleetshowersandthunder" | "sleetshowersandthunder" | "heavysleetshowersandthunder" | "lightsnowshowersandthunder" | "snowshowersandthunder" | "heavysnowshowersandthunder" | "lightrainandthunder" | "rainandthunder" | "heavyrainandthunder" | "lightsleetandthunder" | "sleetandthunder" | "heavysleetandthunder" | "lightsnowandthunder" | "snowandthunder" | "heavysnowandthunder")
+			echo "🌩"
 			;;
-		"clear" | "fair" | "cold")
-			hourmin=$(date +%H%M)
-			if [ "$hourmin" -ge "$sunset" -o "$hourmin" -le "$sunrise" ]; then
-				echo "☾"
-			else
-				echo "〇"
-			fi
+		"fog")
+			echo "🌫"
+			;;
+		"fair_day")
+			echo "〇"
+			;;
+		"fair_night")
+			echo "☾"
 			;;
 		*)
 			echo "?"
