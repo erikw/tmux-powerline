@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [1.4.0] - 2022-05-04
+### Fixed
 - Weather segment now working with yr.no as weather provider [#285](https://github.com/erikw/tmux-powerline/pull/285).
 
 ## [1.3.0] - 2022-04-05
+### Changed
 - Rename master branch to main.
 
 ## [1.2.0] - 2021-10-25
