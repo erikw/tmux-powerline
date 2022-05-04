@@ -89,7 +89,7 @@ Requirements for some segments. You only need to fulfill the requirements for th
 * `ifstat.sh`: ifstat (there is a simpler segment not using ifstat but samples /sys/class/net)
 * `tmux_mem_cpu_load.sh`: [tmux-mem-cpu-load](https://github.com/thewtex/tmux-mem-cpu-load)
 * `rainbarf.sh`: [rainbarf](https://github.com/creaktive/rainbarf)
-* `weather.sh`: GNU `grep` with Perl regexp enabled (FreeBSD specific)
+* `weather.sh`: GNU `grep` with Perl regexp enabled (FreeBSD specific), `jq` for yrno weather API.
 
 ## OS X specific requirements
 
