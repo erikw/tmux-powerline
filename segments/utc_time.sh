@@ -17,7 +17,7 @@ __process_settings() {
 }
 
 run_segment() {
-        __process_settings
+	__process_settings
 	date -u +"$TMUX_POWERLINE_SEG_UTC_TIME_FORMAT"
 	return 0
 }
