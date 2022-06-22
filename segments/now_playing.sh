@@ -283,7 +283,8 @@ __np_playerctl() {
 }
 
 __np_spotify() {
-	if shell_is_linux; then
+    not_wsl = $(! which tasklist.exe )
+	if shell_is_linux && not_wsl; then
 		metadata=$(dbus-send --reply-timeout=42 --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata' 2>/dev/null)
 		if [ "$?" -eq 0 ] && [ -n "$metadata" ]; then
 			# TODO how do one express this with dbus-send? It works with qdbus but the problem is that it's probably not as common as dbus-send.
@@ -296,8 +297,10 @@ __np_spotify() {
 		fi
 	elif shell_is_osx; then
 		np=$(${TMUX_POWERLINE_DIR_SEGMENTS}/np_spotify_mac.script)
-	fi
-	echo "$np"
+    else 
+        np=$(tasklist.exe /APPS /fo list  /v /fi "IMAGENAME eq Spotify.exe" | grep " - "  | cut -d" " -f3-)
+    fi
+    echo "${np//[$'\t\r\n']}"
 }
 
 __np_spotify_wine() {
