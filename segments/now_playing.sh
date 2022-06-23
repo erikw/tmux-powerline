@@ -301,8 +301,8 @@ __np_spotify() {
 		fi
 	elif shell_is_osx; then
 		np=$(${TMUX_POWERLINE_DIR_SEGMENTS}/np_spotify_mac.script)
-    fi
-    echo "$np}"
+	fi
+	echo "$np"
 }
 
 __np_spotify_wine() {
