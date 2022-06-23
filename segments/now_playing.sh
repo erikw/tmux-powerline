@@ -286,6 +286,7 @@ __np_spotify() {
 	if shell_is_linux; then
 		if type tasklist.exe >/dev/null 2>&1; then # WSL
 			np=$(tasklist.exe /APPS /fo list /v /fi "IMAGENAME eq Spotify.exe" | grep " - "  | cut -d" " -f3-)
+			np="${np//[$'\t\r\n']}"
 		else
 			metadata=$(dbus-send --reply-timeout=42 --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata' 2>/dev/null)
 			if [ "$?" -eq 0 ] && [ -n "$metadata" ]; then
@@ -301,7 +302,7 @@ __np_spotify() {
 	elif shell_is_osx; then
 		np=$(${TMUX_POWERLINE_DIR_SEGMENTS}/np_spotify_mac.script)
     fi
-    echo "${np//[$'\t\r\n']}"
+    echo "$np}"
 }
 
 __np_spotify_wine() {
