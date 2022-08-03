@@ -12,11 +12,12 @@ TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT_DEFAULT="%artist% - %title%"
 TMUX_POWERLINE_SEG_NOW_PLAYING_PLAYERCTL_FORMAT_DEFAULT="{{ artist }} - {{ title }}"
 TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT_DEFAULT="%aa - %tt"
 TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR_DEFAULT="♫"
+TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER_DEFAULT="spotify"
 
 generate_segmentrc() {
 	read -d '' rccontents  << EORC
 # Music player to use. Can be any of {audacious, banshee, cmus, itunes, lastfm, mocp, mpd, mpd_simple, pithos, playerctl, rdio, rhythmbox, spotify, spotify_wine, file}.
-export TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER=""
+export TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER="${TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER_DEFAULT}"
 # File to be read in case the song is being read from a file
 export TMUX_POWERLINE_SEG_NOW_PLAYING_FILE_NAME=""
 # Maximum output length.
@@ -290,8 +291,7 @@ __np_spotify() {
 		else
 			metadata=$(dbus-send --reply-timeout=42 --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata' 2>/dev/null)
 			if [ "$?" -eq 0 ] && [ -n "$metadata" ]; then
-				# TODO how do one express this with dbus-send? It works with qdbus but the problem is that it's probably not as common as dbus-send.
-				state=$(qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get org.mpris.MediaPlayer2.Player PlaybackStatus)
+				state=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus'|egrep -A 1 "string"|cut -b 26-|cut -d '"' -f 1|egrep -v ^$)
 				if [[ $state == "Playing" ]]; then
 					artist=$(echo "$metadata" | grep -PA2 "string\s\"xesam:artist\"" | tail -1 | grep -Po "(?<=\").*(?=\")")
 					track=$(echo "$metadata" | grep -PA1 "string\s\"xesam:title\"" | tail -1 | grep -Po "(?<=\").*(?=\")")
