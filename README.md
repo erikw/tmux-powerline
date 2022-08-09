@@ -95,8 +95,8 @@ Requirements for some segments. You only need to fulfill the requirements for th
 
 The `grep` tool is outdated on OS X 10.8 Mountain Lion so you might have to upgrade it.
 
-```console
-$ brew install grep
+```shell
+brew install grep
 ```
 
 ## FreeBSD specific requirements
@@ -107,9 +107,9 @@ Preinstalled `grep` in FreeBSD doesn't support Perl regexp. Solution is rather s
 # Installation
 Start with checking out the repository with:
 
-```console
-$ cd ~/some/path/
-$ git clone https://github.com/erikw/tmux-powerline.git
+```shell
+cd ~/some/path/
+git clone https://github.com/erikw/tmux-powerline.git
 ```
 
 Now edit your `~/.tmux.conf` to use the scripts:
@@ -141,7 +141,7 @@ bind C-] run '~/path/to/tmux-powerline/mute_powerline.sh right'		# Mute right st
 
 Some segments e.g. cwd and cvs_branch needs to find the current working directory of the active pane. To achieve this we let tmux save the path each time the shell prompt is displayed. Put the line below in your `~/.bashrc` or where you define you PS1 variable. zsh users can put it in e.g. `~/.zshrc` and may change `PS1` to `PROMPT` (but that's not necessary).
 
-```console
+```bash
 PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#D" | tr -d %) "$PWD")'
 ```
 
@@ -158,16 +158,16 @@ If you have a recent version of tmux (&ge; 2.1), there is no need to redefine th
 
 The default segments that are shown are defined in `themes/default.sh`. You will probably want to change those to fit your needs. To do so you can edit that file directly but preferable, for easier updating of the repo, you can make a copy and edit that one (or see how to use custom themes directory below). A palette of colors that can be used can be obtained by running the script `color_palette.sh`.
 
-```console
-$ cp themes/default.sh themes/mytheme.sh
-$ $EDITOR themes/mytheme.sh
+```shell
+cp themes/default.sh themes/mytheme.sh
+$EDITOR themes/mytheme.sh
 ```
 Now  generate a default configuration file by doing
 
-```console
-$ ./generate_rc.sh
-$ mv ~/.tmux-powerlinerc.default ~/.tmux-powerlinerc   # or to $XDG_CONFIG_HOME/tmux-powerline/config.sh
-$ $EDITOR ~/.tmux-powerlinerc
+```shell
+./generate_rc.sh
+mv ~/.tmux-powerlinerc.default ~/.tmux-powerlinerc   # or to $XDG_CONFIG_HOME/tmux-powerline/config.sh
+$EDITOR ~/.tmux-powerlinerc
 ```
 and change theme to use and values for segments you want to use. If you want to keep the repo checkout clean you can set custom segment and theme paths in the general section and then store your files outside the repo.
 
@@ -175,13 +175,13 @@ and change theme to use and values for segments you want to use. If you want to 
 
 Some segments might not work on your system for various reasons such as missing programs or different versions not having the same options. To find out which segment is not working it may help to enable the debug setting in `~/.tmux-powerlinerc`. However this may not be enough to determine the error so you can inspect all executed bash commands (will be a long output) by doing
 
-```console
-$ bash -x powerline.sh (left|right)
+```shell
+bash -x powerline.sh (left|right)
 ```
 
 To debug smaller portions of code, say if you think the problem lies in a specific segment, insert these lines at the top and bottom of the relevant code portions e.g. inside a function:
 
-```console
+```bash
 set -x
 exec 2>/tmp/tmux-powerline.log
 <code to debug>
@@ -190,7 +190,7 @@ set +x
 
 and then inspect the outputs like
 
-```console
+```shell
 less /tmp/tmux-powerline.log
 tail -f /tmp/tmux-powerline.log # or follow output like this.
 ```
@@ -206,8 +206,8 @@ The issue is probably that the update of the current directory in the active pan
 ### Nothing is displayed
 You have edited `~/.tmux.conf` but no powerline is displayed. This might be because tmux is not aware of the changes so you have to restart your tmux session or reloaded that file by typing this on the command line (or in tmux command mode with `prefix :`)
 
-```console
-$ tmux source-file ~/.tmux.conf
+```shell
+tmux source-file ~/.tmux.conf
 ```
 ### Multiple lines in bash or no powerline in zsh using iTerm (OS X)
 If your tmux looks like [this](https://github.com/erikw/tmux-powerline/issues/125) then you may have to in iTerm uncheck [Unicode East Asian Ambiguous characters are wide] in Preferences -> Settings -> Advanced.
