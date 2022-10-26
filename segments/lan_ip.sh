@@ -14,7 +14,7 @@ run_segment() {
 	else
 		# Get the names of all attached NICs.
 		all_nics="$(ip addr show | cut -d ' ' -f2 | tr -d :)"
-		all_nics=(${all_nics[@]//lo/})	 # Remove lo interface.
+		all_nics=(${all_nics[@]/lo/})	 # Remove lo interface.
 
 		for nic in "${all_nics[@]}"; do
 			# Parse IP address for the NIC.
