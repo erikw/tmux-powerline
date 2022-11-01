@@ -115,7 +115,7 @@ __process_scripts() {
 __process_colors() {
 	for segment_index in "${!powerline_segments[@]}"; do
 		local powerline_segment=(${powerline_segments[$segment_index]})
-	 	# Find the next segment that produces content (i.e. skip empty segments).
+		# Find the next segment that produces content (i.e. skip empty segments).
 		for next_segment_index in $(eval echo {$(($segment_index + 1))..${#powerline_segments}}) ; do
 			[[ -n ${powerline_segments[next_segment_index]} ]] && break
 		done
