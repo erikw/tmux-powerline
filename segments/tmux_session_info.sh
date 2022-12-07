@@ -1,7 +1,7 @@
 # Prints tmux session info.
 # Assumes that [ -n "$TMUX"].
 
-TMUX_POWERLINE_SEG_TMUX_SESSION_INFO_FORMAT_DEFAULT='[ #S ]:#I.#P'
+TMUX_POWERLINE_SEG_TMUX_SESSION_INFO_FORMAT_DEFAULT='#S:#I.#P'
 
 generate_segmentrc() {
 	read -d '' rccontents  << EORC
