@@ -19,9 +19,7 @@ __process_settings() {
 }
 
 run_segment() {
-	if [ -z "$TMUX_POWERLINE_SEG_TMUX_SESSION_INFO_FORMAT" ]; then
-		export TMUX_POWERLINE_SEG_TMUX_SESSION_INFO_FORMAT='#S:#I.#P'
-	fi
+	__process_settings
 	tmux display-message -p "$TMUX_POWERLINE_SEG_TMUX_SESSION_INFO_FORMAT"
 	return 0
 }
