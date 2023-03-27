@@ -107,11 +107,11 @@ __process_scripts() {
 		fi
 
 		if [ -n "$output" ]; then
-			if [ ${powerline_segment[4]} == "L" ] ; then
+			if [ ${powerline_segment[4]} == "left_disable" ] ; then
 				powerline_segment_contents[$segment_index]="$output "
-			elif [ ${powerline_segment[4]} == "R" ] ; then
+			elif [ ${powerline_segment[4]} == "right_disable" ] ; then
 				powerline_segment_contents[$segment_index]=" $output"
-			elif [ ${powerline_segment[4]} == "B" ] ; then
+			elif [ ${powerline_segment[4]} == "both_disable" ] ; then
 				powerline_segment_contents[$segment_index]="$output"
 			else
 				powerline_segment_contents[$segment_index]=" $output "
@@ -176,7 +176,7 @@ __print_left_segment() {
 	local separator_disable=$7
 
 	__print_colored_content "$content" "$content_background_color" "$content_foreground_color"
-	if [ ! "$separator_disable" == "1" ] ; then
+	if [ ! "$separator_disable" == "separator_disable" ] ; then
 		__print_colored_content "$separator" "$separator_background_color" "$separator_foreground_color"
 	fi
 }
@@ -190,7 +190,7 @@ __print_right_segment() {
 	local separator_foreground_color=$6
 	local separator_disable=$7
 
-	if [ ! "$separator_disable" == "1" ] ; then
+	if [ ! "$separator_disable" == "separator_disable" ] ; then
 		__print_colored_content "$separator" "$separator_background_color" "$separator_foreground_color"
 	fi
 	__print_colored_content "$content" "$content_background_color" "$content_foreground_color"
