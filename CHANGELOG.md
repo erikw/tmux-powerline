@@ -5,10 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Theme config: add ability to selectively disable spacing and segment characters. [#302](https://github.com/erikw/tmux-powerline/pull/302)
 
 ## [1.4.0] - 2022-05-04
 ### Fixed
-- Weather segment now working with yr.no as weather provider [#285](https://github.com/erikw/tmux-powerline/pull/285).
+- Weather segment now working with yr.no as weather provider. [#285](https://github.com/erikw/tmux-powerline/pull/285)
 
 ## [1.3.0] - 2022-04-05
 ### Changed
