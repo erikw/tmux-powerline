@@ -74,6 +74,8 @@ __process_segment_defaults() {
 			${input_segment[1]:-$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR} \
 			${input_segment[2]:-$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR} \
 			${input_segment[3]:-$default_separator} \
+			${input_segment[6]:-$spacing_disable} \
+			${input_segment[7]:-$separator_disable} \
 		)
 
 		powerline_segments[$segment_index]="${powerline_segment_with_defaults[@]}"
@@ -105,7 +107,15 @@ __process_scripts() {
 		fi
 
 		if [ -n "$output" ]; then
-			powerline_segment_contents[$segment_index]=" $output "
+			if [ ${powerline_segment[4]} == "left_disable" ] ; then
+				powerline_segment_contents[$segment_index]="$output "
+			elif [ ${powerline_segment[4]} == "right_disable" ] ; then
+				powerline_segment_contents[$segment_index]=" $output"
+			elif [ ${powerline_segment[4]} == "both_disable" ] ; then
+				powerline_segment_contents[$segment_index]="$output"
+			else
+				powerline_segment_contents[$segment_index]=" $output "
+			fi
 		else
 			unset -v powerline_segments[$segment_index]
 		fi
@@ -115,6 +125,7 @@ __process_scripts() {
 __process_colors() {
 	for segment_index in "${!powerline_segments[@]}"; do
 		local powerline_segment=(${powerline_segments[$segment_index]})
+		local separator_enable=${powerline_segment[5]}
 		# Find the next segment that produces content (i.e. skip empty segments).
 		for next_segment_index in $(eval echo {$(($segment_index + 1))..${#powerline_segments}}) ; do
 			[[ -n ${powerline_segments[next_segment_index]} ]] && break
@@ -134,6 +145,7 @@ __process_colors() {
 		fi
 
 		local previous_background_color=${powerline_segment[1]}
+		powerline_segment[6]=$separator_enable
 
 		powerline_segments[$segment_index]="${powerline_segment[@]}"
 	done
@@ -148,8 +160,9 @@ __process_powerline() {
 		local separator=${powerline_segment[3]}
 		local separator_background_color=${powerline_segment[4]}
 		local separator_foreground_color=${powerline_segment[5]}
+		local separator_disable=${powerline_segment[6]}
 
-		eval "__print_${side}_segment \"${segment_index}\" \"${background_color}\" \"${foreground_color}\" \"${separator}\" \"${separator_background_color}\" \"${separator_foreground_color}\""
+		eval "__print_${side}_segment \"${segment_index}\" \"${background_color}\" \"${foreground_color}\" \"${separator}\" \"${separator_background_color}\" \"${separator_foreground_color}\" \"${separator_disable}\""
 	done
 }
 
@@ -160,9 +173,12 @@ __print_left_segment() {
 	local separator=$4
 	local separator_background_color=$5
 	local separator_foreground_color=$6
+	local separator_disable=$7
 
 	__print_colored_content "$content" "$content_background_color" "$content_foreground_color"
-	__print_colored_content "$separator" "$separator_background_color" "$separator_foreground_color"
+	if [ ! "$separator_disable" == "separator_disable" ] ; then
+		__print_colored_content "$separator" "$separator_background_color" "$separator_foreground_color"
+	fi
 }
 
 __print_right_segment() {
@@ -172,8 +188,11 @@ __print_right_segment() {
 	local separator=$4
 	local separator_background_color=$5
 	local separator_foreground_color=$6
+	local separator_disable=$7
 
-	__print_colored_content "$separator" "$separator_background_color" "$separator_foreground_color"
+	if [ ! "$separator_disable" == "separator_disable" ] ; then
+		__print_colored_content "$separator" "$separator_background_color" "$separator_foreground_color"
+	fi
 	__print_colored_content "$content" "$content_background_color" "$content_foreground_color"
 }
 
