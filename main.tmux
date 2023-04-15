@@ -19,4 +19,4 @@ tmux set-option -g status-left-length $TMUX_POWERLINE_STATUS_LEFT_LENGTH
 tmux set-option -g status-right-length $TMUX_POWERLINE_STATUS_RIGHT_LENGTH
 tmux set-option -g status-left "#(${TMUX_POWERLINE_DIR_HOME}/powerline.sh left)"
 tmux set-option -g status-right "#(${TMUX_POWERLINE_DIR_HOME}/powerline.sh right)"
-tmux set-hook -g session-created 'run-shell "${CURRENT_DIR}/powerline.sh init"'
+tmux set-hook -g session-created "run-shell '${TMUX_POWERLINE_DIR_HOME}/powerline.sh init'"
