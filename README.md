@@ -71,7 +71,7 @@ Remaining battery.
 # Requirements
 Requirements for the lib to work are:
 
-* Recent tmux version
+* `tmux`
 * `bash --version` >= 3.2 (Does not have to be your default shell.)
 * A patched font. Follow instructions at [Powerline Installation](http://powerline.readthedocs.org/en/latest/installation/linux.html) or [download](https://github.com/powerline/fonts) a new one. However you can use other substitute symbols as well; see `config.sh`.
 
@@ -87,16 +87,7 @@ Requirements for some segments. You only need to fulfill the requirements for th
 * `rainbarf.sh`: [rainbarf](https://github.com/creaktive/rainbarf)
 * `weather.sh`: GNU `grep` with Perl regexp enabled (FreeBSD specific), `jq` for yrno weather API.
 
-## OS X specific requirements
-
-The `grep` tool is outdated on OS X 10.8 Mountain Lion so you might have to upgrade it.
-
-```shell
-brew install grep
-```
-
 ## FreeBSD specific requirements
-
 Preinstalled `grep` in FreeBSD doesn't support Perl regexp. Solution is rather simple -- you need to use `textproc/gnugrep` port instead. You also need to make sure, that it has support for PCRE and is compiled with `--enable-perl-regexp` flag.
 
 
