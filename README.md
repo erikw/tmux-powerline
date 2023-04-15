@@ -91,7 +91,7 @@ Preinstalled `grep` in FreeBSD doesn't support Perl regexp. Solution is rather s
 
 
 # Installation
-You can install this as a  [tpm](https://github.com/tmux-plugins/tpm) plugin or the legacy way with manual git clone. It's recommended to use tpm but you can use the manual way if you need more control or don't want to use tpm.
+You can install this as a [tpm](https://github.com/tmux-plugins/tpm) plugin or the legacy way with manual git clone. It's recommended to use tpm but you can use the manual way if you need more control or don't want to use tpm.
 
 ## Installation: the tpm way (recommended)
 1. Install [tpm](https://github.com/tmux-plugins/tpm) and make sure it's working.
