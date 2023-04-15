@@ -56,8 +56,8 @@ __parse_svn_stats() {
 
 	local svn_wcroot=$(echo "${svn_info}" | sed -ne 's#^Working Copy Root Path: ##p')
 	local svn_st=$(cd "${svn_wcroot}"; svn st)
-	local modified=$(echo "${svn_st}" | egrep '^M' | wc -l)
-	local conflicted=$(echo "${svn_st}" | egrep '^!?\s*C' | wc -l)
+	local modified=$(echo "${svn_st}" | grep -E '^M' | wc -l)
+	local conflicted=$(echo "${svn_st}" | grep -E '^!?\s*C' | wc -l)
 
 	#print
 	if [[ $modified -gt 0 ]] ; then
