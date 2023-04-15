@@ -68,10 +68,6 @@ Remaining battery.
 
 ![right-status, weather and battery](img/right-status_weather_battery.png)
 
-# Project Status
-This project is accepting contributions, but currently active development on new features are paused. If you look for a more active project, check out [Lokaltog/powerline](https://github.com/Lokaltog/powerline). However this project is still functional and can serve as a lightweight alternative for those who does not want large dependencies (Lokaltog/powerline requires a Python setup on the system), as this is implemented in bash.
-
-
 # Requirements
 Requirements for the lib to work are:
 
