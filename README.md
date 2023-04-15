@@ -76,7 +76,7 @@ Requirements for the lib to work are:
 * A patched font. Follow instructions at [Powerline Installation](http://powerline.readthedocs.org/en/latest/installation/linux.html) or [download](https://github.com/powerline/fonts) a new one. However you can use other substitute symbols as well; see `config.sh`.
 
 ## Segment Requirements
-Requirements for some segments. You only need to fulfill the requirements for those segments you want to use.
+Some segments have their own requirements. If you enable them in your theme, make sure all requirements are met for those.
 
 * `wan_ip.sh`, `now_playing.sh` (last.fm), `weather_yahoo.sh`: curl, bc
 * `now_playing.sh` (mpd) : [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
