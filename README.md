@@ -21,23 +21,23 @@
 
 
 # Intro
-This is a hackable set of scripts for making a nice and dynamic tmux statusbar consisting of segments. This is much like [Lokaltog/vim-powerline](https://github.com/Lokaltog/vim-powerline) but for tmux.
+This is a hackable set of scripts for making a nice and dynamic tmux powerline statusbar consisting of segments. It's implemented purley in bash thus minimizing system requirements.
 
-The following segments exists for now:
-* LAN & WAN IP addresses.
+Some examples of segments available that you can add to your tmux status bar are:
+* LAN & WAN IP addresses
 * Now Playing for MPD, Spotify (GNU/Linux native or wine, OS X), iTunes (OS X), Rhythmbox, Banshee, MOC, Audacious, Rdio (OS X), cmus, Pithos and Last.fm (last scrobbled track).
-* New mail count for GMail, Maildir, mbox, mailcheck, and Apple Mail.
-* GNU/Linux and Macintosh OS X battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery)).
-* Weather in Celsius, Fahrenheit and Kelvin using Yahoo Weather.
-* System load, cpu usage and uptime.
-* Git, SVN and Mercurial branch in CWD.
-* Date and time.
-* Hostname.
-* tmux info.
-* CWD in pane.
-* Current X keyboard layout.
-* Network download/upload speed.
-* Earthquake warnings.
+* New mail count for GMail, Maildir, mbox, mailcheck, and Apple Mail
+* GNU/Linux and Macintosh OS X battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery))
+* Weather in Celsius, Fahrenheit and Kelvin using Yahoo Weather
+* System load, cpu usage and uptime
+* Git, SVN and Mercurial branch in CWD
+* Date and time
+* Hostname
+* tmux info
+* CWD in pane
+* Current X keyboard layout
+* Network download/upload speed
+* Earthquake warnings
 
 # Screenshots
 **Full screenshot**
