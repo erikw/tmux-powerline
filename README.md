@@ -142,24 +142,49 @@ if set -q TMUX; tmux setenv TMUXPWD_(tmux display -p "#D" | tr -d '%') $PWD; end
 If you have a recent version of tmux (&ge; 2.1), there is no need to redefine the PS1 variable since tmux can be called directly to query the working directory of the active pane.
 
 # Configuration
+tmux-powerlien stores the custom config, themes and segments at `$XDG_CONFIG_HOME/tmux-powerline/`. Let's assume here in the following examples that `$XDG_CONFIG_HOME=$HOME/.config`.
 
-The default segments that are shown are defined in `themes/default.sh`. You will probably want to change those to fit your needs. To do so you can edit that file directly but preferable, for easier updating of the repo, you can make a copy and edit that one (or see how to use custom themes directory below). A palette of colors that can be used can be obtained by running the script `color_palette.sh`.
-
-```shell
-cp themes/default.sh themes/mytheme.sh
-$EDITOR themes/mytheme.sh
-```
-Now  generate a default configuration file by doing
+## Config file
+Start by generating your own configuration file
 
 ```shell
 ./generate_rc.sh
-mv ~/.tmux-powerlinerc.default ~/.tmux-powerlinerc   # or to $XDG_CONFIG_HOME/tmux-powerline/config.sh
-$EDITOR ~/.tmux-powerlinerc
+mkdir -p $HOME/.config/tmux-powerline
+mv ~/.config/tmux-powerline/config.sh.default ~/.config/tmux-powerline/config.sh
+$EDITOR ~/.config/tmux-powerline/config.sh
 ```
-and change theme to use and values for segments you want to use. If you want to keep the repo checkout clean you can set custom segment and theme paths in the general section and then store your files outside the repo.
+
+Go through the default config and adjust to you needs!
+
+## Custom theme
+The theme is specified in the config file in the env var `$TMUX_POWERLINE_THEME`. It will use a default theme and you probably want to use your own. The default config have set the custom theme path to be `~/.config/tmux-powerline/themes/`.
+
+Make a copy of the default theme and make your own, say `my-theme`:
+```shell
+mkdir -p ~/.config/tmux-powerline/themes
+cp ~/path/to/tmux-powerline/themes/default.sh ~/.config/tmux-powerline/themes/my-theme.sh
+$EDITOR ~/.config/tmux-powerline/themes/my-theme.sh.default
+```
+
+Remember to update the configuration file to use the new theme by setting `TMUX_POWERLINE_THEME=my-theme`
+
+## Custom segments
+In the same was as themes, you can creat your own segments at `TMUX_POWERLINE_DIR_USER_SEGMENTS` which defaults to `~/.config/tmux-powerline/segments".
+
+Copy an existing segment similar to what you want to do to get started:
+Make a copy of the default theme and make your own, say `my-theme`:
+```shell
+mkdir -p ~/.config/tmux-powerline/segmentss
+cp ~/path/to/tmux-powerline/segmetns/date.sh ~/.config/tmux-powerline/themes/my-segment.sh
+$EDITOR ~/.config/tmux-powerline/themes/my-segment.sh.default
+```
+
+Then add `my-segment` to your own theme!
+
+Also see [How to make a segment](#How-to-make-a-segment) below.
+
 
 # Debugging
-
 Some segments might not work on your system for various reasons such as missing programs or different versions not having the same options. To find out which segment is not working it may help to enable the debug setting in `~/.tmux-powerlinerc`. However this may not be enough to determine the error so you can inspect all executed bash commands (will be a long output) by doing
 
 ```shell
@@ -184,9 +209,9 @@ tail -f /tmp/tmux-powerline.log # or follow output like this.
 
 If you can not solve the problems you can post an [issue](https://github.com/erikw/tmux-powerline/issues?state=open) and be sure to include relevant information about your system and script output (from bash -x) and/or screenshots if needed.  Be sure to search in the [resolved issues](https://github.com/erikw/tmux-powerline/issues?page=1&state=closed) section for similar problems you're experiencing before posting.
 
+
+
 ## Common problems
-
-
 ### VCS_branch / PWD is not updating
 The issue is probably that the update of the current directory in the active pane is not updated correctly. Make sure that your PS1 or PROMPT variable actually contains the line from the installation step above by simply inspecting the output of `echo $PS1`. You might have placed the PS1 line in you shell configuration such that it is overwritten later. The simplest solution is to put it at the very end to make sure that nothing overwrites it. See [issue #52](https://github.com/erikw/tmux-powerline/issues/52).
 
@@ -199,8 +224,9 @@ tmux source-file ~/.tmux.conf
 ### Multiple lines in bash or no powerline in zsh using iTerm (OS X)
 If your tmux looks like [this](https://github.com/erikw/tmux-powerline/issues/125) then you may have to in iTerm uncheck [Unicode East Asian Ambiguous characters are wide] in Preferences -> Settings -> Advanced.
 
-# Hacking
 
+
+# Hacking
 This project can only gain positively from contributions. Fork today and make your own enhancements and segments to share back! If you'd like, add your name and E-mail to AUTHORS before making a pull request so you can get some credit for your work :-)
 
 ## How to make a segment
