@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Improved the README with config instructions and include user segment instructions.
+- Dropped support for `$(tmux -V)` <2.2.
 
 ### Removed
 - Support for tmux 2.1
