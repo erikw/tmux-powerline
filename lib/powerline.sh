@@ -31,6 +31,7 @@ format() {
     esac
 }
 
+# Prettifies the window-status segments.
 init_powerline() {
 	if [ -z $TMUX_POWERLINE_WINDOW_STATUS_CURRENT ]; then
 		TMUX_POWERLINE_WINDOW_STATUS_CURRENT=(
@@ -107,11 +108,11 @@ __process_scripts() {
 		fi
 
 		if [ -n "$output" ]; then
-			if [ ${powerline_segment[4]} == "left_disable" ] ; then
+			if [[ ${powerline_segment[4]} == "left_disable" ]]; then
 				powerline_segment_contents[$segment_index]="$output "
-			elif [ ${powerline_segment[4]} == "right_disable" ] ; then
+			elif [[ ${powerline_segment[4]} == "right_disable" ]]; then
 				powerline_segment_contents[$segment_index]=" $output"
-			elif [ ${powerline_segment[4]} == "both_disable" ] ; then
+			elif [[ ${powerline_segment[4]} == "both_disable" ]]; then
 				powerline_segment_contents[$segment_index]="$output"
 			else
 				powerline_segment_contents[$segment_index]=" $output "

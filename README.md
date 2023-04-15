@@ -21,7 +21,7 @@
 
 
 # Intro
-This is a hackable set of scripts for making a nice and dynamic tmux powerline statusbar consisting of segments. It's implemented purley in bash thus minimizing system requirements.
+This [tpm](https://github.com/tmux-plugins/tpm) tmux plugin that gives you a slick and hackable powerline status bar consisting of segments. It's easily extensible with custom segments and themes. The plugin itself is implemented purely in bash thus minimizing system requirements. However you can make segments in any language you want (with a shell wrapper).
 
 Some examples of segments available that you can add to your tmux status bar are:
 * LAN & WAN IP addresses
@@ -70,13 +70,12 @@ Remaining battery & weather segments.
 
 # Requirements
 Requirements for the lib to work are:
-
 * `tmux -V` >= 2.1
 * `bash --version` >= 3.2 (Does not have to be your default shell.)
 * A patched font. Follow instructions at [Powerline Installation](http://powerline.readthedocs.org/en/latest/installation/linux.html) or [download](https://github.com/powerline/fonts) a new one. However you can use other substitute symbols as well; see `config.sh`.
 
 ## Segment Requirements
-Requirements for some segments. You only need to fulfill the requirements for those segments you want to use.
+Some segments have their own requirements. If you enable them in your theme, make sure all requirements are met for those.
 
 * `wan_ip.sh`, `now_playing.sh` (last.fm), `weather_yahoo.sh`: curl, bc
 * `now_playing.sh` (mpd) : [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
@@ -92,6 +91,22 @@ Preinstalled `grep` in FreeBSD doesn't support Perl regexp. Solution is rather s
 
 
 # Installation
+You can install this as a  [tpm](https://github.com/tmux-plugins/tpm) plugin or the legacy way with manual git clone. It's recommended to use tpm but you can use the manual way if you need more control or don't want to use tpm.
+
+## Installation: the tpm way (recommended)
+1. Install [tpm](https://github.com/tmux-plugins/tpm) and make sure it's working.
+2. Install tmux-powerline as a plugin by adding a line to `tmux.conf`:
+     ```conf
+      set -g @plugin 'erikw/tmux-powerline'
+     ```
+3. Install the plugin with `<prefix>I`, unless you changed [tpm's keybindings](https://github.com/tmux-plugins/tpm#key-bindings).
+   * The default powerline should already be visible now!
+4. Continue to the [Configuration](#configuration) section below.
+
+Note that tpm plugins should be at the bottom of you `tmux.conf`. This plugin will then override some tmux settings like `status-left`, `status-right` etc. If you had already set those in your tmux config, it is a good opportunity to remove or comment those out. Take a look at [main.tmux](https://github.com/erikw/tmux-powerline/blob/main/main.tmux) for exactly which settings are overridden.
+
+
+## Installation: the manual way
 Start with checking out the repository with:
 
 ```shell
@@ -117,22 +132,20 @@ Set the maximum lengths to something that suits your configuration of segments a
 
 The window-status configuration is run only when a session is created, so re-running init is required to refresh the window status formats.
 
-You can toggle the visibility of the statusbars by adding the following lines:
-
-```vim
-bind C-[ run '~/path/to/tmux-powerline/mute_powerline.sh left'		# Mute left statusbar.
-bind C-] run '~/path/to/tmux-powerline/mute_powerline.sh right'		# Mute right statusbar.
-```
-
 # Configuration
-tmux-powerline stores the custom config, themes and segments at `$XDG_CONFIG_HOME/tmux-powerline/`. Let's assume here in the following examples that `$XDG_CONFIG_HOME=$HOME/.config`.
+tmux-powerline stores the custom config, themes and segments at `$XDG_CONFIG_HOME/tmux-powerline/`.
+
+To make the following example easier, let's assume the following:
+* `$XDG_CONFIG_HOME=$HOME/.config`
+* tmux-powerline was installed as a tpm plugin to the default path `~/.config/tmux/plugins/tmux-powerline`
+
+Adapt the examples if your paths differs from this.
+
 
 ## Config file
-Start by generating your own configuration file
-
+Start by generating your own configuration file:
 ```shell
-./generate_rc.sh
-mkdir -p $HOME/.config/tmux-powerline
+~/.config/tmux/plugins/tmux-powerline/generate_rc.sh
 mv ~/.config/tmux-powerline/config.sh.default ~/.config/tmux-powerline/config.sh
 $EDITOR ~/.config/tmux-powerline/config.sh
 ```
@@ -140,31 +153,39 @@ $EDITOR ~/.config/tmux-powerline/config.sh
 Go through the default config and adjust to you needs!
 
 ## Custom theme
-The theme is specified in the config file in the env var `$TMUX_POWERLINE_THEME`. It will use a default theme and you probably want to use your own. The default config have set the custom theme path to be `~/.config/tmux-powerline/themes/`.
+The theme is specified by setting the environment variable `$TMUX_POWERLINE_THEME` in the config file above. It will use a default theme and you probably want to use your own. The default config have set the custom theme path to be `~/.config/tmux-powerline/themes/`.
 
 Make a copy of the default theme and make your own, say `my-theme`:
 ```shell
 mkdir -p ~/.config/tmux-powerline/themes
-cp ~/path/to/tmux-powerline/themes/default.sh ~/.config/tmux-powerline/themes/my-theme.sh
+cp ~/.config/tmux/plugins/tmux-powerline/themes/default.sh ~/.config/tmux-powerline/themes/my-theme.sh
 $EDITOR ~/.config/tmux-powerline/themes/my-theme.sh.default
 ```
 
 Remember to update the configuration file to use the new theme by setting `TMUX_POWERLINE_THEME=my-theme`
 
 ## Custom segments
-In the same was as themes, you can creat your own segments at `TMUX_POWERLINE_DIR_USER_SEGMENTS` which defaults to `~/.config/tmux-powerline/segments".
+In the same was as themes, you can create your own segments at `TMUX_POWERLINE_DIR_USER_SEGMENTS` which defaults to `~/.config/tmux-powerline/segments`.
 
-Copy an existing segment similar to what you want to do to get started:
-Make a copy of the default theme and make your own, say `my-theme`:
+To get started, copy an existing segment that is similar to the segment that you want to create.
 ```shell
 mkdir -p ~/.config/tmux-powerline/segmentss
-cp ~/path/to/tmux-powerline/segmetns/date.sh ~/.config/tmux-powerline/themes/my-segment.sh
+cp ~/.config/tmux/plugins/tmux-powerline/segments/date.sh ~/.config/tmux-powerline/themes/my-segment.sh
 $EDITOR ~/.config/tmux-powerline/themes/my-segment.sh.default
 ```
 
-Then add `my-segment` to your own theme!
+Now you can add `my-segment` to your own theme!
 
-Also see [How to make a segment](#How-to-make-a-segment) below.
+Also see [How to make a segment](#How-to-make-a-segment) below for more details.
+
+## Mute status bars
+You can toggle the visibility of the status bars by adding the following lines to your `tmux.conf`:
+```vim
+bind C-[ run '$HOME/.config/tmux/plugins/tmux-powerline/mute_powerline.sh left'		# Mute left status bar.
+bind C-] run '$HOME/.config/tmux/plugins/tmux-powerline/mute_powerline.sh right'	# Mute right status bar.
+```
+
+These examples assumes tmux powerline was installed with tpm to the default $XDG_CONFIG_HOME path. Change the paths if your tmux-powerline was installed somewhere else.
 
 
 # Debugging
@@ -190,6 +211,9 @@ less /tmp/tmux-powerline.log
 tail -f /tmp/tmux-powerline.log # or follow output like this.
 ```
 
+
+You can also enable the debug mode in your config file. Look for the `TMUX_POWERLINE_DEBUG_MODE_ENABLED` environment variable and set it to `true`.
+
 If you can not solve the problems you can post an [issue](https://github.com/erikw/tmux-powerline/issues?state=open) and be sure to include relevant information about your system and script output (from bash -x) and/or screenshots if needed.  Be sure to search in the [resolved issues](https://github.com/erikw/tmux-powerline/issues?page=1&state=closed) section for similar problems you're experiencing before posting.
 
 
@@ -213,8 +237,13 @@ If your tmux looks like [this](https://github.com/erikw/tmux-powerline/issues/12
 This project can only gain positively from contributions. Fork today and make your own enhancements and segments to share back! If you'd like, add your name and E-mail to AUTHORS before making a pull request so you can get some credit for your work :-)
 
 ## How to make a segment
-If you want to (of course you do!) send a pull request for a cool segment you written make sure that it follows the style of existing segments, unless you have good reason for it. Each segment resides in the `segments/` directory with a descriptive and simple name. A segment must have at least one function and that is `run_segment` which is like the main function that is called from the tmux-powerline lib. What ever text is echoed out from this function to stdout is the text displayed in the tmux statusbar. If the segment at a certain point does not have anything to show, simply don't echo anything out and the segment will be hidden. A successful execution of the `run_segment` function should return an exit code of 0. If the segment failed to execute in a fatal way return a non-zero exit code so the user can pick up the error and fix it when debug mode is on (e.g. missing program that is needed for the segment).
+If you want to (of course you do!) send a pull request for a cool segment you written make sure that it follows the style of existing segments, unless you have good reason for it. Each segment resides in the `segments/` directory with a descriptive and simple name. A segment must have at least one function and that is `run_segment` which is like the main function that is called from the tmux-powerline lib. What ever text is echoed out from this function to stdout is the text displayed in the tmux status bar. If the segment at a certain point does not have anything to show, simply don't echo anything out and the segment will be hidden. A successful execution of the `run_segment` function should return an exit code of 0. If the segment failed to execute in a fatal way return a non-zero exit code so the user can pick up the error and fix it when debug mode is on (e.g. missing program that is needed for the segment).
 
 Usage of helper function to organize the work of a segment is encourage and should be named in the format `__helper_func`. If a segment has settings it should have a function `generate_rc` which outputs default values of all settings and a short explanation of the setting and its values. Study e.g. `segments/now_playing.sh` to see how it is done. A segment having settings should typically call a helper function `__process_settings` as the first statement in `run_segment` that sets default values to the settings that has not been set by the user.
 
 Also, don't use bash4 features as requiring bash4 complicates installation for macOS user quite a bit. Use tabs for indentation ([discussion](https://github.com/erikw/tmux-powerline/pull/92)),
+
+
+# More tmux plugins
+I have another tmux plugin that might interest you:
+* [tmux-dark-notify](https://github.com/erikw/tmux-dark-notify) - A plugin that make tmux's theme follow macOS dark/light mode.
