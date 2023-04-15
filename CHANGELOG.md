@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Theme config: add ability to selectively disable spacing and segment characters. [#302](https://github.com/erikw/tmux-powerline/pull/302)
 
+### Changed
+- Improved the README with config instructions and include user segment instructions.
+
+### Removed
+- Support for tmux 2.1
+
 ## [1.4.0] - 2022-05-04
 ### Fixed
 - Weather segment now working with yr.no as weather provider. [#285](https://github.com/erikw/tmux-powerline/pull/285)
