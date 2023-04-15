@@ -125,7 +125,6 @@ bind C-] run '~/path/to/tmux-powerline/mute_powerline.sh right'		# Mute right st
 ```
 
 ## For tmux versions < 2.1
-
 Some segments e.g. cwd and cvs_branch needs to find the current working directory of the active pane. To achieve this we let tmux save the path each time the shell prompt is displayed. Put the line below in your `~/.bashrc` or where you define you PS1 variable. zsh users can put it in e.g. `~/.zshrc` and may change `PS1` to `PROMPT` (but that's not necessary).
 
 ```bash
@@ -142,7 +141,7 @@ if set -q TMUX; tmux setenv TMUXPWD_(tmux display -p "#D" | tr -d '%') $PWD; end
 If you have a recent version of tmux (&ge; 2.1), there is no need to redefine the PS1 variable since tmux can be called directly to query the working directory of the active pane.
 
 # Configuration
-tmux-powerlien stores the custom config, themes and segments at `$XDG_CONFIG_HOME/tmux-powerline/`. Let's assume here in the following examples that `$XDG_CONFIG_HOME=$HOME/.config`.
+tmux-powerline stores the custom config, themes and segments at `$XDG_CONFIG_HOME/tmux-powerline/`. Let's assume here in the following examples that `$XDG_CONFIG_HOME=$HOME/.config`.
 
 ## Config file
 Start by generating your own configuration file
