@@ -64,7 +64,7 @@ After pausing the music there's no need for showing NP anymore. Also the weather
 
 ![right-status, no mpd](img/right-status_no_mpd.png)
 
-Remaining battery.
+Remaining battery & weather segments.
 
 ![right-status, weather and battery](img/right-status_weather_battery.png)
 
