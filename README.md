@@ -149,15 +149,6 @@ Now you can add `my-segment` to your own theme!
 
 Also see [How to make a segment](#How-to-make-a-segment) below for more details.
 
-## Mute status bars
-You can toggle the visibility of the status bars by adding the following lines to your `tmux.conf`:
-```vim
-bind C-[ run '$HOME/.config/tmux/plugins/tmux-powerline/mute_powerline.sh left'		# Mute left status bar.
-bind C-] run '$HOME/.config/tmux/plugins/tmux-powerline/mute_powerline.sh right'	# Mute right status bar.
-```
-
-These examples assumes tmux powerline was installed with tpm to the default $XDG_CONFIG_HOME path. Change the paths if your tmux-powerline was installed somewhere else.
-
 
 # Debugging
 Some segments might not work on your system for various reasons such as missing programs or different versions not having the same options. To find out which segment is not working it may help to enable the debug setting in `~/.tmux-powerlinerc`. However this may not be enough to determine the error so you can inspect all executed bash commands (will be a long output) by doing
