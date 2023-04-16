@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.1.0] - 2023-04-16
 ### Added
 - Config options to add keybindigns to mute the status bar added: `TMUX_POWERLINE_MUTE_LEFT_KEYBINDING` and `TMUX_POWERLINE_MUTE_RIGHT_KEYBINDING`.
 ### Changed
