@@ -179,13 +179,14 @@ Now you can add `my-segment` to your own theme!
 Also see [How to make a segment](#How-to-make-a-segment) below for more details.
 
 ## Mute status bars
-You can toggle the visibility of the status bars by adding the following lines to your `tmux.conf`:
+You can toggle the visibility of the status bars using `C-[` and `C-]`
+You can change these by adding the following lines to your `tmux.conf`:
 ```vim
-bind C-[ run '$HOME/.config/tmux/plugins/tmux-powerline/mute_powerline.sh left'		# Mute left status bar.
-bind C-] run '$HOME/.config/tmux/plugins/tmux-powerline/mute_powerline.sh right'	# Mute right status bar.
+set -g @powerline-mute-left 'M-Left'      # default C-[
+set -g @powerline-mute-right 'M-Right'    # default C-]
 ```
 
-These examples assumes tmux powerline was installed with tpm to the default $XDG_CONFIG_HOME path. Change the paths if your tmux-powerline was installed somewhere else.
+You can set an invalid binding to unbind them (e.g `no-key`)
 
 
 # Debugging
