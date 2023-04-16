@@ -91,9 +91,6 @@ Preinstalled `grep` in FreeBSD doesn't support Perl regexp. Solution is rather s
 
 
 # Installation
-You can install this as a [tpm](https://github.com/tmux-plugins/tpm) plugin or the legacy way with manual git clone. It's recommended to use tpm but you can use the manual way if you need more control or don't want to use tpm.
-
-## Installation: the tpm way (recommended)
 1. Install [tpm](https://github.com/tmux-plugins/tpm) and make sure it's working.
 2. Install tmux-powerline as a plugin by adding a line to `tmux.conf`:
      ```conf
@@ -105,32 +102,6 @@ You can install this as a [tpm](https://github.com/tmux-plugins/tpm) plugin or t
 
 Note that tpm plugins should be at the bottom of you `tmux.conf`. This plugin will then override some tmux settings like `status-left`, `status-right` etc. If you had already set those in your tmux config, it is a good opportunity to remove or comment those out. Take a look at [main.tmux](https://github.com/erikw/tmux-powerline/blob/main/main.tmux) for exactly which settings are overridden.
 
-
-## Installation: the manual way
-Start with checking out the repository with:
-
-```shell
-cd ~/some/path/
-git clone https://github.com/erikw/tmux-powerline.git
-```
-
-Now edit your `~/.tmux.conf` to use the scripts:
-
-<!-- Close syntax enough. -->
-```vim
-set-option -g status on
-set-option -g status-interval 2
-set-option -g status-justify "centre"
-set-option -g status-left-length 60
-set-option -g status-right-length 90
-set-option -g status-left "#(~/path/to/tmux-powerline/powerline.sh left)"
-set-option -g status-right "#(~/path/to/tmux-powerline/powerline.sh right)"
-set-hook -g session-created 'run-shell "~/path/to/tmux-powerline/powerline.sh init"' # prettifies the window-status segments
-```
-
-Set the maximum lengths to something that suits your configuration of segments and size of terminal (the maximum segments length will be handled better in the future).
-
-The window-status configuration is run only when a session is created, so re-running init is required to refresh the window status formats.
 
 # Configuration
 tmux-powerline stores the custom config, themes and segments at `$XDG_CONFIG_HOME/tmux-powerline/`.
