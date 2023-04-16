@@ -107,11 +107,10 @@ Note that tpm plugins should be at the bottom of you `tmux.conf`. This plugin wi
 tmux-powerline stores the custom config, themes and segments at `$XDG_CONFIG_HOME/tmux-powerline/`.
 
 To make the following example easier, let's assume the following:
-* `$XDG_CONFIG_HOME=$HOME/.config`
-* tmux-powerline was installed as a tpm plugin to the default path `~/.config/tmux/plugins/tmux-powerline`
+* `$XDG_CONFIG_HOME` has the default value of `~/.config`
+* tmux-powerline was installed to the XDG path `~/.config/tmux/plugins/tmux-powerline`
 
-Adapt the examples if your paths differs from this.
-
+Adapt the commands below if your paths differs from this.
 
 ## Config file
 Start by generating your own configuration file:
