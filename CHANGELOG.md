@@ -5,10 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Config options to add keybindigns to mute the status bar added: `TMUX_POWERLINE_MUTE_LEFT_KEYBINDING` and `TMUX_POWERLINE_MUTE_RIGHT_KEYBINDING`.
+### Changed
+- The old manual way is not supported for simplicity of maintaing the code.
 
 ## [2.0.0] - 2023-04-15
 ### Added
-- tmux-powerline is now installable as a [tpm](https://github.com/tmux-plugins/tpm) plugin! Long requested feature. The old manual way is not supported for simplicity of maintaing the code. [#189](https://github.com/erikw/tmux-powerline/issues/189)
+- tmux-powerline is now installable as a [tpm](https://github.com/tmux-plugins/tpm) plugin! Long requested feature. [#189](https://github.com/erikw/tmux-powerline/issues/189)
 - Theme config: add ability to selectively disable spacing and segment characters. [#302](https://github.com/erikw/tmux-powerline/pull/302)
 ### Changed
 - Improved the README with config instructions and include user segment instructions.
