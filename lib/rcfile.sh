@@ -17,15 +17,15 @@ process_settings() {
 
 	if [ -z "$TMUX_POWERLINE_STATUS_VISIBILITY" ]; then
 		export TMUX_POWERLINE_STATUS_VISIBILITY="${TMUX_POWERLINE_STATUS_VISIBILITY_DEFAULT}"
-	fi	
+	fi
 
 	if [ -z "$TMUX_POWERLINE_STATUS_INTERVAL" ]; then
 		export TMUX_POWERLINE_STATUS_INTERVAL="${TMUX_POWERLINE_STATUS_INTERVAL_DEFAULT}"
-	fi	
+	fi
 
 	if [ -z "$TMUX_POWERLINE_STATUS_JUSTIFICATION" ]; then
 		export TMUX_POWERLINE_STATUS_JUSTIFICATION="${TMUX_POWERLINE_STATUS_JUSTIFICATION_DEFAULT}"
-	fi	
+	fi
 
 	if [ -z "$TMUX_POWERLINE_STATUS_LEFT_LENGTH" ]; then
 		export TMUX_POWERLINE_STATUS_LEFT_LENGTH="${TMUX_POWERLINE_STATUS_LEFT_LENGTH_DEFAULT}"
@@ -75,7 +75,7 @@ generate_default_rc() {
 
 	# The initial visibility of the status bar. Can be {"on, off"}.
 	export TMUX_POWERLINE_STATUS_VISIBILITY="${TMUX_POWERLINE_STATUS_VISIBILITY_DEFAULT}"
-	# The status bar refresh interval in seconds. 
+	# The status bar refresh interval in seconds.
 	# Note that events that force-refresh the status bar (such as window renaming) will ignore this.
 	export TMUX_POWERLINE_STATUS_INTERVAL="${TMUX_POWERLINE_STATUS_INTERVAL_DEFAULT}"
 	# The location of the window list. Can be {"absolute-centre, centre, left, right"}.
