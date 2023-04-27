@@ -12,9 +12,9 @@ process_settings
 
 # Configure tmux to use tmux-powerline.
 # It's assumed that this will override these setting if already set in tmux.conf, as TPM is recommended to be loaded last in the tmux.conf. Ref: https://github.com/tmux-plugins/tpm
-tmux set-option -g status on
-tmux set-option -g status-interval 2
-tmux set-option -g status-justify "centre"
+tmux set-option -g status "$TMUX_POWERLINE_STATUS_VISIBILITY"
+tmux set-option -g status-interval "$TMUX_POWERLINE_STATUS_INTERVAL"
+tmux set-option -g status-justify "$TMUX_POWERLINE_STATUS_JUSTIFICATION"
 
 tmux set-option -g status-left-length $TMUX_POWERLINE_STATUS_LEFT_LENGTH
 tmux set-option -g status-right-length $TMUX_POWERLINE_STATUS_RIGHT_LENGTH

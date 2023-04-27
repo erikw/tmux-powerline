@@ -15,6 +15,18 @@ process_settings() {
 		export TMUX_POWERLINE_THEME="${TMUX_POWERLINE_THEME_DEFAULT}"
 	fi
 
+	if [ -z "$TMUX_POWERLINE_STATUS_VISIBILITY" ]; then
+		export TMUX_POWERLINE_STATUS_VISIBILITY="${TMUX_POWERLINE_STATUS_VISIBILITY_DEFAULT}"
+	fi
+
+	if [ -z "$TMUX_POWERLINE_STATUS_INTERVAL" ]; then
+		export TMUX_POWERLINE_STATUS_INTERVAL="${TMUX_POWERLINE_STATUS_INTERVAL_DEFAULT}"
+	fi
+
+	if [ -z "$TMUX_POWERLINE_STATUS_JUSTIFICATION" ]; then
+		export TMUX_POWERLINE_STATUS_JUSTIFICATION="${TMUX_POWERLINE_STATUS_JUSTIFICATION_DEFAULT}"
+	fi
+
 	if [ -z "$TMUX_POWERLINE_STATUS_LEFT_LENGTH" ]; then
 		export TMUX_POWERLINE_STATUS_LEFT_LENGTH="${TMUX_POWERLINE_STATUS_LEFT_LENGTH_DEFAULT}"
 	fi
@@ -60,6 +72,14 @@ generate_default_rc() {
 	export TMUX_POWERLINE_DIR_USER_THEMES="\${XDG_CONFIG_HOME:-\$HOME/.config}/tmux-powerline/themes"
 	# Overlay directory to look for segments. There you can put your own segments outside the repo. Fallback will still be the "segments" directory in the repo.
 	export TMUX_POWERLINE_DIR_USER_SEGMENTS="\${XDG_CONFIG_HOME:-\$HOME/.config}/tmux-powerline/segments"
+
+	# The initial visibility of the status bar. Can be {"on, off"}.
+	export TMUX_POWERLINE_STATUS_VISIBILITY="${TMUX_POWERLINE_STATUS_VISIBILITY_DEFAULT}"
+	# The status bar refresh interval in seconds.
+	# Note that events that force-refresh the status bar (such as window renaming) will ignore this.
+	export TMUX_POWERLINE_STATUS_INTERVAL="${TMUX_POWERLINE_STATUS_INTERVAL_DEFAULT}"
+	# The location of the window list. Can be {"absolute-centre, centre, left, right"}.
+	export TMUX_POWERLINE_STATUS_JUSTIFICATION="${TMUX_POWERLINE_STATUS_JUSTIFICATION_DEFAULT}"
 
 	# The maximum length of the left status bar.
 	export TMUX_POWERLINE_STATUS_LEFT_LENGTH="${TMUX_POWERLINE_STATUS_LEFT_LENGTH_DEFAULT}"
