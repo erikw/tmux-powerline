@@ -67,7 +67,7 @@ Now I've read my inbox so the mail segment disappears!
 
 ![right-status, no mail](img/right-status_no_mail.png)
 
-After pausing the music there's no need for showing NP anymore. Also the weather has become much nicer!
+After pausing the music there's no need for showing the Now Playing segment anymore. Also the weather has become much nicer!
 
 ![right-status, no mpd](img/right-status_no_mpd.png)
 
