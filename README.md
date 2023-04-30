@@ -1,4 +1,10 @@
-# tmux-powerline
+<p align="center">
+<img alt="log" width="50%" height="50%" src="img/logo.png" />
+</p>
+<p align="center"><i>Empowering your tmux (status bar) experience!</i></p>
+<hr>
+
+
 [![GitHub Stars](https://img.shields.io/github/stars/erikw/tmux-powerline?style=social)](#)
 [![GitHub Forks](https://img.shields.io/github/forks/erikw/tmux-powerline?style=social)](#)
 <br>
@@ -21,7 +27,7 @@
 
 
 # Intro
-This tmux [tpm](https://github.com/tmux-plugins/tpm) plugin that gives you a slick and hackable powerline status bar consisting of segments. It's easily extensible with custom segments and themes. The plugin itself is implemented purely in bash thus minimizing system requirements. However you can make segments in any language you want (with a shell wrapper).
+tmux-powerline is a tmux [tpm](https://github.com/tmux-plugins/tpm) plugin that gives you a slick and hackable powerline status bar consisting of segments. It's easily extensible with custom segments and themes. The plugin itself is implemented purely in bash thus minimizing system requirements. However you can make segments in any language you want (with a shell wrapper).
 
 Some examples of segments available that you can add to your tmux status bar are:
 * LAN & WAN IP addresses
