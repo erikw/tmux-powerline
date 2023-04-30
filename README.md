@@ -4,10 +4,11 @@
 <p align="center"><i>Empowering your tmux (status bar) experience!</i></p>
 <hr>
 
+<p align="center">
+<img alt="GitHub Stars" src="https://img.shields.io/github/stars/erikw/tmux-powerline?style=social" />
+<img alt="GitHub Forks" src="https://img.shields.io/github/forks/erikw/tmux-powerline?style=social" />
+</p>
 
-[![GitHub Stars](https://img.shields.io/github/stars/erikw/tmux-powerline?style=social)](#)
-[![GitHub Forks](https://img.shields.io/github/forks/erikw/tmux-powerline?style=social)](#)
-<br>
 <!-- [![Lint Code Base](https://github.com/erikw/tmux-powerline/actions/workflows/linter.yml/badge.svg)](https://github.com/erikw/tmux-powerline/actions/workflows/linter.yml) -->
 [![SLOC](https://img.shields.io/tokei/lines/github/erikw/tmux-powerline?logo=codefactor&logoColor=lightgrey)](#)
 [![Number of programming languages used](https://img.shields.io/github/languages/count/erikw/tmux-powerline)](#)
