@@ -71,7 +71,7 @@ After pausing the music there's no need for showing the Now Playing segment anym
 
 ![right-status, no mpd](img/right-status_no_mpd.png)
 
-Remaining battery & weather segments.
+Laptop mode: a battery segment.
 
 ![right-status, weather and battery](img/right-status_weather_battery.png)
 
