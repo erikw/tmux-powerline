@@ -38,8 +38,15 @@ export TMUX_POWERLINE_SEG_NOW_PLAYING_PLAYERCTL_FORMAT="${TMUX_POWERLINE_SEG_NOW
 # Song display format for rhythmbox. see "FORMATS" in rhythmbox-client(1).
 export TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT="${TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT_DEFAULT}"
 
+# Last.fm
+# Set up steps for Last.fm
+# 1. Make sure jq(1) is installed on the system.
+# 2. Create a new API application at https://www.last.fm/api/account/create (name it tmux-powerline) and copy the API key and insert it below in the setting TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_API_KEY
+# 3. Make sure the API can access your recently played song by going to you user privacy settings https://www.last.fm/settings/privacy and make sure "Hide recent listening information" is UNCHECKED.
 # Username for Last.fm if that music player is used.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_USERNAME=""
+# API Key for the API.
+export TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_API_KEY=""
 # How often in seconds to update the data from last.fm.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_UPDATE_PERIOD_DEFAULT}"
 # Fancy char to display before now playing track
@@ -215,25 +222,27 @@ __np_itunes() {
 }
 
 __np_lastfm() {
-	local tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/np_lastfm.txt"
-	if [ -f "$tmp_file" ]; then
+	local TMP_FILE="${TMUX_POWERLINE_DIR_TEMPORARY}/np_lastfm.txt"
+	local ENDPOINT_FMT="http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&format=json&limit=1&user=%s&api_key=%s"
+	if [ -f "$TMP_FILE" ]; then
 		if shell_is_osx || shell_is_bsd; then
-			last_update=$(stat -f "%m" ${tmp_file})
+			last_update=$(stat -f "%m" ${TMP_FILE})
 		elif shell_is_linux; then
-			last_update=$(stat -c "%Y" ${tmp_file})
+			last_update=$(stat -c "%Y" ${TMP_FILE})
 		fi
 		time_now=$(date +%s)
 
 		up_to_date=$(echo "(${time_now}-${last_update}) < ${TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_UPDATE_PERIOD}" | bc)
 		if [ "$up_to_date" -eq 1 ]; then
-			np=$(cat ${tmp_file})
+			np=$(cat ${TMP_FILE})
 		fi
 	fi
 
 	if [ -z "$np" ]; then
-		np=$(curl --max-time 2 -s  http://ws.audioscrobbler.com/1.0/user/${TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_USERNAME}/recenttracks.txt | head -n 1 | sed -e 's/^[0-9]*,//' | sed 's/\xe2\x80\x93/-/')
+		local url=$(printf $ENDPOINT_FMT $TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_USERNAME $TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_API_KEY)
+		np=$(curl --silent "$url" | jq --raw-output '.recenttracks.track[0] | "\(.artist."#text") - \(.name)"')
 		if [ "$?" -eq "0" ] && [ -n "$np" ]; then
-			echo "${np}" > $tmp_file
+			echo "${np}" > $TMP_FILE
 		fi
 	fi
 	echo "$np"
