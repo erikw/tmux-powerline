@@ -1,5 +1,5 @@
 #!/usr/bin/env osascript
-# Returns the current playing song in iTunes for OSX
+# Returns the current playing song in iTunes for macOS.
 
 tell application "System Events"
 	set process_list to (name of every process)
@@ -21,4 +21,3 @@ if process_list contains "iTunes" then
 		end if
 	end tell
 end if
-
