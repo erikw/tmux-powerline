@@ -223,7 +223,9 @@ __np_itunes() {
 
 __np_lastfm() {
 	local TMP_FILE="${TMUX_POWERLINE_DIR_TEMPORARY}/np_lastfm.txt"
+	# API docs: https://www.last.fm/api/show/user.getRecentTracks
 	local ENDPOINT_FMT="http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&format=json&limit=1&user=%s&api_key=%s"
+
 	if [ -f "$TMP_FILE" ]; then
 		if shell_is_osx || shell_is_bsd; then
 			last_update=$(stat -f "%m" ${TMP_FILE})
