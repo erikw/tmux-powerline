@@ -1,22 +1,7 @@
 # Source all neede libs and helpers, kind of like a main.h.
 
-# macOS doesn't ship with realpath.
-# Bash implementation from https://stackoverflow.com/a/18443300/265508
-realpath() (
-  OURPWD=$PWD
-  cd "$(dirname "$1")"
-  LINK=$(readlink "$(basename "$1")")
-  while [ "$LINK" ]; do
-    cd "$(dirname "$LINK")"
-    LINK=$(readlink "$(basename "$1")")
-  done
-  REALPATH="$PWD/$(basename "$1")"
-  cd "$OURPWD"
-  echo "$REALPATH"
-)
-
 if [ -z "$TMUX_POWERLINE_DIR_HOME" ]; then
-	lib_dir="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+	lib_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 	export TMUX_POWERLINE_DIR_HOME="$(dirname "${lib_dir}")" # step up to parent dir.
 	unset lib_dir
 fi

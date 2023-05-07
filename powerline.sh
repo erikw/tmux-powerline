@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export TMUX_POWERLINE_DIR_HOME="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+export TMUX_POWERLINE_DIR_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 source "${TMUX_POWERLINE_DIR_HOME}/lib/headers.sh"
 
