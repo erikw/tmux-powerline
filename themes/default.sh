@@ -50,20 +50,22 @@ fi
 
 # Format: segment_name background_color foreground_color [non_default_separator] [separator_background_color] [separator_foreground_color] [spacing_disable] [separator_disable]
 #
-# non_default_separator - specify an alternative character for this segment's separator
-# separator_background_color - specify a unique background color for the separator
-# separator_foreground_color - specify a unique foreground color for the separator
-# spacing_disable - remove space on left, right or both sides of the segment:
-#
-#   "left_disable" - disable space on the left
-#   "right_disable" - disable space on the right
-#   "both_disable" - disable spaces on both sides
+# * background_color and foreground_color. Formats:
+#   * Named colors (chech man page of tmux for complete list) e.g. black, red, green, yellow, blue, magenta, cyan, white
+#   * a hexadecimal RGB string e.g. #ffffff
+#   * 'default' for the defalt tmux color.
+# * non_default_separator - specify an alternative character for this segment's separator
+# * separator_background_color - specify a unique background color for the separator
+# * separator_foreground_color - specify a unique foreground color for the separator
+# * spacing_disable - remove space on left, right or both sides of the segment:
+#   * "left_disable" - disable space on the left
+#   * "right_disable" - disable space on the right
+#   * "both_disable" - disable spaces on both sides
 #   * - any other character/string produces no change to default behavior (eg "none", "X", etc.)
 #
-# separator_disable - disables drawing a separator on this segment, very useful for segments
-# with dynamic background colours (eg tmux_mem_cpu_load)
-#
-#   "separator_disable" - disables the separator
+# * separator_disable - disables drawing a separator on this segment, very useful for segments
+#   with dynamic background colours (eg tmux_mem_cpu_load):
+#   * "separator_disable" - disables the separator
 #   * - any other character/string produces no change to default behavior
 #
 # Example segment with separator disabled and right space character disabled:
