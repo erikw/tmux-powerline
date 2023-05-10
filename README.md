@@ -23,7 +23,7 @@
 
 [![Contributors](https://img.shields.io/github/contributors/erikw/tmux-powerline)](https://github.com/erikw/tmux-powerline/graphs/contributors) including these top contributors:
 <a href = "https://github.com/erikw/tmux-powerline/graphs/contributors">
-<img src = "https://contrib.rocks/image?repo=erikw/tmux-powerline&max=24"/>
+<img src = "https://contrib.rocks/image?repo=erikw/tmux-powerline&max=36"/>
 </a>
 
 
