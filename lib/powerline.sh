@@ -39,7 +39,8 @@ init_powerline() {
 			"$TMUX_POWERLINE_DEFAULT_LEFTSIDE_SEPARATOR" \
 			" #I#F " \
 			"$TMUX_POWERLINE_SEPARATOR_RIGHT_THIN" \
-			" #W " \ "#[$(format regular)]" \
+			" #W " \
+			"#[$(format regular)]" \
 			"$TMUX_POWERLINE_DEFAULT_LEFTSIDE_SEPARATOR"
 		)
 	fi
@@ -50,7 +51,7 @@ init_powerline() {
 		)
 	fi
 
-	if [ -z $TMUX_POWERLINE_WINDOW_STATUS_STYLE ]; then
+	if [ -z $TMUX_POWERLINE_WINDOW_STATUS_FORMAT ]; then
 		TMUX_POWERLINE_WINDOW_STATUS_FORMAT=(
 			"#[$(format regular)]" \
 			"  #I#{?window_flags,#F, } " \
