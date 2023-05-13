@@ -1,5 +1,8 @@
 # Paths
 
+if [ -z "$XDG_CONFIG_HOME" ]; then
+	XDG_CONFIG_HOME=$HOME/.config
+fi
 export TMUX_POWERLINE_DIR_LIB="$TMUX_POWERLINE_DIR_HOME/lib"
 export TMUX_POWERLINE_DIR_SEGMENTS="$TMUX_POWERLINE_DIR_HOME/segments"
 export TMUX_POWERLINE_DIR_TEMPORARY="/tmp/tmux-powerline_${USER}"
