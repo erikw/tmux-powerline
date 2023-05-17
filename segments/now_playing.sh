@@ -297,7 +297,7 @@ __np_playerctl() {
 __np_spotify() {
 	if shell_is_linux; then
 		if type tasklist.exe >/dev/null 2>&1; then # WSL
-			np=$(tasklist.exe /APPS /fo list /v /fi "IMAGENAME eq Spotify.exe" | grep " - "  | cut -d" " -f3-)
+			np=$(tasklist.exe /fo list /v /fi "IMAGENAME eq Spotify.exe" | grep " - "  | cut -d" " -f3-)
 			np="${np//[$'\t\r\n']}"
 		else
 			metadata=$(dbus-send --reply-timeout=42 --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata' 2>/dev/null)
