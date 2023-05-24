@@ -101,7 +101,7 @@ if [ -z $TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS ]; then
 		#"cpu 240 136" \
 		#"load 237 167" \
 		"weather 37 255" \
-        "cpu_temp 233 136" \
+        "cpu_temp 215 161" \
 		#"tmux_mem_cpu_load 233 136" \
 		#"battery 137 127" \
 		#"rainbarf 0 ${TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR}" \
