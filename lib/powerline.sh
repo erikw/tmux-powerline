@@ -17,18 +17,23 @@ print_powerline() {
 }
 
 format() {
-    local type="$1"
+	local type="$1"
+	local bg_color
+	local fg_color
 
-    case $type in
-	inverse)
-		echo "fg=colour$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR,bg=colour$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR,nobold,noitalics,nounderscore"
-		;;
-	regular)
-		echo "fg=colour$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR,bg=colour$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR,nobold,noitalics,nounderscore"
-		;;
-	*)
-		;;
-    esac
+	bg_color=$(__normalize_color "$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR")
+	fg_color=$(__normalize_color "$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR")
+
+	case $type in
+		inverse)
+			echo "fg=$bg_color,bg=$fg_color,nobold,noitalics,nounderscore"
+			;;
+		regular)
+			echo "fg=$fg_color,bg=$bg_color,nobold,noitalics,nounderscore"
+			;;
+		*)
+			;;
+	esac
 }
 
 # Prettifies the window-status segments.
@@ -60,10 +65,16 @@ init_powerline() {
 		)
 	fi
 
+	local bg_color
+	local fg_color
+
+	bg_color=$(__normalize_color "$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR")
+	fg_color=$(__normalize_color "$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR")
+
 	tmux set-option -g window-status-current-format "$(printf '%s' "${TMUX_POWERLINE_WINDOW_STATUS_CURRENT[@]}")"
 	tmux set-option -g window-status-format "$(printf '%s' "${TMUX_POWERLINE_WINDOW_STATUS_FORMAT[@]}")"
 	tmux set-option -g window-status-style "$(printf '%s' "${TMUX_POWERLINE_WINDOW_STATUS_STYLE[@]}")"
-	tmux set-option -g status-style "fg=colour$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR,bg=colour$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR"
+	tmux set-option -g status-style "fg=$fg_color,bg=$bg_color"
 }
 
 __process_segment_defaults() {
