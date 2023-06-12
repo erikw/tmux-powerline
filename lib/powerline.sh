@@ -2,7 +2,9 @@
 
 print_powerline() {
 	local side="$1"
-	local upper_side=$(echo "$1" | tr '[:lower:]' '[:upper:]')
+	local upper_side
+
+	upper_side=$(echo "$1" | tr '[:lower:]' '[:upper:]')
 	eval "local input_segments=(\"\${TMUX_POWERLINE_${upper_side}_STATUS_SEGMENTS[@]}\")"
 	local powerline_segments=()
 	local powerline_segment_contents=()
@@ -17,23 +19,28 @@ print_powerline() {
 }
 
 format() {
-    local type="$1"
+	local type="$1"
+	local bg_color
+	local fg_color
 
-    case $type in
-	inverse)
-		echo "fg=colour$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR,bg=colour$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR,nobold,noitalics,nounderscore"
-		;;
-	regular)
-		echo "fg=colour$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR,bg=colour$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR,nobold,noitalics,nounderscore"
-		;;
-	*)
-		;;
-    esac
+	bg_color=$(__normalize_color "$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR")
+	fg_color=$(__normalize_color "$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR")
+
+	case $type in
+		inverse)
+			echo "fg=$bg_color,bg=$fg_color,nobold,noitalics,nounderscore"
+			;;
+		regular)
+			echo "fg=$fg_color,bg=$bg_color,nobold,noitalics,nounderscore"
+			;;
+		*)
+			;;
+	esac
 }
 
 # Prettifies the window-status segments.
 init_powerline() {
-	if [ -z $TMUX_POWERLINE_WINDOW_STATUS_CURRENT ]; then
+	if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_CURRENT" ]; then
 		TMUX_POWERLINE_WINDOW_STATUS_CURRENT=(
 			"#[$(format inverse)]" \
 			"$TMUX_POWERLINE_DEFAULT_LEFTSIDE_SEPARATOR" \
@@ -45,13 +52,13 @@ init_powerline() {
 		)
 	fi
 
-	if [ -z $TMUX_POWERLINE_WINDOW_STATUS_STYLE ]; then
+	if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_STYLE" ]; then
 		TMUX_POWERLINE_WINDOW_STATUS_STYLE=(
 			"$(format regular)"
 		)
 	fi
 
-	if [ -z $TMUX_POWERLINE_WINDOW_STATUS_FORMAT ]; then
+	if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_FORMAT" ]; then
 		TMUX_POWERLINE_WINDOW_STATUS_FORMAT=(
 			"#[$(format regular)]" \
 			"  #I#{?window_flags,#F, } " \
@@ -60,15 +67,21 @@ init_powerline() {
 		)
 	fi
 
+	local bg_color
+	local fg_color
+
+	bg_color=$(__normalize_color "$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR")
+	fg_color=$(__normalize_color "$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR")
+
 	tmux set-option -g window-status-current-format "$(printf '%s' "${TMUX_POWERLINE_WINDOW_STATUS_CURRENT[@]}")"
 	tmux set-option -g window-status-format "$(printf '%s' "${TMUX_POWERLINE_WINDOW_STATUS_FORMAT[@]}")"
 	tmux set-option -g window-status-style "$(printf '%s' "${TMUX_POWERLINE_WINDOW_STATUS_STYLE[@]}")"
-	tmux set-option -g status-style "fg=colour$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR,bg=colour$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR"
+	tmux set-option -g status-style "fg=$fg_color,bg=$bg_color"
 }
 
 __process_segment_defaults() {
 	for segment_index in "${!input_segments[@]}"; do
-		local input_segment=(${input_segments[$segment_index]})
+		local input_segment=(${input_segments[segment_index]})
 		eval "local default_separator=\$TMUX_POWERLINE_DEFAULT_${upper_side}SIDE_SEPARATOR"
 
 		powerline_segment_with_defaults=(
@@ -80,13 +93,13 @@ __process_segment_defaults() {
 			${input_segment[7]:-$separator_disable} \
 		)
 
-		powerline_segments[$segment_index]="${powerline_segment_with_defaults[@]}"
+		powerline_segments[segment_index]="${powerline_segment_with_defaults[@]}"
 	done
 }
 
 __process_scripts() {
 	for segment_index in "${!powerline_segments[@]}"; do
-		local powerline_segment=(${powerline_segments[$segment_index]})
+		local powerline_segment=(${powerline_segments[segment_index]})
 
 		if [ -n "$TMUX_POWERLINE_DIR_USER_SEGMENTS" ] && [ -f "$TMUX_POWERLINE_DIR_USER_SEGMENTS/${powerline_segment[0]}.sh" ] ; then
 			local script="$TMUX_POWERLINE_DIR_USER_SEGMENTS/${powerline_segment[0]}.sh"
@@ -110,33 +123,33 @@ __process_scripts() {
 
 		if [ -n "$output" ]; then
 			if [[ ${powerline_segment[4]} == "left_disable" ]]; then
-				powerline_segment_contents[$segment_index]="$output "
+				powerline_segment_contents[segment_index]="$output "
 			elif [[ ${powerline_segment[4]} == "right_disable" ]]; then
-				powerline_segment_contents[$segment_index]=" $output"
+				powerline_segment_contents[segment_index]=" $output"
 			elif [[ ${powerline_segment[4]} == "both_disable" ]]; then
-				powerline_segment_contents[$segment_index]="$output"
+				powerline_segment_contents[segment_index]="$output"
 			else
-				powerline_segment_contents[$segment_index]=" $output "
+				powerline_segment_contents[segment_index]=" $output "
 			fi
 		else
-			unset -v powerline_segments[$segment_index]
+			unset -v powerline_segments[segment_index]
 		fi
 	done
 }
 
 __process_colors() {
 	for segment_index in "${!powerline_segments[@]}"; do
-		local powerline_segment=(${powerline_segments[$segment_index]})
+		local powerline_segment=(${powerline_segments[segment_index]})
 		local separator_enable=${powerline_segment[5]}
 		# Find the next segment that produces content (i.e. skip empty segments).
-		for next_segment_index in $(eval echo {$(($segment_index + 1))..${#powerline_segments}}) ; do
+		for next_segment_index in $(eval echo "{$((segment_index + 1))..${#powerline_segments}}") ; do
 			[[ -n ${powerline_segments[next_segment_index]} ]] && break
 		done
-		local next_segment=(${powerline_segments[$next_segment_index]})
+		local next_segment=(${powerline_segments[next_segment_index]})
 
-		if [ $side == 'left' ]; then
+		if [ "$side" == 'left' ]; then
 			powerline_segment[4]=${next_segment[1]:-$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR}
-		elif [ $side == 'right' ]; then
+		elif [ "$side" == 'right' ]; then
 			powerline_segment[4]=${previous_background_color:-$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR}
 		fi
 
@@ -149,13 +162,13 @@ __process_colors() {
 		local previous_background_color=${powerline_segment[1]}
 		powerline_segment[6]=$separator_enable
 
-		powerline_segments[$segment_index]="${powerline_segment[@]}"
+		powerline_segments[segment_index]="${powerline_segment[@]}"
 	done
 }
 
 __process_powerline() {
 	for segment_index in "${!powerline_segments[@]}"; do
-		local powerline_segment=(${powerline_segments[$segment_index]})
+		local powerline_segment=(${powerline_segments[segment_index]})
 
 		local background_color=${powerline_segment[1]}
 		local foreground_color=${powerline_segment[2]}
@@ -199,8 +212,8 @@ __print_right_segment() {
 }
 
 __segment_separator_is_thin() {
-	[[ ${powerline_segment[3]} == $TMUX_POWERLINE_SEPARATOR_LEFT_THIN || \
-		${powerline_segment[3]} == $TMUX_POWERLINE_SEPARATOR_RIGHT_THIN ]];
+	[[ ${powerline_segment[3]} == "$TMUX_POWERLINE_SEPARATOR_LEFT_THIN" || \
+		${powerline_segment[3]} == "$TMUX_POWERLINE_SEPARATOR_RIGHT_THIN" ]];
 }
 
 __check_platform() {
@@ -208,3 +221,4 @@ __check_platform() {
 		 echo "Unknown platform; modify config/shell.sh"  &1>&2
 	fi
 }
+

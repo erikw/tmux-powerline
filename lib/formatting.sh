@@ -1,19 +1,21 @@
+# Utilities for formatting content
+#
+# Dependencies:
+#		- ./colors.sh
+
+#######################################
+# Returns a string coloring content using tmux's color formatting
+#
+# Arguments:
+#   $1: a string of text to render
+#   $2: the background color
+#   $3: the foreground color color
+#######################################
 __print_colored_content() {
-	bgcolor="$2"
-	fgcolor="$3"
-	if [[ $bgcolor == "default" ]] ; then
-		  BGCOLOR=$bgcolor
-	else
-	[ "${bgcolor:0:1}" = "#" ] && BGCOLOR="$bgcolor" || BGCOLOR="colour$bgcolor"
-	fi
+	bgcolor=$(__normalize_color "$2")
+	fgcolor=$(__normalize_color "$3")
 
-	if [[ "$fgcolor" == "default" ]] ; then
-		FGCOLOR=$fgcolor
-	else
-	[ "${fgcolor:0:1}" = "#" ] && FGCOLOR="$fgcolor" || FGCOLOR="colour$fgcolor"
-	fi
-
-	 echo -n "#[fg=${FGCOLOR},bg=${BGCOLOR}]"
-	 echo -n "$1"
-	 echo -n "#[default]"
+	echo -n "#[fg=${fgcolor},bg=${bgcolor}]"
+	echo -n "$1"
+	echo -n "#[default]"
 }
