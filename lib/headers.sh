@@ -11,6 +11,7 @@ source "${TMUX_POWERLINE_DIR_HOME}/config/paths.sh"
 source "${TMUX_POWERLINE_DIR_HOME}/config/shell.sh"
 source "${TMUX_POWERLINE_DIR_HOME}/config/defaults.sh"
 
+source "${TMUX_POWERLINE_DIR_LIB}/colors.sh"
 source "${TMUX_POWERLINE_DIR_LIB}/arg_processing.sh"
 source "${TMUX_POWERLINE_DIR_LIB}/formatting.sh"
 source "${TMUX_POWERLINE_DIR_LIB}/muting.sh"
