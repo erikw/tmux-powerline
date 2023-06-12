@@ -1,8 +1,10 @@
-# Source all neede libs and helpers, kind of like a main.h.
+# Source all needed libs and helpers, kind of like a main.h.
 
-if [ -z "$TMUX_POWERLINE_DIR_HOME" ]; then
+if [ "$TMUX_POWERLINE_DIR_HOME" = "" ]; then
 	lib_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-	export TMUX_POWERLINE_DIR_HOME="$(dirname "${lib_dir}")" # step up to parent dir.
+	TMUX_POWERLINE_DIR_HOME="$(dirname "$lib_dir")" # step up to parent dir.
+
+	export TMUX_POWERLINE_DIR_HOME
 	unset lib_dir
 fi
 
