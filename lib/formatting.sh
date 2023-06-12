@@ -1,6 +1,6 @@
 __normalize_color() {
-	local input="$1"
-	local result
+	input="$1"
+	result
 
 	case "$input" in
 			[0-9]|[0-9][0-9]|[0-9][0-9][0-9]) # Convert 1 to 3 digit colours to 'colour[code]'
@@ -15,9 +15,6 @@ __normalize_color() {
 }
 
 __print_colored_content() {
-	local bgcolor
-	local fgcolor
-
 	bgcolor=$(__normalize_color "$2")
 	fgcolor=$(__normalize_color "$3")
 
