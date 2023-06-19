@@ -3,13 +3,25 @@
 # Source lib to get the function get_tmux_pwd
 source "${TMUX_POWERLINE_DIR_LIB}/tmux_adapter.sh"
 
+TMUX_POWERLINE_SEG_VCS_BRANCH_MAX_LEN_DEFAULT=24
+
 branch_symbol=""
 git_colour="5"
 svn_colour="220"
 hg_colour="45"
 
 
+generate_segmentrc() {
+	read -d '' rccontents  << EORC
+# Max length of the branch name.
+export TMUX_POWERLINE_SEG_VCS_BRANCH_MAX_LEN="${TMUX_POWERLINE_SEG_VCS_BRANCH_MAX_LEN_DEFAULT}"
+EORC
+	echo "$rccontents"
+}
+
+
 run_segment() {
+	__process_settings
 	tmux_path=$(get_tmux_cwd)
 	cd "$tmux_path"
 	branch=""
@@ -50,8 +62,9 @@ __parse_git_branch() {
 
 	# Clean off unnecessary information.
 	branch=${branch#refs\/heads\/}
+	branch=$(__truncate_branch_name $branch)
 
-	echo  -n "#[fg=colour${git_colour}]${branch_symbol} #[fg=colour${TMUX_POWERLINE_CUR_SEGMENT_FG}]${branch}"
+	echo -n "#[fg=colour${git_colour}]${branch_symbol} #[fg=colour${TMUX_POWERLINE_CUR_SEGMENT_FG}]${branch}"
 }
 
 # Show SVN branch.
@@ -71,6 +84,7 @@ __parse_svn_branch() {
 	local svn_url=$(echo "${svn_info}" | sed -ne 's#^URL: ##p')
 
 	local branch=$(echo "${svn_url}" | grep -E -o '[^/]+$')
+	branch=$(__truncate_branch_name $branch)
 	echo "#[fg=colour${svn_colour}]${branch_symbol} #[fg=colour${TMUX_POWERLINE_CUR_SEGMENT_FG}]${branch}"
 }
 
@@ -86,5 +100,20 @@ __parse_hg_branch() {
 	fi
 
 	local branch=$(echo "$summary" | grep 'branch:' | cut -d ' ' -f2)
-	echo  "#[fg=colour${hg_colour}]${branch_symbol} #[fg=colour${TMUX_POWERLINE_CUR_SEGMENT_FG}]${branch}"
+	branch=$(__truncate_branch_name $branch)
+	echo "#[fg=colour${hg_colour}]${branch_symbol} #[fg=colour${TMUX_POWERLINE_CUR_SEGMENT_FG}]${branch}"
+}
+
+
+__truncate_branch_name() {
+	trunc_symbol="···"
+	branch=$(echo $1 | sed "s/\(.\{$TMUX_POWERLINE_SEG_VCS_BRANCH_MAX_LEN\}\).*/\1$trunc_symbol/")
+	echo -n $branch
+}
+
+
+__process_settings() {
+	if [ -z "$TMUX_POWERLINE_SEG_VCS_BRANCH_MAX_LEN" ]; then
+		export TMUX_POWERLINE_SEG_VCS_BRANCH_MAX_LEN="${TMUX_POWERLINE_SEG_VCS_BRANCH_MAX_LEN_DEFAULT}"
+	fi
 }
