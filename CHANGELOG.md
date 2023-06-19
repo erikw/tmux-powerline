@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Config options to set the status bar's initial visibility, refresh interval and justification: `TMUX_POWERLINE_STATUS_VISIBILITY`, `TMUX_POWERLINE_STATUS_INTERVAL` and `TMUX_POWERLINE_STATUS_JUSTIFICATION`.
 - Allow setting the `default` tmux color in segment themes. [#296](https://github.com/erikw/tmux-powerline/issues/296).
+- Allow truncation of VCS branch name with a new config `TMUX_POWERLINE_SEG_VCS_BRANCH_MAX_LEN`.
 ### Fixed
 - The now playing segment is fixed for Last.FM using their 2.0 API. [#307](https://github.com/erikw/tmux-powerline/issues/307)
 - Correctly handle named colours when specifying theme colours. [#314](https://github.com/erikw/tmux-powerline/issues/314)
