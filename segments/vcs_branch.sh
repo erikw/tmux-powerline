@@ -62,7 +62,7 @@ __parse_git_branch() {
 
 	# Clean off unnecessary information.
 	branch=${branch#refs\/heads\/}
-  branch=$(__truncate_branch_name $branch)
+	branch=$(__truncate_branch_name $branch)
 
 	echo -n "#[fg=colour${git_colour}]${branch_symbol} #[fg=colour${TMUX_POWERLINE_CUR_SEGMENT_FG}]${branch}"
 }
@@ -84,7 +84,7 @@ __parse_svn_branch() {
 	local svn_url=$(echo "${svn_info}" | sed -ne 's#^URL: ##p')
 
 	local branch=$(echo "${svn_url}" | grep -E -o '[^/]+$')
-  branch=$(__truncate_branch_name $branch)
+	branch=$(__truncate_branch_name $branch)
 	echo "#[fg=colour${svn_colour}]${branch_symbol} #[fg=colour${TMUX_POWERLINE_CUR_SEGMENT_FG}]${branch}"
 }
 
@@ -100,7 +100,7 @@ __parse_hg_branch() {
 	fi
 
 	local branch=$(echo "$summary" | grep 'branch:' | cut -d ' ' -f2)
-  branch=$(__truncate_branch_name $branch)
+	branch=$(__truncate_branch_name $branch)
 	echo "#[fg=colour${hg_colour}]${branch_symbol} #[fg=colour${TMUX_POWERLINE_CUR_SEGMENT_FG}]${branch}"
 }
 
@@ -108,7 +108,7 @@ __parse_hg_branch() {
 __truncate_branch_name() {
 	trunc_symbol="···"
 	branch=$(echo $1 | sed "s/\(.\{$TMUX_POWERLINE_SEG_VCS_BRANCH_MAX_LEN\}\).*/\1$trunc_symbol/")
-  echo -n $branch
+	echo -n $branch
 }
 
 
