@@ -3,6 +3,8 @@
 # Source lib to get the function get_tmux_pwd
 source "${TMUX_POWERLINE_DIR_LIB}/tmux_adapter.sh"
 
+TMUX_POWERLINE_SEG_VCS_BRANCH_MAX_LEN_DEFAULT="24"
+
 branch_symbol=""
 git_colour="5"
 svn_colour="220"
@@ -50,6 +52,8 @@ __parse_git_branch() {
 
 	# Clean off unnecessary information.
 	branch=${branch#refs\/heads\/}
+	trunc_symbol="···"
+  branch=$(echo $branch | sed "s/\(.\{$TMUX_POWERLINE_SEG_VCS_BRANCH_MAX_LEN_DEFAULT\}\).*/\1$trunc_symbol/")
 
 	echo  -n "#[fg=colour${git_colour}]${branch_symbol} #[fg=colour${TMUX_POWERLINE_CUR_SEGMENT_FG}]${branch}"
 }
