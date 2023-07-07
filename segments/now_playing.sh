@@ -109,6 +109,9 @@ run_segment() {
 }
 
 __process_settings() {
+	if [ -z "$TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER" ]; then
+		export TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER="${TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER_DEFAULT}"
+	fi
 	if [ -z "$TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN" ]; then
 		export TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN="${TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN_DEFAULT}"
 	fi
@@ -157,9 +160,8 @@ __np_mpd() {
 }
 
 __np_file() {
-
-        np=$(cat $TMUX_POWERLINE_SEG_NOW_PLAYING_FILE_NAME | tr '\n' '|')
-        echo "$np"
+	np=$(cat $TMUX_POWERLINE_SEG_NOW_PLAYING_FILE_NAME | tr '\n' '|')
+	echo "$np"
 }
 
 
