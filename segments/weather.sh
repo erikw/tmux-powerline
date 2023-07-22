@@ -1,7 +1,4 @@
-# Prints the current weather in Celsius, Fahrenheits or lord Kelvins. The forecast is cached and updated with a period of $update_period.
-
-# The update period in seconds.
-update_period=600
+# Prints the current weather in Celsius, Fahrenheits or lord Kelvins. The forecast is cached and updated with a period.
 
 TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT="yrno"
 TMUX_POWERLINE_SEG_WEATHER_JSON_DEFAULT="jq"
@@ -88,7 +85,7 @@ __yrno() {
 		fi
 		time_now=$(date +%s)
 
-		up_to_date=$(echo "(${time_now}-${last_update}) < ${update_period}" | bc)
+		up_to_date=$(echo "(${time_now}-${last_update}) < ${TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD}" | bc)
 		if [ "$up_to_date" -eq 1 ]; then
 			__read_tmp_file
 		fi
@@ -148,43 +145,46 @@ __get_yrno_condition_symbol() {
 	local condition=$1
 	case "$condition" in
 		"clearsky_day")
-			echo "🌣"
+			echo "☀️ "
 			;;
 		"clearsky_night")
-			echo "☾"
-			;;
-		"rain" | "lightrain" | "heavyrain" | "sleet" | "lightsleet" | "heavysleet")
-			echo "🌧"
-			;;
-		"lightrainshowers" | "rainshowers" | "heavyrainshowers")
-			echo "🌦"
-			;;
-		"snow" | "lightsnow" | "heavysnow")
-			echo "❅"
-			;;
-		"lightsnowshowers" | "heavysnowshowers" | "snowshowers")
-			echo "🌨"
-			;;
-		"cloudy")
-			echo "☁️"
-			;;
-		"partlycloudy_day")
-			echo "🌤"
-			;;
-		"partlycloudy_night")
-			echo "☾☁"
-			;;
-		"lightrainshowersandthunder" | "rainshowersandthunder" | "heavyrainshowersandthunder" | "lightsleetshowersandthunder" | "sleetshowersandthunder" | "heavysleetshowersandthunder" | "lightsnowshowersandthunder" | "snowshowersandthunder" | "heavysnowshowersandthunder" | "lightrainandthunder" | "rainandthunder" | "heavyrainandthunder" | "lightsleetandthunder" | "sleetandthunder" | "heavysleetandthunder" | "lightsnowandthunder" | "snowandthunder" | "heavysnowandthunder")
-			echo "🌩"
-			;;
-		"fog")
-			echo "🌫"
+			echo "🌙"
 			;;
 		"fair_day")
-			echo "〇"
+			echo "🌤 "
 			;;
 		"fair_night")
-			echo "☾"
+			echo "🌜"
+			;;
+		"fog")
+			echo "🌫 "
+			;;
+		"cloudy")
+			echo "☁️ "
+			;;
+		"rain" | "lightrain" | "heavyrain" | "sleet" | "lightsleet" | "heavysleet")
+			echo "🌧 "
+			;;
+		"heavyrainandthunder" | "heavyrainshowersandthunder_day" | "heavyrainshowersandthunder_night" | "heavysleetandthunder" | "heavysleetshowersandthunder_day" | "heavysnowandthunder" | "heavysnowshowersandthunder_day" | "heavysnowshowersandthunder_night" | "lightrainandthunder" | "lightrainshowersandthunder_day" | "lightrainshowersandthunder_night" | "lightsleetandthunder" | "lightsnowandthunder" | "lightssleetshowersandthunder_day" | "lightssleetshowersandthunder_night" | "lightssnowshowersandthunder_day" | "lightssnowshowersandthunder_night" | "rainandthunder" | "rainshowersandthunder_day" | "rainshowersandthunder_night" | "sleetandthunder" | "sleetshowersandthunder_day" | "sleetshowersandthunder_night" | "snowandthunder" | "snowshowersandthunder_day" | "snowshowersandthunder_night")
+			echo "⛈️ "
+			;;
+		"heavyrainshowers_day" | "heavysleetshowers_day" | "heavysleetshowersandthunder_night" | "lightrainshowers_day" | "lightsleetshowers_day" | "rainshowers_day" | "sleetshowers_day")
+			echo "🌦️ "
+			;;
+    "heavyrainshowers_night" | "heavysleetshowers_night" | "lightrainshowers_night" | "lightsleetshowers_night" | "rainshowers_night" | "sleetshowers_night")
+			echo "☔"
+			;;
+		"snow" | "lightsnow" | "heavysnow")
+			echo "❄️ "
+			;;
+		"lightsnowshowers_day" | "lightsnowshowers_night" | "heavysnowshowers_day" | "heavysnowshowers_night" | "snowshowers_day" | "snowshowers_night")
+			echo "🌨 "
+			;;
+		"partlycloudy_day")
+			echo "⛅"
+			;;
+		"partlycloudy_night")
+			echo "🌗"
 			;;
 		*)
 			echo "?"
