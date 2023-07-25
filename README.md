@@ -149,8 +149,8 @@ In the same was as themes, you can create your own segments at `TMUX_POWERLINE_D
 To get started, copy an existing segment that is similar to the segment that you want to create.
 ```shell
 mkdir -p ~/.config/tmux-powerline/segments
-cp ~/.config/tmux/plugins/tmux-powerline/segments/date.sh ~/.config/tmux-powerline/themes/my-segment.sh
-$EDITOR ~/.config/tmux-powerline/themes/my-segment.sh.default
+cp ~/.config/tmux/plugins/tmux-powerline/segments/date.sh ~/.config/tmux-powerline/segments/my-segment.sh
+$EDITOR ~/.config/tmux-powerline/segments/my-segment.sh
 ```
 
 Now you can add `my-segment` to your own theme!
