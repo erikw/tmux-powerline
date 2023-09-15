@@ -79,6 +79,7 @@ generate_default_rc() {
 	# Note that events that force-refresh the status bar (such as window renaming) will ignore this.
 	export TMUX_POWERLINE_STATUS_INTERVAL="${TMUX_POWERLINE_STATUS_INTERVAL_DEFAULT}"
 	# The location of the window list. Can be {"absolute-centre, centre, left, right"}.
+	# Note that "absolute-centre" is only supported on \`tmux -V\` >= 3.2.
 	export TMUX_POWERLINE_STATUS_JUSTIFICATION="${TMUX_POWERLINE_STATUS_JUSTIFICATION_DEFAULT}"
 
 	# The maximum length of the left status bar.
