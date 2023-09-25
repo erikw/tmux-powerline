@@ -202,6 +202,8 @@ tmux source-file ~/.tmux.conf
 If your tmux looks like [this](https://github.com/erikw/tmux-powerline/issues/125) then you may have to in iTerm uncheck [Unicode East Asian Ambiguous characters are wide] in Preferences -> Settings -> Advanced.
 
 
+### Changign TMUX_POWERLINE_DEFAULT_*GROUND_COLOR does not have effect
+This is a known issue, see #322 for details. Workaround: reload the color change by creating a new tmux session.
 
 # Hacking
 This project can only gain positively from contributions. Fork today and make your own enhancements and segments to share back! If you'd like, add your name and E-mail to AUTHORS before making a pull request so you can get some credit for your work :-)
