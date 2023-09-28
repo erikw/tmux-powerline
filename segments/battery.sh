@@ -97,7 +97,7 @@ __battery_osx() {
 					BAT_NOW=$BATPATH/energy_now
 				fi
 
-				if [ "$1" = `cat $STATUS` -o "$1" = "" ]; then
+				if [[ "$1" = `cat $STATUS` || "$1" = "" ]]; then
 					__linux_get_bat
 				fi
 				;;
