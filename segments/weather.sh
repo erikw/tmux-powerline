@@ -1,15 +1,11 @@
 # Prints the current weather in Celsius, Fahrenheits or lord Kelvins. The forecast is cached and updated with a period.
+# To configure your location, set TMUX_POWERLINE_SEG_WEATHER_LOCATION in the tmux-powerline config file.
 
 TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT="yrno"
 TMUX_POWERLINE_SEG_WEATHER_JSON_DEFAULT="jq"
 TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAULT="c"
 TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT="600"
 
-# If you want to set your location, set TMUX_POWERLINE_SEG_WEATHER_LOCATION in the tmux-powerlinerc file.
-# 1. You create tmux-powerlinerc file.
-#    $ ./generate_rc.sh
-#    $ mv ~/.tmux-powerlinerc.default ~/.tmux-powerlinerc
-# 2. You set TMUX_POWERLINE_SEG_WEATHER_LOCATION.
 
 if shell_is_bsd  && [ -f /user/local/bin/grep  ]; then
 	TMUX_POWERLINE_SEG_WEATHER_GREP_DEFAULT="/usr/local/bin/grep"
