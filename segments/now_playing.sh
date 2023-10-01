@@ -16,7 +16,7 @@ TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER_DEFAULT="spotify"
 
 generate_segmentrc() {
 	read -d '' rccontents  << EORC
-# Music player to use. Can be any of {audacious, banshee, cmus, itunes, lastfm, mocp, mpd, mpd_simple, pithos, playerctl, rdio, rhythmbox, spotify, spotify_wine, file}.
+# Music player to use. Can be any of {audacious, banshee, cmus, apple_music, itunes, lastfm, mocp, mpd, mpd_simple, pithos, playerctl, rdio, rhythmbox, spotify, spotify_wine, file}.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER="${TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER_DEFAULT}"
 # File to be read in case the song is being read from a file
 export TMUX_POWERLINE_SEG_NOW_PLAYING_FILE_NAME=""
@@ -70,6 +70,7 @@ run_segment() {
 			"audacious")  np=$(__np_audacious) ;;
 			"banshee")  np=$(__np_banshee) ;;
 			"cmus")  np=$(__np_cmus) ;;
+			"apple_music")  np=$(__np_apple_music) ;;
 			"itunes")  np=$(__np_itunes) ;;
 			"lastfm")  np=$(__np_lastfm) ;;
 			"mocp")  np=$(__np_mocp) ;;
@@ -215,6 +216,12 @@ __np_cmus() {
 			echo "$np"
 		fi
 	fi
+}
+
+__np_apple_music() {
+	[ ! shell_is_osx ] && return 1
+	np=$(${TMUX_POWERLINE_DIR_SEGMENTS}/np_apple_music.script)
+	echo "$np"
 }
 
 __np_itunes() {
