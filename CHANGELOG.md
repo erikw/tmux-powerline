@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [3.0.0] - 2023-10-02
 ### Added
 - Config options to set the status bar's initial visibility, refresh interval and justification: `TMUX_POWERLINE_STATUS_VISIBILITY`, `TMUX_POWERLINE_STATUS_INTERVAL` and `TMUX_POWERLINE_STATUS_JUSTIFICATION`.
 - Allow setting the `default` tmux color in segment themes. [#296](https://github.com/erikw/tmux-powerline/issues/296).
