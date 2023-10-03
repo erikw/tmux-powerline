@@ -221,4 +221,3 @@ __check_platform() {
 		 echo "Unknown platform; modify config/shell.sh"  &1>&2
 	fi
 }
-

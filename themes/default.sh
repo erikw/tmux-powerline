@@ -1,4 +1,5 @@
 # Default Theme
+# If changes made here does not take effect, then try to re-create the tmux session to force reload.
 
 if patched_font_in_use; then
 	TMUX_POWERLINE_SEPARATOR_LEFT_BOLD=""
