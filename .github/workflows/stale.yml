@@ -10,5 +10,8 @@ jobs:
     steps:
       - uses: actions/stale@v8
         with:
-          stale-issue-message: "Issue is stale; closing."
-          stale-pr-message: "PR is stale; closing."
+          days-before-stale: 180
+          exempt-issue-labels: "NotStale"
+          exempt-pr-labels: "NotStale"
+          stale-issue-message: "Issue is stale; will soon close."
+          stale-pr-message: "PR is stale; will soon close."
