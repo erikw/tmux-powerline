@@ -297,7 +297,7 @@ __np_plexamp() {
 
 	if [ -z "$np" ]; then
 		local url=$(printf $ENDPOINT_FMT $TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_TAUTULLI_HOST $TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_TAUTULLI_API_KEY)
-		np=$(curl --silent "$url" | jq -r ".response.data.sessions[] | select(.username==$TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_USERNAME and .media_type==\"track\" and .state==\"playing\") | .grandparent_title + " - " + .title")
+		np=$(curl --silent "$url" | jq -r ".response.data.sessions[] | select(.username==\"$TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_USERNAME\" and .media_type==\"track\" and .state==\"playing\") | .grandparent_title + \" - \" + .title")
 		if [ "$?" -eq "0" ] && [ -n "$np" ]; then
 			echo "${np}" > $TMP_FILE
 		fi
