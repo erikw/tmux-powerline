@@ -8,6 +8,7 @@ TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SPEED_DEFAULT="2"
 TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST_DEFAULT="localhost"
 TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT_DEFAULT="6600"
 TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_UPDATE_PERIOD_DEFAULT="30"
+TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_UPDATE_PERIOD_DEFAULT="30"
 TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT_DEFAULT="%artist% - %title%"
 TMUX_POWERLINE_SEG_NOW_PLAYING_PLAYERCTL_FORMAT_DEFAULT="{{ artist }} - {{ title }}"
 TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT_DEFAULT="%aa - %tt"
@@ -16,7 +17,7 @@ TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER_DEFAULT="spotify"
 
 generate_segmentrc() {
 	read -d '' rccontents  << EORC
-# Music player to use. Can be any of {audacious, banshee, cmus, apple_music, itunes, lastfm, mocp, mpd, mpd_simple, pithos, playerctl, rdio, rhythmbox, spotify, spotify_wine, file}.
+# Music player to use. Can be any of {audacious, banshee, cmus, apple_music, itunes, lastfm, plexamp, mocp, mpd, mpd_simple, pithos, playerctl, rdio, rhythmbox, spotify, spotify_wine, file}.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER="${TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER_DEFAULT}"
 # File to be read in case the song is being read from a file
 export TMUX_POWERLINE_SEG_NOW_PLAYING_FILE_NAME=""
@@ -51,6 +52,19 @@ export TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_API_KEY=""
 export TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_UPDATE_PERIOD_DEFAULT}"
 # Fancy char to display before now playing track
 export TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR="${TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR_DEFAULT}"
+
+# Plexamp 
+# Set up steps for Plexamp
+# 1. Make sure jq(1) is installed on the system.
+# 2. Make sure you have an instance of Tautulli that is accessible by the computer running tmux-powerline.
+# Username for Plexamp if that music player is used.
+export TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_USERNAME=""
+# Hostname for Tautulli server in the format "[password@]host"
+export TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_TAUTULLI_HOST=""
+# API Key for Tautulli.
+export TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_TAUTULLI_API_KEY=""
+# How often in seconds to update the data from Plexamp.
+export TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_UPDATE_PERIOD_DEFAULT}"
 EORC
 	echo "$rccontents"
 }
@@ -73,6 +87,7 @@ run_segment() {
 			"apple_music")  np=$(__np_apple_music) ;;
 			"itunes")  np=$(__np_itunes) ;;
 			"lastfm")  np=$(__np_lastfm) ;;
+			"plexamp")  np=$(__np_plexamp) ;;
 			"mocp")  np=$(__np_mocp) ;;
 			"mpd")  np=$(__np_mpd) ;;
 			"mpd_simple")  np=$(__np_mpd_simple) ;;
@@ -133,6 +148,9 @@ __process_settings() {
 	fi
 	if [ -z "$TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_UPDATE_PERIOD" ]; then
 		export TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_UPDATE_PERIOD_DEFAULT}"
+	fi
+	if [ -z "$TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_UPDATE_PERIOD" ]; then
+		export TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_UPDATE_PERIOD_DEFAULT}"
 	fi
 	if [ -z "$TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR" ]; then
 		export TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR="${TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR_DEFAULT}"
@@ -259,6 +277,33 @@ __np_lastfm() {
 	echo "$np"
 }
 
+__np_plexamp() {
+	local TMP_FILE="${TMUX_POWERLINE_DIR_TEMPORARY}/np_plexamp.txt"
+	local ENDPOINT_FMT="https://%s/api/v2?cmd=get_activity&apikey=%s"
+
+	if [ -f "$TMP_FILE" ]; then
+		if shell_is_osx || shell_is_bsd; then
+			last_update=$(stat -f "%m" ${TMP_FILE})
+		elif shell_is_linux; then
+			last_update=$(stat -c "%Y" ${TMP_FILE})
+		fi
+		time_now=$(date +%s)
+
+		up_to_date=$(echo "(${time_now}-${last_update}) < ${TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_UPDATE_PERIOD}" | bc)
+		if [ "$up_to_date" -eq 1 ]; then
+			np=$(cat ${TMP_FILE})
+		fi
+	fi
+
+	if [ -z "$np" ]; then
+		local url=$(printf $ENDPOINT_FMT $TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_TAUTULLI_HOST $TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_TAUTULLI_API_KEY)
+		np=$(curl --silent "$url" | jq -r ".response.data.sessions[] | select(.username==\"$TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_USERNAME\" and .media_type==\"track\" and .state==\"playing\") | .grandparent_title + \" - \" + .title")
+		if [ "$?" -eq "0" ] && [ -n "$np" ]; then
+			echo "${np}" > $TMP_FILE
+		fi
+	fi
+	echo "$np"
+}
 __np_pithos() {
 	if [ "$(dbus-send --reply-timeout=10 --print-reply --dest=net.kevinmehall.Pithos /net/kevinmehall/Pithos net.kevinmehall.Pithos.IsPlaying 2>/dev/null | grep boolean | cut -d' ' -f5)" == "true" ]; then
 		np=$(${TMUX_POWERLINE_DIR_SEGMENTS}/np_pithos.py)
