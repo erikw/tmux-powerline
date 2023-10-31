@@ -17,7 +17,7 @@ run_segment() {
 	else
 		iface=$(ip route show default | grep -o "dev.*" | cut -d ' ' -f 2)
 		if [ -z "$iface" ]; then
-			iface=$(/bin/cat /proc/net/dev | /usr/bin/awk '{if($2>0 && NR > 2) print substr($1, 0, index($1, ":") - 1)}' | /bin/sed '/^lo$/d')
+			iface=$(cat /proc/net/dev | awk '{if($2>0 && NR > 2) print substr($1, 0, index($1, ":") - 1)}' | sed '/^lo$/d')
 		fi
 		type="⎆" # "☫" for wlan
 		RXB=$(</sys/class/net/"$iface"/statistics/rx_bytes)
