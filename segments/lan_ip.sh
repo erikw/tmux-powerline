@@ -15,9 +15,12 @@ run_segment() {
 			[[ -n "${lan_ip}" ]] && break
 		done
 	else
+		default_route_nic=$(ip route get 1.1.1.1 | grep -o "dev.*" | cut -d ' ' -f 2)
 		# Get the names of all attached NICs.
 		all_nics="$(ip addr show | cut -d ' ' -f2 | tr -d :)"
 		all_nics=(${all_nics[@]/lo/})	 # Remove lo interface.
+		# the nic of the default route is considered first
+		all_nics=("$default_route_nic" "${all_nics[@]}")
 
 		for nic in "${all_nics[@]}"; do
 			# Parse IP address for the NIC.
