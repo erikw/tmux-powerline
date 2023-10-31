@@ -4,7 +4,10 @@
 run_segment() {
 	sleeptime="0.5"
 	if shell_is_osx; then
-		iface="en0"
+		iface=$(route get default | grep -i interface | awk '{print $2}')
+		if [ -z "$iface" ]; then
+			iface="en0"
+		fi
 		type="⎆" # "☫" for wlan
 		RXB=$(netstat -i -b | grep -m 1 $iface | awk '{print $7}')
 		TXB=$(netstat -i -b | grep -m 1 $iface | awk '{print $10}')
@@ -12,7 +15,10 @@ run_segment() {
 		RXBN=$(netstat -i -b | grep -m 1 $iface | awk '{print $7}')
 		TXBN=$(netstat -i -b | grep -m 1 $iface | awk '{print $10}')
 	else
-		iface=$(/bin/cat /proc/net/dev | /usr/bin/awk '{if($2>0 && NR > 2) print substr($1, 0, index($1, ":") - 1)}' | /bin/sed '/^lo$/d')
+		iface=$(ip route show default | grep -o "dev.*" | cut -d ' ' -f 2)
+		if [ -z "$iface" ]; then
+			iface=$(cat /proc/net/dev | awk '{if($2>0 && NR > 2) print substr($1, 0, index($1, ":") - 1)}' | sed '/^lo$/d')
+		fi
 		type="⎆" # "☫" for wlan
 		RXB=$(</sys/class/net/"$iface"/statistics/rx_bytes)
 		TXB=$(</sys/class/net/"$iface"/statistics/tx_bytes)
