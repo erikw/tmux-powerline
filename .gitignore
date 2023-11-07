@@ -5,3 +5,4 @@ segments/xkb_layout
 # ignore all themes, only default.sh
 themes/*
 !themes/default.sh
+!themes/bubble_theme.sh
