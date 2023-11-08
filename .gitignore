@@ -2,7 +2,8 @@ segments/np_mpd
 segments/xkb_layout
 *.swp
 
+
 # ignore all themes, except for the built-in ones. User themes should be put in `~/.config/tmux-powerline/themes/
 themes/*
 !themes/default.sh
-!themes/bubble_theme.sh
+!themes/bubble.sh
