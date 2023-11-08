@@ -81,7 +81,7 @@ Do you enjoy hacking tmux and your shell? As less time is becoming available for
 Your profile could look like:
 * Use tmux regularly, configured with tmux-powerline.
 * Experience in writing maintainable, working and understandable bash scripts, or willing to become proficient. Some prior knowledge would be needed.
-* When following the code paths from [powerline.sh](powerline.sh) to (lib/powerline.sh)[lib/powerline.sh] understand how the powerline is rendered.
+* When following the code paths from [powerline.sh](powerline.sh) to [lib/powerline.sh](lib/powerline.sh) understand how the powerline is rendered.
 * Understand how the segment's different functions are called and expected to behave.
 * Understand how themes and the config file works.
 
