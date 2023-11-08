@@ -86,7 +86,7 @@ Your profile could look like:
 * Understand how themes and the config file works.
 
 
-Is this you? Contact me at https://erikw.me/contact/ if you're interested!
+Is this you? Contact me at [erikw.me/contact](https://erikw.me/contact/) if you're interested!
 
 
 # Requirements
