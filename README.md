@@ -76,7 +76,7 @@ Laptop mode: a battery segment.
 ![right-status, weather and battery](img/right-status_weather_battery.png)
 
 # :raised_hands: Project status + Co-maintainer wanted!
-This project is cinsidered feature complete (see reasoning below). Only bug fixes and new segments will ve accepted. 
+This project is considered feature complete (see reasoning below). Only bug fixes and new segments will ve accepted. 
 
 *Unless... you want to be a co-maintainer!*
 
