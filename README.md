@@ -75,7 +75,11 @@ Laptop mode: a battery segment.
 
 ![right-status, weather and battery](img/right-status_weather_battery.png)
 
-# :raised_hands: Co-maintainer wanted!
+# :raised_hands: Project status + Co-maintainer wanted!
+This project is cinsidered feature complete (see reasoning below). Only bug fixes and new segments will ve accepted. 
+
+*Unless... you want to be a co-maintainer!*
+
 Do you enjoy hacking tmux and your shell? As less time is becoming available for me to keep up with the incoming PRs and maintainace, I would be happy to add someone as a co-maintainer.
 
 Your profile could look like:
