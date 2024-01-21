@@ -19,3 +19,5 @@ source "${TMUX_POWERLINE_DIR_LIB}/formatting.sh"
 source "${TMUX_POWERLINE_DIR_LIB}/muting.sh"
 source "${TMUX_POWERLINE_DIR_LIB}/powerline.sh"
 source "${TMUX_POWERLINE_DIR_LIB}/rcfile.sh"
+
+source "${TMUX_POWERLINE_DIR_HOME}/segments/air.sh"
