@@ -1,15 +1,6 @@
 TMUX_POWERLINE_SEG_AIR_DATA_PROVIDER_DEFAULT="openweather"
 TMUX_POWERLINE_SEG_AIR_JSON_DEFAULT="jq"
 TMUX_POWERLINE_SEG_AIR_UPDATE_PERIOD_DEFAULT="600"
-TMUX_POWERLINE_SEG_AIR_COLOR_DEFAULT="32"
-TMUX_POWERLINE_DIR_TEMPORARY="/tmp/tmux-powerline_${USER}"
-
-# reads temp to set color based on aqi
-tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/temp_air_file.txt"
-if [ -n $tmp_file ]; then
-    TMUX_POWERLINE_SEG_AIR_COLOR=$(awk '{print $NF}' $tmp_file)
-fi
-TMUX_POWERLINE_SEG_AIR_COLOR="${TMUX_POWERLINE_SEG_AIR_COLOR:-$TMUX_POWERLINE_SEG_AIR_COLOR_DEFAULT}"
 
 generate_segmentrc() {
 	read -d '' rccontents  << EORC
