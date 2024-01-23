@@ -212,7 +212,8 @@ __get_us_aqi_score() {
     fi
 
     aqi_value=$(__get_aqi_max "$carbon_monoxide_aqi_value" "$nitrogen_dioxide_aqi_value" "$ozone_aqi_value" "$sulphur_dioxide_aqi_value" "$fine_particle_aqi_value" "$coarse_particulate_aqi_value")
-    IFS=' ' read -r aqi_level aqi_color aqi_symbol <<< "$(__get_aqi_level_color_symbol "$aqi_value")" 
+    # aqi_value=150
+    IFS=' ' read -r aqi_color aqi_symbol <<< "$(__get_aqi_level_color_symbol "$aqi_value")" 
     rounded_aqi=$(printf '%.*f\n' 0 "$aqi_value")
  
     echo  "${rounded_aqi} AQI ${aqi_symbol}" "${aqi_color}" | tee "${tmp_file}"
@@ -272,36 +273,36 @@ __get_aqi_level_color_symbol(){
     local aqi_value=$1
 
     if (( $(echo "$aqi_value < 51" | bc -l) )); then
-        aqi_level="Good"
+        # aqi_level="Good"
         aqi_color="#8da101" # Green
         aqi_symbol="😊"
     elif (( $(echo "$aqi_value < 101" | bc -l) )); then
-        aqi_level="Moderate"
+        # aqi_level="Moderate"
         aqi_color="#dfa000" # Yellow
         aqi_symbol="😐"
     elif (( $(echo "$aqi_value < 151" | bc -l) )); then
-        aqi_level="Unhealthy for sensitive groups"
+        # aqi_level="Unhealthy for sensitive groups"
         aqi_color="#f57d26" # Orange
         aqi_symbol="🙁"
     elif (( $(echo "$aqi_value < 201" | bc -l) )); then
-        aqi_level="Unhealthy"
+        # aqi_level="Unhealthy"
         aqi_color="#f85552" # Red
         aqi_symbol="😷"
     elif (( $(echo "$aqi_value < 301" | bc -l) )); then
-        aqi_level="Very unhealthy"
+        # aqi_level="Very unhealthy"
         aqi_color="#df69ba" # Purple
         aqi_symbol="😨"
     elif (( $(echo "$aqi_value < 501" | bc -l) )); then
-        aqi_level="Hazardous"
-        aqi_color="#542d2c" # Maroon
+        # aqi_level="Hazardous"
+        aqi_color="#883A26" # Maroon
         aqi_symbol="🛑"
     elif (( $(echo "$aqi_value < 1001" | bc -l) )); then
-        aqi_level="Very Hazardous"
+        # aqi_level="Very Hazardous"
         aqi_color="#66401a" # Brown
         aqi_symbol="💀"
     fi 
 
-    echo $aqi_level $aqi_color $aqi_symbol
+    echo $aqi_color $aqi_symbol
 }
 
 __read_tmp_file() {
