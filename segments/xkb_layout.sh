@@ -11,7 +11,20 @@
 # This script will print the correct layout even if layout is set per window.
 # Exit if platform is not linux as this script is dependant on X11
 
+TMUX_POWERLINE_SEG_XKB_LAYOUT_ICON_DEFAULT="⌨ "
+
+generate_segmentrc() {
+	read -d '' rccontents  << EORC
+# Keyboard icon
+export TMUX_POWERLINE_SEG_XKB_LAYOUT_ICON="${TMUX_POWERLINE_SEG_XKB_LAYOUT_ICON_DEFAULT}"
+EORC
+	echo "$rccontents"
+}
+
+
 run_segment() {
+	__process_settings
+
 	if ! shell_is_linux; then
 		return 1
 	fi
@@ -25,8 +38,14 @@ run_segment() {
 		cur_layout_nbr=$(($(./xkb_layout)+1));
 		cur_layout=$(setxkbmap -query | grep layout | sed 's/layout:\s\+//g' | \
 			awk -F ',' '{print $'$(echo "$cur_layout_nbr")'}')
-		echo "⌨  $cur_layout"
+		echo "$TMUX_POWERLINE_SEG_XKB_LAYOUT_ICON $cur_layout"
 	else
 		return 1
+	fi
+}
+
+__process_settings() {
+	if [ -z "$TMUX_POWERLINE_SEG_XKB_LAYOUT_ICON" ]; then
+		export TMUX_POWERLINE_SEG_XKB_LAYOUT_ICON="${TMUX_POWERLINE_SEG_XKB_LAYOUT_ICON_DEFAULT}"
 	fi
 }
