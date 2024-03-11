@@ -1,6 +1,6 @@
 # Library functions
 
-print_powerline() {
+print_powerline_side() {
 	local side="$1"
 	local upper_side
 
@@ -16,6 +16,35 @@ print_powerline() {
 	__process_colors
 
 	__process_powerline
+}
+
+print_powerline_window_status_current_format() {
+	if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_CURRENT" ]; then
+		TMUX_POWERLINE_WINDOW_STATUS_CURRENT=(
+			"#[$(format inverse)]" \
+			"$TMUX_POWERLINE_DEFAULT_LEFTSIDE_SEPARATOR" \
+			" #I#F " \
+			"$TMUX_POWERLINE_SEPARATOR_RIGHT_THIN" \
+			" #W " \
+			"#[$(format regular)]" \
+			"$TMUX_POWERLINE_DEFAULT_LEFTSIDE_SEPARATOR"
+		)
+	fi
+
+	printf '%s' "${TMUX_POWERLINE_WINDOW_STATUS_CURRENT[@]}"
+}
+
+print_powerline_window_status_format() {
+	if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_FORMAT" ]; then
+		TMUX_POWERLINE_WINDOW_STATUS_FORMAT=(
+			"#[$(format regular)]" \
+			"  #I#{?window_flags,#F, } " \
+			"$TMUX_POWERLINE_SEPARATOR_RIGHT_THIN" \
+			" #W "
+		)
+	fi
+
+	printf '%s' "${TMUX_POWERLINE_WINDOW_STATUS_FORMAT[@]}"
 }
 
 format() {
@@ -36,47 +65,6 @@ format() {
 		*)
 			;;
 	esac
-}
-
-# Prettifies the window-status segments.
-init_powerline() {
-	if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_CURRENT" ]; then
-		TMUX_POWERLINE_WINDOW_STATUS_CURRENT=(
-			"#[$(format inverse)]" \
-			"$TMUX_POWERLINE_DEFAULT_LEFTSIDE_SEPARATOR" \
-			" #I#F " \
-			"$TMUX_POWERLINE_SEPARATOR_RIGHT_THIN" \
-			" #W " \
-			"#[$(format regular)]" \
-			"$TMUX_POWERLINE_DEFAULT_LEFTSIDE_SEPARATOR"
-		)
-	fi
-
-	if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_STYLE" ]; then
-		TMUX_POWERLINE_WINDOW_STATUS_STYLE=(
-			"$(format regular)"
-		)
-	fi
-
-	if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_FORMAT" ]; then
-		TMUX_POWERLINE_WINDOW_STATUS_FORMAT=(
-			"#[$(format regular)]" \
-			"  #I#{?window_flags,#F, } " \
-			"$TMUX_POWERLINE_SEPARATOR_RIGHT_THIN" \
-			" #W "
-		)
-	fi
-
-	local bg_color
-	local fg_color
-
-	bg_color=$(__normalize_color "$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR")
-	fg_color=$(__normalize_color "$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR")
-
-	tmux set-option -g window-status-current-format "$(printf '%s' "${TMUX_POWERLINE_WINDOW_STATUS_CURRENT[@]}")"
-	tmux set-option -g window-status-format "$(printf '%s' "${TMUX_POWERLINE_WINDOW_STATUS_FORMAT[@]}")"
-	tmux set-option -g window-status-style "$(printf '%s' "${TMUX_POWERLINE_WINDOW_STATUS_STYLE[@]}")"
-	tmux set-option -g status-style "fg=$fg_color,bg=$bg_color"
 }
 
 __process_segment_defaults() {

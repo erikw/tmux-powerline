@@ -55,6 +55,18 @@ process_settings() {
 		source "${TMUX_POWERLINE_DIR_THEMES}/${TMUX_POWERLINE_THEME}.sh"
 	fi
 
+	# Set the default status bar colors to the theme's default colors. This section is here because it needs to be after the theme is sourced.
+	if [ -z "$TMUX_POWERLINE_STATUS_STYLE" ]; then
+		local bg_color
+		local fg_color
+
+		fg_color=$(__normalize_color "$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR")
+		bg_color=$(__normalize_color "$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR")
+
+		export TMUX_POWERLINE_STATUS_STYLE="fg=$fg_color,bg=$bg_color"
+	fi
+
+
 }
 
 generate_default_config() {
