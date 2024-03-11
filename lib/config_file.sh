@@ -35,6 +35,10 @@ process_settings() {
 		export TMUX_POWERLINE_STATUS_RIGHT_LENGTH="${TMUX_POWERLINE_STATUS_RIGHT_LENGTH_DEFAULT}"
 	fi
 
+	if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_SEPARATOR" ]; then
+		export TMUX_POWERLINE_WINDOW_STATUS_SEPARATOR="${TMUX_POWERLINE_WINDOW_STATUS_SEPARATOR_DEFAULT}"
+	fi
+
 	if [ -z "$TMUX_POWERLINE_MUTE_LEFT_KEYBINDING" ]; then
 		export TMUX_POWERLINE_MUTE_LEFT_KEYBINDING="${TMUX_POWERLINE_MUTE_LEFT_KEYBINDING_DEFAULT}"
 	fi
@@ -86,6 +90,9 @@ generate_default_config() {
 	export TMUX_POWERLINE_STATUS_LEFT_LENGTH="${TMUX_POWERLINE_STATUS_LEFT_LENGTH_DEFAULT}"
 	# The maximum length of the right status bar.
 	export TMUX_POWERLINE_STATUS_RIGHT_LENGTH="${TMUX_POWERLINE_STATUS_RIGHT_LENGTH_DEFAULT}"
+
+	# The separator to use between windows on the status bar.
+	export TMUX_POWERLINE_WINDOW_STATUS_SEPARATOR=""
 
 	# Uncomment these if you want to enable tmux bindings for muting (hiding) one of the status bars.
 	# E.g. this example binding would mute the left status bar when pressing <prefix> followed by Ctrl-[
