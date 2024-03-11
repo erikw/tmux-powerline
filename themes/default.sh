@@ -13,6 +13,7 @@ else
 	TMUX_POWERLINE_SEPARATOR_RIGHT_THIN="❯"
 fi
 
+# See Color formatting section below for details on what colors can be used here.
 TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR=${TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR:-'235'}
 TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR=${TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR:-'255'}
 TMUX_POWERLINE_SEG_AIR_COLOR=$("${TMUX_POWERLINE_DIR_HOME}/segments/air_color.sh")
@@ -52,10 +53,12 @@ fi
 
 # Format: segment_name background_color foreground_color [non_default_separator] [separator_background_color] [separator_foreground_color] [spacing_disable] [separator_disable]
 #
-# * background_color and foreground_color. Formats:
-#   * Named colors (chech man page of tmux for complete list) e.g. black, red, green, yellow, blue, magenta, cyan, white
-#   * a hexadecimal RGB string e.g. #ffffff
-#   * 'default' for the defalt tmux color.
+# * background_color and foreground_color. Color formatting (see `man tmux` for complete list):
+#   * Named colors, e.g. black, red, green, yellow, blue, magenta, cyan, white
+#   * Hexadecimal RGB string e.g. #ffffff
+#   * 'default' for the default tmux color.
+#   * 'terminal' for the terminal's default background/foreground color
+#   * The numbers 0-255 for the 256-color palette. Run `tmux-powerline/color-palette.sh` to see the colors.
 # * non_default_separator - specify an alternative character for this segment's separator
 # * separator_background_color - specify a unique background color for the separator
 # * separator_foreground_color - specify a unique foreground color for the separator
