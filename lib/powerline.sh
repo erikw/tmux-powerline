@@ -95,8 +95,8 @@ __process_scripts() {
 			local script="$TMUX_POWERLINE_DIR_SEGMENTS/${powerline_segment[0]}.sh"
 		fi
 
-		export TMUX_POWERLINE_CUR_SEGMENT_BG="${powerline_segment[1]}"
-		export TMUX_POWERLINE_CUR_SEGMENT_FG="${powerline_segment[2]}"
+		export TMUX_POWERLINE_CUR_SEGMENT_BG=$(__normalize_color "${powerline_segment[1]}")
+		export TMUX_POWERLINE_CUR_SEGMENT_FG=$(__normalize_color "${powerline_segment[2]}")
 		source "$script"
 		local output
 		output=$(run_segment)

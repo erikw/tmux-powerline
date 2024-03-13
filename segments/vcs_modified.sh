@@ -61,7 +61,7 @@ __parse_svn_stats() {
 
 	#print
 	if [[ $modified -gt 0 ]] ; then
-		local ret="#[fg=colour${TMUX_POWERLINE_CUR_SEGMENT_FG}]±${modified}"
+		local ret="#[fg=${TMUX_POWERLINE_CUR_SEGMENT_FG}]±${modified}"
 	fi
 	if [[ $conflicted -gt 0 ]] ; then
 		local ret="#[fg=colour${svn_colour}]ϟ${conflicted} ${ret}"
