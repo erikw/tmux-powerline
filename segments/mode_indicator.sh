@@ -39,7 +39,7 @@ COPY_MODE_ENABLED_DEFAULT="true"
 COPY_MODE_TEXT_DEFAULT="copy"
 COPY_MODE_TEXT_COLOR_DEFAULT="$TMUX_POWERLINE_CUR_SEGMENT_FG"
 
-SEPARATOR_TEXT_DEFAULT="•"
+SEPARATOR_TEXT_DEFAULT=" • "
 
 generate_segmentrc() {
     read -d '' rccontents <<EORC
@@ -61,7 +61,7 @@ export TMUX_POWERLINE_SEG_MODE_INDICATOR_COPY_MODE_ENABLED="${COPY_MODE_ENABLED_
 # Copy mode text & color overrides. Defaults to "copy" & the segment foreground color set in the theme used.
 export TMUX_POWERLINE_SEG_MODE_INDICATOR_COPY_MODE_TEXT="${COPY_MODE_TEXT_DEFAULT}"
 export TMUX_POWERLINE_SEG_MODE_INDICATOR_COPY_MODE_TEXT_COLOR=""
-# Separator text override. Defaults to "•".
+# Separator text override. Defaults to " • ".
 export TMUX_POWERLINE_SEG_MODE_INDICATOR_SEPARATOR_TEXT="${SEPARATOR_TEXT_DEFAULT}"
 EORC
     echo "$rccontents"
@@ -103,7 +103,7 @@ __normal_and_prefix_mode_indicator() {
     if [ -z "$segment" ]; then
         segment+="$normal_and_prefix_indicator"
     else
-        segment+=" $separator $normal_and_prefix_indicator"
+        segment+="$separator$normal_and_prefix_indicator"
     fi
 }
 
@@ -130,7 +130,7 @@ __mouse_mode_indicator() {
     if [ -z "$segment" ]; then
         segment+="$mouse_indicator"
     else
-        segment+=" $separator $mouse_indicator"
+        segment+="$separator$mouse_indicator"
     fi
 }
 
@@ -152,7 +152,7 @@ __copy_mode_indicator() {
     if [ -z "$segment" ]; then
         segment+="#{?pane_in_mode,$copy_mode,}"
     else
-        segment+="#{?pane_in_mode, $separator $copy_mode,}"
+        segment+="#{?pane_in_mode,$separator$copy_mode,}"
     fi
 }
 
