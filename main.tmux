@@ -16,6 +16,7 @@ tmux set-option -g status "$TMUX_POWERLINE_STATUS_VISIBILITY"
 tmux set-option -g status-interval "$TMUX_POWERLINE_STATUS_INTERVAL"
 tmux set-option -g status-justify "$TMUX_POWERLINE_STATUS_JUSTIFICATION"
 tmux set-option -g status-style "$TMUX_POWERLINE_STATUS_STYLE"
+tmux set-option -g message-style "$TMUX_POWERLINE_STATUS_STYLE"
 
 tmux set-option -g status-left-length $TMUX_POWERLINE_STATUS_LEFT_LENGTH
 tmux set-option -g status-right-length $TMUX_POWERLINE_STATUS_RIGHT_LENGTH
