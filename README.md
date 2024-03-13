@@ -41,7 +41,7 @@ Some examples of segments available that you can add to your tmux status bar are
 * Date and time
 * Hostname
 * tmux info
-# tmux mode indicator (normal/prefix, mouse, copy modes)
+* tmux mode indicator (normal/prefix, mouse, copy modes)
 * CWD in pane
 * Current X keyboard layout
 * Network download/upload speed
