@@ -76,6 +76,10 @@ Laptop mode: a battery segment.
 
 ![right-status, weather and battery](img/right-status_weather_battery.png)
 
+**dual-line status**
+
+![dual-line status bar](img/dual-line-status-bar.png)
+
 # Co-maintainer
 [@xx4h](https://github.com/xx4h) is helping out developing, maintaining and managing this project!
 
