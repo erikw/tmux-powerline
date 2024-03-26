@@ -13,6 +13,10 @@
 # - Copy mode: The mode when text is being copied. By default this is triggered
 #   by pressing the prefix key followed by '['; see `man tmux` for more details.
 #
+# - Suspend mode: A custom mode by https://github.com/MunifTanjim/tmux-suspend/
+#   This suspends prefix processing, allowing prefix keys to directly reach a
+#   nested tmux.
+#
 # Normal & prefix modes toggle between each other, so they occupy the same
 # section of this segment. The other modes are independent of each other, so
 # they each have their own part of the segment. By default, all modes are
@@ -39,6 +43,11 @@ COPY_MODE_ENABLED_DEFAULT="true"
 COPY_MODE_TEXT_DEFAULT="copy"
 COPY_MODE_TEXT_COLOR_DEFAULT="$TMUX_POWERLINE_CUR_SEGMENT_FG"
 
+SUSPEND_MODE_ENABLED_DEFAULT="true"
+
+SUSPEND_MODE_TEXT_DEFAULT="SUSPEND"
+SUSPEND_MODE_TEXT_COLOR_DEFAULT="$TMUX_POWERLINE_CUR_SEGMENT_FG"
+
 SEPARATOR_TEXT_DEFAULT=" • "
 
 generate_segmentrc() {
@@ -61,6 +70,9 @@ export TMUX_POWERLINE_SEG_MODE_INDICATOR_COPY_MODE_ENABLED="${COPY_MODE_ENABLED_
 # Copy mode text & color overrides. Defaults to "copy" & the segment foreground color set in the theme used.
 export TMUX_POWERLINE_SEG_MODE_INDICATOR_COPY_MODE_TEXT="${COPY_MODE_TEXT_DEFAULT}"
 export TMUX_POWERLINE_SEG_MODE_INDICATOR_COPY_MODE_TEXT_COLOR=""
+# Suspend mode text & color overrides. Defaults to "SUSPEND" & the segment foreground color set in the theme used.
+export TMUX_POWERLINE_SEG_MODE_INDICATOR_SUSPEND_MODE_TEXT="${SUSPEND_MODE_TEXT_DEFAULT}"
+export TMUX_POWERLINE_SEG_MODE_INDICATOR_SUSPEND_MODE_TEXT_COLOR=""
 # Separator text override. Defaults to " • ".
 export TMUX_POWERLINE_SEG_MODE_INDICATOR_SEPARATOR_TEXT="${SEPARATOR_TEXT_DEFAULT}"
 EORC
@@ -75,6 +87,7 @@ run_segment() {
     prefix_text_color="#[fg=$TMUX_POWERLINE_SEG_MODE_INDICATOR_PREFIX_MODE_TEXT_COLOR]"
     mouse_text_color="#[fg=$TMUX_POWERLINE_SEG_MODE_INDICATOR_MOUSE_MODE_TEXT_COLOR]"
     copy_text_color="#[fg=$TMUX_POWERLINE_SEG_MODE_INDICATOR_COPY_MODE_TEXT_COLOR]"
+    suspend_text_color="#[fg=$TMUX_POWERLINE_SEG_MODE_INDICATOR_SUSPEND_MODE_TEXT_COLOR]"
 
     # Separator.
     separator="#[fg=$TMUX_POWERLINE_CUR_SEGMENT_FG]$TMUX_POWERLINE_SEG_MODE_INDICATOR_SEPARATOR_TEXT"
@@ -98,7 +111,13 @@ __normal_and_prefix_mode_indicator() {
 
     normal_mode="$normal_text_color$TMUX_POWERLINE_SEG_MODE_INDICATOR_NORMAL_MODE_TEXT"
     prefix_mode="$prefix_text_color$TMUX_POWERLINE_SEG_MODE_INDICATOR_PREFIX_MODE_TEXT"
-    normal_and_prefix_indicator="#{?client_prefix,$prefix_mode,$normal_mode}"
+    suspend_mode="$suspend_text_color$TMUX_POWERLINE_SEG_MODE_INDICATOR_SUSPEND_MODE_TEXT"
+
+    if [ "$(tmux show-option -qv key-table)" = "suspended" ] ; then
+        normal_and_prefix_indicator="$suspend_mode"
+    else
+        normal_and_prefix_indicator="#{?client_prefix,$prefix_mode,$normal_mode}"
+    fi
 
     if [ -z "$segment" ]; then
         segment+="$normal_and_prefix_indicator"
@@ -189,6 +208,12 @@ __process_settings() {
     fi
     if [ -z "$TMUX_POWERLINE_SEG_MODE_INDICATOR_COPY_MODE_TEXT_COLOR" ]; then
         export TMUX_POWERLINE_SEG_MODE_INDICATOR_COPY_MODE_TEXT_COLOR="${COPY_MODE_TEXT_COLOR_DEFAULT}"
+    fi
+    if [ -z "$TMUX_POWERLINE_SEG_MODE_INDICATOR_SUSPEND_MODE_TEXT" ]; then
+        export TMUX_POWERLINE_SEG_MODE_INDICATOR_SUSPEND_MODE_TEXT="${SUSPEND_MODE_TEXT_DEFAULT}"
+    fi
+    if [ -z "$TMUX_POWERLINE_SEG_MODE_INDICATOR_SUSPEND_MODE_TEXT_COLOR" ]; then
+        export TMUX_POWERLINE_SEG_MODE_INDICATOR_SUSPEND_MODE_TEXT_COLOR="${SUSPEND_MODE_TEXT_COLOR_DEFAULT}"
     fi
     if [ -z "$TMUX_POWERLINE_SEG_MODE_INDICATOR_SEPARATOR_TEXT" ]; then
         export TMUX_POWERLINE_SEG_MODE_INDICATOR_SEPARATOR_TEXT="${SEPARATOR_TEXT_DEFAULT}"
