@@ -2,32 +2,34 @@
 
 # Source lib to get the function get_tmux_pwd
 source "${TMUX_POWERLINE_DIR_LIB}/tmux_adapter.sh"
+source "${TMUX_POWERLINE_DIR_LIB}/vcs_helper.sh"
 
-other_symbol="⋯ "
+TMUX_POWERLINE_SEG_VCS_OTHERS_SYMBOL="${TMUX_POWERLINE_SEG_VCS_OTHERS_SYMBOL:-⋯}"
+
+generate_segmentrc() {
+	read -d '' rccontents << EORC
+# Symbol for count of untracked vcs files.
+# export TMUX_POWERLINE_SEG_VCS_OTHERS_SYMBOL="${TMUX_POWERLINE_SEG_VCS_OTHERS_SYMBOL}"
+EORC
+	echo "$rccontents"
+}
+
 
 run_segment() {
+	__process_settings
+	{ read vcs_type; read root_path; } < <(get_vcs_type_and_root_path)
 	tmux_path=$(get_tmux_cwd)
 	cd "$tmux_path"
-	stats=""
-	if [ -n "${git_stats=$(__parse_git_stats)}" ]; then
-		stats="$git_stats"
-	elif [ -n "${svn_stats=$(__parse_svn_stats)}" ]; then
-		stats="$svn_stats"
-	elif [ -n "${hg_stats=$(__parse_hg_stats)}" ]; then
-		stats="$hg_stats"
-	fi
+
+	stats="$(__parse_${vcs_type}_stats)"
+
 	if [[ -n "$stats" && $stats -gt 0 ]]; then
-		echo "${other_symbol}${stats}"
+		echo "${TMUX_POWERLINE_SEG_VCS_OTHERS_SYMBOL} ${stats}"
 	fi
 	return 0
 }
 
 __parse_git_stats(){
-	type git >/dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
-		return
-	fi
-
 	# check if git
 	[[ -z $(git rev-parse --git-dir 2> /dev/null) ]] && return
 
@@ -36,16 +38,19 @@ __parse_git_stats(){
 	echo $other
 }
 __parse_hg_stats(){
-	type svn >/dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
+	other=$(hg status -u | wc -l)
+	if [ -z "$other" ]; then
 		return
 	fi
-	# not yet implemented
+	echo $other
 }
 __parse_svn_stats(){
-	type hg >/dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
-		return
-	fi
 	# not yet implemented
+	return
+}
+
+__process_settings() {
+	if [ -z "$TMUX_POWERLINE_SEG_VCS_OTHERS_SYMBOL" ]; then
+		export TMUX_POWERLINE_SEG_VCS_OTHERS_SYMBOL="${TMUX_POWERLINE_SEG_VCS_OTHERS_SYMBOL}"
+	fi
 }

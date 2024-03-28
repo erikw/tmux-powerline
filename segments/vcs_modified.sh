@@ -3,32 +3,33 @@
 
 # Source lib to get the function get_tmux_pwd
 source "${TMUX_POWERLINE_DIR_LIB}/tmux_adapter.sh"
+source "${TMUX_POWERLINE_DIR_LIB}/vcs_helper.sh"
 
-mod_symbol="﹢"
+TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL="${TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL:-±}"
+
+generate_segmentrc() {
+	read -d '' rccontents << EORC
+# Symbol for count of modified vcs files.
+# export TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL="${TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL}"
+EORC
+	echo "$rccontents"
+}
+
 
 run_segment() {
+	__process_settings
+	{ read vcs_type; read root_path; } < <(get_vcs_type_and_root_path)
 	tmux_path=$(get_tmux_cwd)
 	cd "$tmux_path"
 
-	stats=""
-	if [ -n "${git_stats=$(__parse_git_stats)}" ]; then
-		stats="$git_stats"
-	elif [ -n "${svn_stats=$(__parse_svn_stats)}" ]; then
-		stats="$svn_stats"
-	elif [ -n "${hg_stats=$(__parse_hg_stats)}" ]; then
-		stats="$hg_stats"
-	fi
+	stats="$(__parse_${vcs_type}_stats)"
+
 	if [[ -n "$stats" && $stats -gt 0 ]]; then
-		echo "${mod_symbol}${stats}"
+		echo "${TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL} ${stats}"
 	fi
 }
 
 __parse_git_stats(){
-	type git >/dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
-		return
-	fi
-
 	# check if git
 	[[ -z $(git rev-parse --git-dir 2> /dev/null) ]] && return
 
@@ -37,18 +38,13 @@ __parse_git_stats(){
 	echo $modified
 }
 __parse_hg_stats(){
-	type hg >/dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
+	local modified=$(hg status -m | wc -l)
+	if [ -z "${modified}" ]; then
 		return
 	fi
-	# not yet implemented
+	echo ${modified}
 }
 __parse_svn_stats() {
-	type svn >/dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
-		return
-	fi
-
 	local svn_info=$(svn info 2>/dev/null)
 	if [ -z "${svn_info}" ]; then
 		return
@@ -60,11 +56,17 @@ __parse_svn_stats() {
 	local conflicted=$(echo "${svn_st}" | grep -E '^!?\s*C' | wc -l)
 
 	#print
-	if [[ $modified -gt 0 ]] ; then
-		local ret="#[fg=${TMUX_POWERLINE_CUR_SEGMENT_FG}]±${modified}"
-	fi
 	if [[ $conflicted -gt 0 ]] ; then
-		local ret="#[fg=colour${svn_colour}]ϟ${conflicted} ${ret}"
+		local ret="ϟ ${conflicted}"
+	fi
+	if [[ $modified -gt 0 ]] ; then
+		local ret="${modified} ${ret}"
 	fi
 	echo "${ret}"
+}
+
+__process_settings() {
+	if [ -z "$TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL" ]; then
+		export TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL="${TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL}"
+	fi
 }
