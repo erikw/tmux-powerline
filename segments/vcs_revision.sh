@@ -3,41 +3,43 @@
 
 # Source lib to get the function get_tmux_pwd
 source "${TMUX_POWERLINE_DIR_LIB}/tmux_adapter.sh"
+source "${TMUX_POWERLINE_DIR_LIB}/vcs_helper.sh"
 
 run_segment() {
+	{ read vcs_type; read root_path; } < <(get_vcs_type_and_root_path)
 	tmux_path=$(get_tmux_cwd)
 	cd "$tmux_path"
 
-	stats=""
-	if [[ -n "${svn_stats=$(__parse_svn_stats)}" ]]; then
-		stats="$svn_stats"
-	elif [[ -n "${hg_stats=$(__parse_hg_stats)}" ]]; then
-		stats="$hg_stats"
-	fi
+	stats="$(__parse_${vcs_type}_stats)"
+
 	if [[ -n "$stats" ]]; then
 		echo "${stats}"
 	fi
 }
 
-__parse_hg_stats(){
-	type hg >/dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
-		return
-	fi
-	# not yet implemented
-}
-__parse_svn_stats(){
-	type svn >/dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
+__parse_git_stats() {
+	local git_rev=$(git rev-parse --short HEAD)
+	if [ -z "$git_rev" ]; then
 		return
 	fi
 
+	echo "${git_rev}"
+}
+
+__parse_hg_stats(){
+	local hg_rev=$(hg id -i)
+	if [ -z "$hg_rev" ]; then
+		return
+	fi
+	echo "${hg_rev}"
+}
+__parse_svn_stats(){
 	local svn_info=$(svn info 2>/dev/null)
 	if [ -z "${svn_info}" ]; then
 		return
 	fi
 
-	local svn_ref=$(echo "${svn_info}" | sed -ne 's#^Revision: ##p')
+	local svn_rev=$(echo "${svn_info}" | sed -ne 's#^Revision: ##p')
 
-	echo "r${svn_ref}"
+	echo "r${svn_rev}"
 }

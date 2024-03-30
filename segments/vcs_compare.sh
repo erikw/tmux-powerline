@@ -3,20 +3,29 @@
 
 # Source lib to get the function get_tmux_pwd
 source "${TMUX_POWERLINE_DIR_LIB}/tmux_adapter.sh"
+source "${TMUX_POWERLINE_DIR_LIB}/vcs_helper.sh"
 
-flat_symbol="⤚"
+TMUX_POWERLINE_SEG_VCS_COMPARE_AHEAD_SYMBOL="${TMUX_POWERLINE_SEG_VCS_COMPARE_AHEAD_SYMBOL:-↑}"
+TMUX_POWERLINE_SEG_VCS_COMPARE_BEHIND_SYMBOL="${TMUX_POWERLINE_SEG_VCS_COMPARE_BEHIND_SYMBOL:-↓}"
+
+generate_segmentrc() {
+	read -d '' rccontents << EORC
+# Symbol if local branch is behind.
+# export TMUX_POWERLINE_SEG_VCS_COMPARE_AHEAD_SYMBOL="${TMUX_POWERLINE_SEG_VCS_COMPARE_AHEAD_SYMBOL}"
+# Symbol if local branch is ahead.
+# export TMUX_POWERLINE_SEG_VCS_COMPARE_BEHIND_SYMBOL="${TMUX_POWERLINE_SEG_VCS_COMPARE_BEHIND_SYMBOL}"
+EORC
+	echo "$rccontents"
+}
+
 
 run_segment() {
+	__process_settings
+	{ read vcs_type; read root_path; } < <(get_vcs_type_and_root_path)
 	tmux_path=$(get_tmux_cwd)
 	cd "$tmux_path"
-	stats=""
-	if [ -n "${git_stats=$(__parse_git_stats)}" ]; then
-		stats="$git_stats"
-	elif [ -n "${svn_stats=$(__parse_svn_stats)}" ]; then
-		stats="$svn_stats"
-	elif [ -n "${hg_stats=$(__parse_hg_stats)}" ]; then
-		stats="$hg_stats"
-	fi
+
+	stats="$(__parse_${vcs_type}_stats)"
 
 	if [ -n "$stats" ]; then
 		echo "${stats}"
@@ -25,11 +34,6 @@ run_segment() {
 }
 
 __parse_git_stats() {
-	type git >/dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
-		return
-	fi
-
 	# check if git
 	[[ -z $(git rev-parse --git-dir 2> /dev/null) ]] && return
 
@@ -55,17 +59,20 @@ __parse_git_stats() {
 }
 
 __parse_hg_stats() {
-	type hg >/dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
-		return
-	fi
 	# not yet implemented
+	return
 }
 
 __parse_svn_stats() {
-	type svn >/dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
-		return
-	fi
 	# not yet implemented
+	return
+}
+
+__process_settings() {
+	if [ -z "$TMUX_POWERLINE_SEG_VCS_COMPARE_AHEAD_SYMBOL" ]; then
+		export TMUX_POWERLINE_SEG_VCS_COMPARE_AHEAD_SYMBOL="${TMUX_POWERLINE_SEG_VCS_COMPARE_AHEAD_SYMBOL}"
+	fi
+	if [ -z "$TMUX_POWERLINE_SEG_VCS_COMPARE_BEHIND_SYMBOL" ]; then
+		export TMUX_POWERLINE_SEG_VCS_COMPARE_BEHIND_SYMBOL="${TMUX_POWERLINE_SEG_VCS_COMPARE_BEHIND_SYMBOL}"
+	fi
 }
