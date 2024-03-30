@@ -76,24 +76,8 @@ Laptop mode: a battery segment.
 
 ![right-status, weather and battery](img/right-status_weather_battery.png)
 
-# :raised_hands: Project status + Co-maintainer wanted!
-This project is considered feature complete (see reasoning below). Only bug fixes and new segments will be accepted. 
-
-*Unless... you want to be a co-maintainer!*
-
-Do you enjoy hacking tmux and your shell? As less time is becoming available for me to keep up with the incoming PRs and maintainace, I would be happy to add someone as a co-maintainer.
-
-Your profile could look like:
-* Use tmux regularly, configured with tmux-powerline.
-* Experience in writing maintainable, correct and understandable bash scripts, or willing to become proficient. Some prior knowledge would be needed.
-  * Understanding of portability of shell scripting (POSIX) e.g. that some command line swithces to common tools might differ on Linux to BSD or macOS.
-* When following the code paths from [powerline.sh](powerline.sh) to [lib/powerline.sh](lib/powerline.sh) understand how the powerline is rendered.
-* Understand how the segment's different functions are called and expected to behave.
-* Understand how themes and the config file works.
-
-
-Is this you? Contact me at [erikw.me/contact](https://erikw.me/contact/) if you're interested!
-
+# Co-maintainer
+[@xx4h](https://github.com/xx4h) is helping out developing, maintaining and managing this project!
 
 # Requirements
 Requirements for the lib to work are:
