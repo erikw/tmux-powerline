@@ -89,7 +89,7 @@ generate_default_config() {
 	# Overlay directory to look for segments. There you can put your own segments outside the repo. Fallback will still be the "segments" directory in the repo.
 	export TMUX_POWERLINE_DIR_USER_SEGMENTS="\${XDG_CONFIG_HOME:-\$HOME/.config}/tmux-powerline/segments"
 
-	# The initial visibility of the status bar. Can be {"on", "off", "2"}. 2 will create two status lines.
+	# The initial visibility of the status bar. Can be {"on", "off", "2"}. 2 will create two status lines: one for the window list and one with status bar segments. 
 	export TMUX_POWERLINE_STATUS_VISIBILITY="${TMUX_POWERLINE_STATUS_VISIBILITY_DEFAULT}"
 	# In case of visibility = 2, where to display window status and where left/right status bars.
 	# 0: window status top, left/right status bottom; 1: window status bottom, left/right status top
