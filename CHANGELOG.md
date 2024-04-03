@@ -6,12 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Dual status bar support [#380](https://github.com/erikw/tmux-powerline/pull/380)
-- New segment date_week [#376](https://github.com/erikw/tmux-powerline/pull/376)
-- New segment kubernetes_context [#378](https://github.com/erikw/tmux-powerline/pull/378)
-- New segment vcs_rootpath [#374](https://github.com/erikw/tmux-powerline/pull/374)
+- Dual status bar support [#379](https://github.com/erikw/tmux-powerline/issues/379)
+- New segment date_week [#375](https://github.com/erikw/tmux-powerline/issues/375)
+- New segment kubernetes_context [#377](https://github.com/erikw/tmux-powerline/issues/377)
+- New segment vcs_rootpath [#373](https://github.com/erikw/tmux-powerline/issues/374)
+- New segment vpn [#383](https://github.com/erikw/tmux-powerline/issues/383)
 ### Fixed
-- Fix vcs segments [#372](https://github.com/erikw/tmux-powerline/pull/372)
+- Fix vcs segments [#371](https://github.com/erikw/tmux-powerline/issues/371)
+- Fix wrong session_info in nested tmux session [#359](https://github.com/erikw/tmux-powerline/issues/359)
 
 
 ## [3.0.0] - 2023-10-02
