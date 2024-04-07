@@ -1,59 +1,71 @@
+# shellcheck shell=bash
 # This checks if the current branch is ahead of
 # or behind the remote branch with which it is tracked
 
 # Source lib to get the function get_tmux_pwd
+# shellcheck source=lib/tmux_adapter.sh
 source "${TMUX_POWERLINE_DIR_LIB}/tmux_adapter.sh"
+# shellcheck source=lib/vcs_helper.sh
 source "${TMUX_POWERLINE_DIR_LIB}/vcs_helper.sh"
 
-TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL="${TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL:-±}"
+TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL="${TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL:-± }"
+
 
 generate_segmentrc() {
-	read -d '' rccontents << EORC
+	read -r -d '' rccontents << EORC
 # Symbol for count of modified vcs files.
 # export TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL="${TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL}"
 EORC
 	echo "$rccontents"
 }
 
-
 run_segment() {
-	__process_settings
-	{ read vcs_type; read root_path; } < <(get_vcs_type_and_root_path)
+	{ read -r vcs_type; read -r vcs_rootpath; } < <(get_vcs_type_and_root_path)
 	tmux_path=$(get_tmux_cwd)
-	cd "$tmux_path"
+	cd "$tmux_path" || return
 
-	stats="$(__parse_${vcs_type}_stats)"
+	stats=$(__parse_"${vcs_type}"_stats "$vcs_rootpath")
 
 	if [[ -n "$stats" && $stats -gt 0 ]]; then
-		echo "${TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL} ${stats}"
+		echo "${TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL}${stats}"
 	fi
 }
 
 __parse_git_stats(){
+  local rootpath
+	local modified
+
+	rootpath=$1
+
 	# check if git
 	[[ -z $(git rev-parse --git-dir 2> /dev/null) ]] && return
 
 	# return the number of modified but not staged items
-	modified=$(git ls-files --modified `git rev-parse --show-cdup` | wc -l)
-	echo $modified
+	modified=$(git ls-files --modified "$rootpath" | wc -l)
+	echo "$modified"
 }
 __parse_hg_stats(){
-	local modified=$(hg status -m | wc -l)
-	if [ -z "${modified}" ]; then
-		return
-	fi
-	echo ${modified}
+	local modified
+
+	modified=$(hg status -m | wc -l)
+	echo "${modified}"
 }
 __parse_svn_stats() {
-	local svn_info=$(svn info 2>/dev/null)
+	local svn_info
+	local svn_wcroot
+	local svn_st
+	local modified
+	local conflicted
+
+	svn_info=$(svn info 2>/dev/null)
 	if [ -z "${svn_info}" ]; then
 		return
 	fi
 
-	local svn_wcroot=$(echo "${svn_info}" | sed -ne 's#^Working Copy Root Path: ##p')
-	local svn_st=$(cd "${svn_wcroot}"; svn st)
-	local modified=$(echo "${svn_st}" | grep -E '^M' | wc -l)
-	local conflicted=$(echo "${svn_st}" | grep -E '^!?\s*C' | wc -l)
+	svn_wcroot=$(echo "${svn_info}" | sed -ne 's#^Working Copy Root Path: ##p')
+	svn_st=$(cd "${svn_wcroot}" && svn st)
+	modified=$(echo "${svn_st}" | grep -E '^M' -c)
+	conflicted=$(echo "${svn_st}" | grep -E '^!?\s*C' -c)
 
 	#print
 	if [[ $conflicted -gt 0 ]] ; then
@@ -63,10 +75,4 @@ __parse_svn_stats() {
 		local ret="${modified} ${ret}"
 	fi
 	echo "${ret}"
-}
-
-__process_settings() {
-	if [ -z "$TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL" ]; then
-		export TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL="${TMUX_POWERLINE_SEG_VCS_MODIFIED_SYMBOL}"
-	fi
 }
