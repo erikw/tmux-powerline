@@ -51,10 +51,10 @@ __process_settings() {
 		echo "No location defined.";
 		exit 8
 	fi
-    if [-z "$TMUX_POWERLINE_SEG_AIR_OPEN_WEATHER_API_KEY" ]; then
-        echo "No API Key defined.";
-        exit 8
-    fi
+	if [ -z "$TMUX_POWERLINE_SEG_AIR_OPEN_WEATHER_API_KEY" ]; then
+		echo "No API Key defined.";
+		exit 8
+	fi
 }
 
 __openweather() {
