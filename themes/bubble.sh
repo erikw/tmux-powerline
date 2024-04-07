@@ -60,7 +60,7 @@ TMUX_POWERLINE_SEPARATOR_THIN="|"
 # See Color formatting section below for details on what colors can be used here.
 TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR=${TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR:-$thm_bg}
 TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR=${TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR:-$thm_fg}
-TMUX_POWERLINE_SEG_AIR_COLOR=$("${TMUX_POWERLINE_DIR_HOME}/segments/air_color.sh")
+source ${TMUX_POWERLINE_DIR_HOME}/segments/air_color.sh
 
 TMUX_POWERLINE_DEFAULT_LEFTSIDE_SEPARATOR=${TMUX_POWERLINE_DEFAULT_LEFTSIDE_SEPARATOR:-$TMUX_POWERLINE_SEPARATOR_RIGHT_BOLD}
 TMUX_POWERLINE_DEFAULT_RIGHTSIDE_SEPARATOR=${TMUX_POWERLINE_DEFAULT_RIGHTSIDE_SEPARATOR:-$TMUX_POWERLINE_SEPARATOR_LEFT_BOLD}
@@ -129,13 +129,13 @@ if [ -z $TMUX_POWERLINE_LEFT_STATUS_SEGMENTS ]; then
 	TMUX_POWERLINE_LEFT_STATUS_SEGMENTS=(
 		"tmux_session_info $blue $thm_bg" \
 		"hostname $eggplant $thm_bg" \
-		# "ifstat 30 255" \
+		#"ifstat 30 255" \
 		#"ifstat_sys 30 255" \
 		"lan_ip $sky_blue $thm_bg ${TMUX_POWERLINE_SEPARATOR_RIGHT_THIN}" \
 		"wan_ip $sky_blue $thm_bg" \
 		"vcs_branch $thm_gray" \
-        # "air ${TMUX_POWERLINE_SEG_AIR_COLOR} $thm_bg" \
-		# "vcs_compare 60 255" \
+    #"air ${TMUX_POWERLINE_SEG_AIR_COLOR} $thm_bg" \
+		#"vcs_compare 60 255" \
 		#"vcs_staged 64 255" \
 		#"vcs_modified 9 255" \
 		#"vcs_others 245 0" \
@@ -149,11 +149,11 @@ if [ -z $TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS ]; then
 		#"macos_notification_count 29 255" \
 		#"mailcount 9 255" \
 		"now_playing $spotify_green $spotify_black" \
-		# "cpu 240 136" \
-		# "load 237 167" \
-		# "tmux_mem_cpu_load 234 136" \
+		#"cpu 240 136" \
+		#"load 237 167" \
+		#"tmux_mem_cpu_load 234 136" \
 		"battery $blue $thm_bg" \
-		# "weather 37 255" \
+		#"weather 37 255" \
 		#"rainbarf 0 ${TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR}" \
 		#"xkb_layout 125 117" \
 		"date_day $teal $thm_bg" \
