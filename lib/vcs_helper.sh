@@ -1,10 +1,12 @@
+# shellcheck shell=bash
 # Source lib to get the function get_tmux_pwd
+# shellcheck source=lib/tmux_adapter.sh
 source "${TMUX_POWERLINE_DIR_LIB}/tmux_adapter.sh"
 
 
 get_vcs_type_and_root_path() {
 	tmux_path=$(get_tmux_cwd)
-	cd "$tmux_path"
+	cd "$tmux_path" || return
 	root_path=""
 	git_root_path="$(__parse_git_root_path)"
 	hg_root_path="$(__parse_hg_root_path)"
@@ -16,35 +18,35 @@ get_vcs_type_and_root_path() {
 }
 
 __parse_git_root_path() {
-	type git >/dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
+	if ! type git >/dev/null 2>&1; then
 		return
 	fi
 
-	root_path=$(git rev-parse --show-toplevel 2>/dev/null)
-	[ $? -ne 0 ] && return
+	if ! root_path=$(git rev-parse --show-toplevel 2>/dev/null); then
+		return
+	fi
 	echo "${root_path}"
 }
 
 __parse_hg_root_path() {
-	type hg >/dev/null 2>&1
-	if [ $? -ne 0 ]; then
+	if ! type hg >/dev/null 2>&1; then
 		return
 	fi
 
-	root_path=$(hg root 2>/dev/null)
-	[ $? -ne 0 ] && return
+	if ! root_path=$(hg root 2>/dev/null); then
+		return
+	fi
 	echo "${root_path}"
 }
 
 __parse_svn_root_path() {
-	type svn >/dev/null 2>&1
-	if [ $? -ne 0 ]; then
+	if ! type svn >/dev/null 2>&1; then
 		return
 	fi
 
-	root_path=$(svn info --show-item wc-root 2>/dev/null)
-	[ $? -ne 0 ] && return
+	if ! root_path=$(svn info --show-item wc-root 2>/dev/null); then
+		return
+	fi
 	echo "${root_path}"
 }
 
