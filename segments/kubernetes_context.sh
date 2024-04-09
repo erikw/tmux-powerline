@@ -6,7 +6,7 @@ TMUX_POWERLINE_SEG_KUBERNETES_CONTEXT_SEPARATOR="${TMUX_POWERLINE_SEG_KUBERNETES
 
 
 generate_segmentrc() {
-	read -d '' rccontents << EORC
+	read -r -d '' rccontents << EORC
 # Kubernetes config context display mode {"name_namespace", "name", "namespace"}.
 # export TMUX_POWERLINE_SEG_KUBERNETES_CONTEXT_DISPLAY_MODE="${TMUX_POWERLINE_SEG_KUBERNETES_CONTEXT_DISPLAY_MODE}"
 # Kubernetes config context symbol.
@@ -21,8 +21,7 @@ EORC
 
 run_segment() {
 	__process_settings
-	type kubectl >/dev/null 2>&1
-	if [ $? -ne 0 ]; then
+	if ! type kubectl >/dev/null 2>&1; then
 		return 0
 	fi
 	k_context=$(kubectl config current-context)
