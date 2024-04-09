@@ -5,4 +5,4 @@ if [ -n "$air_temp_file" ] && [ -f "$air_temp_file" ]; then
     TMUX_POWERLINE_SEG_AIR_COLOR=$(awk '{print $NF}' "$air_temp_file")
 fi
 
-echo $TMUX_POWERLINE_SEG_AIR_COLOR
+echo "${TMUX_POWERLINE_SEG_AIR_COLOR:-'37'}"
