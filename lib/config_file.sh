@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Read user config file.
 
 process_settings() {
@@ -62,8 +63,10 @@ process_settings() {
 	eval TMUX_POWERLINE_DIR_USER_SEGMENTS="$TMUX_POWERLINE_DIR_USER_SEGMENTS"
 	eval TMUX_POWERLINE_DIR_USER_THEMES="$TMUX_POWERLINE_DIR_USER_THEMES"
 	if [ -n "$TMUX_POWERLINE_DIR_USER_THEMES" ] && [ -f "${TMUX_POWERLINE_DIR_USER_THEMES}/${TMUX_POWERLINE_THEME}.sh" ]; then
+		# shellcheck disable=SC1090
 		source "${TMUX_POWERLINE_DIR_USER_THEMES}/${TMUX_POWERLINE_THEME}.sh"
 	else
+		# shellcheck disable=SC1090
 		source "${TMUX_POWERLINE_DIR_THEMES}/${TMUX_POWERLINE_THEME}.sh"
 	fi
 
@@ -82,7 +85,7 @@ process_settings() {
 }
 
 generate_default_config() {
-	read -d '' config_contents  << EORC
+	read -r -d '' config_contents << EORC
 # Default configuration file for tmux-powerline.
 # Modeline {
 #	 vi: foldmarker={,} foldmethod=marker foldlevel=0 tabstop=4 filetype=sh
@@ -128,7 +131,8 @@ generate_default_config() {
 # }
 EORC
 
-	for segment in ${TMUX_POWERLINE_DIR_SEGMENTS}/*.sh; do
+	for segment in "${TMUX_POWERLINE_DIR_SEGMENTS}"/*.sh; do
+		# shellcheck disable=SC1090
 		source "$segment"
 		if declare -f generate_segmentrc >/dev/null; then
 			segmentrc=$(generate_segmentrc | sed -e 's/^/\\t/g')
@@ -145,6 +149,7 @@ EORC
 
 __read_config_file() {
 	if [  -f "$TMUX_POWERLINE_CONFIG_FILE" ]; then
+		# shellcheck disable=SC1090
 		source "$TMUX_POWERLINE_CONFIG_FILE"
 	fi
 }

@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Utilities for formatting content
 #
 # Dependencies:

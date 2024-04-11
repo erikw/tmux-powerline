@@ -1,3 +1,4 @@
+# shellcheck shell=bash disable=SC2034
 ####################################################################################################
 # This is a bubble theme created by @embe221ed (https://github.com/embe221ed)
 # colors are inspired by catppuccin palettes (https://github.com/catppuccin/catppuccin)
@@ -60,7 +61,7 @@ TMUX_POWERLINE_SEPARATOR_THIN="|"
 # See Color formatting section below for details on what colors can be used here.
 TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR=${TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR:-$thm_bg}
 TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR=${TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR:-$thm_fg}
-TMUX_POWERLINE_SEG_AIR_COLOR=$("${TMUX_POWERLINE_DIR_HOME}/segments/air_color.sh")
+TMUX_POWERLINE_SEG_AIR_COLOR=$(air_color)
 
 TMUX_POWERLINE_DEFAULT_LEFTSIDE_SEPARATOR=${TMUX_POWERLINE_DEFAULT_LEFTSIDE_SEPARATOR:-$TMUX_POWERLINE_SEPARATOR_RIGHT_BOLD}
 TMUX_POWERLINE_DEFAULT_RIGHTSIDE_SEPARATOR=${TMUX_POWERLINE_DEFAULT_RIGHTSIDE_SEPARATOR:-$TMUX_POWERLINE_SEPARATOR_LEFT_BOLD}
@@ -68,7 +69,8 @@ TMUX_POWERLINE_DEFAULT_RIGHTSIDE_SEPARATOR=${TMUX_POWERLINE_DEFAULT_RIGHTSIDE_SE
 # See `man tmux` for additional formatting options for the status line.
 # The `format regular` and `format inverse` functions are provided as conveinences
 
-if [ -z $TMUX_POWERLINE_WINDOW_STATUS_CURRENT ]; then
+# shellcheck disable=SC2128
+if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_CURRENT" ]; then
 	TMUX_POWERLINE_WINDOW_STATUS_CURRENT=(
 		"#[$(format regular)]" \
 		"$TMUX_POWERLINE_DEFAULT_RIGHTSIDE_SEPARATOR" \
@@ -81,13 +83,15 @@ if [ -z $TMUX_POWERLINE_WINDOW_STATUS_CURRENT ]; then
 	)
 fi
 
-if [ -z $TMUX_POWERLINE_WINDOW_STATUS_STYLE ]; then
+# shellcheck disable=SC2128
+if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_STYLE" ]; then
 	TMUX_POWERLINE_WINDOW_STATUS_STYLE=(
 		"$(format regular)"
 	)
 fi
 
-if [ -z $TMUX_POWERLINE_WINDOW_STATUS_FORMAT ]; then
+# shellcheck disable=SC2128
+if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_FORMAT" ]; then
 	TMUX_POWERLINE_WINDOW_STATUS_FORMAT=(
 		"#[$(format regular)]" \
 		"  #I#{?window_flags,#F, } " \
@@ -125,7 +129,8 @@ fi
 # separator_foreground_color options must still be specified so that appropriate index
 # of options to support the spacing_disable and separator_disable features can be used
 
-if [ -z $TMUX_POWERLINE_LEFT_STATUS_SEGMENTS ]; then
+# shellcheck disable=SC1143,SC2128
+if [ -z "$TMUX_POWERLINE_LEFT_STATUS_SEGMENTS" ]; then
 	TMUX_POWERLINE_LEFT_STATUS_SEGMENTS=(
 		"tmux_session_info $blue $thm_bg" \
 		"hostname $eggplant $thm_bg" \
@@ -142,7 +147,8 @@ if [ -z $TMUX_POWERLINE_LEFT_STATUS_SEGMENTS ]; then
 	)
 fi
 
-if [ -z $TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS ]; then
+# shellcheck disable=SC1143,SC2128
+if [ -z "$TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS" ]; then
 	TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS=(
 		# "earthquake 3 0" \
 		"pwd $mauve $surface0" \
