@@ -24,6 +24,8 @@ run_segment() {
 	cd "$tmux_path" || return
 
 	stats=$(__parse_"${vcs_type}"_stats "$vcs_rootpath")
+	# Ensure spaces are removed (e.g. from macOS 'wc' command)
+	stats=${stats//[[:space:]]/}
 
 	if [[ -n "$stats" && $stats -gt 0 ]]; then
 		echo "${TMUX_POWERLINE_SEG_VCS_OTHERS_SYMBOL} ${stats}"
