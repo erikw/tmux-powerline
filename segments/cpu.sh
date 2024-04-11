@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Prints the CPU usage: user% sys% idle.
 
 run_segment() {

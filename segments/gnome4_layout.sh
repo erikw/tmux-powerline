@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Print the currently used keyboard layout
 # Works with Gnome 40
 # Set smaller update interval in .tmux.conf: 'set-option -g status-interval 1'
