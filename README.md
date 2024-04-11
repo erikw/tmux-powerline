@@ -87,7 +87,7 @@ Laptop mode: a battery segment.
 Requirements for the lib to work are:
 * `tmux -V` >= 2.1
 * `bash --version` >= 3.2 (Does not have to be your default shell.)
-* A patched font. Follow instructions at [Powerline Installation](http://powerline.readthedocs.org/en/latest/installation/linux.html) or [download](https://github.com/powerline/fonts) a new one. However you can use other substitute symbols as well; see `config.sh`.
+* Nerd Font. Follow instructions at [Font Installation](https://github.com/ryanoasis/nerd-fonts?tab=readme-ov-file#font-installation). However you can use other substitute symbols as well; see `config.sh`.
 
 ## Segment Requirements
 Some segments have their own requirements. If you enable them in your theme, make sure all requirements are met for those.
