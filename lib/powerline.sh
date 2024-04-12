@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Library functions
 
 print_powerline_side() {

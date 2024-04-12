@@ -1,7 +1,8 @@
+# shellcheck shell=bash
 # Shell Configuration
 # vi: sw=8 ts=8 noet
 
-ostype() { echo $OSTYPE | tr '[A-Z]' '[a-z]'; }
+ostype() { echo "$OSTYPE" | tr '[:upper:]' '[:lower:]'; }
 
 export SHELL_PLATFORM='unknown'
 

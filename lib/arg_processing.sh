@@ -1,4 +1,5 @@
-#! Check script arguments.
+# shellcheck shell=bash
+# Check script arguments.
 
 check_arg_segment() {
 	local segment="$1"

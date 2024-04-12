@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Other settings and helper functions.
 
 debug_mode_enabled() {

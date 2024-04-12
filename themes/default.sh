@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Default Theme
 # If changes made here does not take effect, then try to re-create the tmux session to force reload.
 
@@ -16,7 +17,8 @@ fi
 # See Color formatting section below for details on what colors can be used here.
 TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR=${TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR:-'235'}
 TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR=${TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR:-'255'}
-TMUX_POWERLINE_SEG_AIR_COLOR=$("${TMUX_POWERLINE_DIR_HOME}/segments/air_color.sh")
+# shellcheck disable=SC2034
+TMUX_POWERLINE_SEG_AIR_COLOR=$(air_color)
 
 TMUX_POWERLINE_DEFAULT_LEFTSIDE_SEPARATOR=${TMUX_POWERLINE_DEFAULT_LEFTSIDE_SEPARATOR:-$TMUX_POWERLINE_SEPARATOR_RIGHT_BOLD}
 TMUX_POWERLINE_DEFAULT_RIGHTSIDE_SEPARATOR=${TMUX_POWERLINE_DEFAULT_RIGHTSIDE_SEPARATOR:-$TMUX_POWERLINE_SEPARATOR_LEFT_BOLD}
@@ -24,7 +26,8 @@ TMUX_POWERLINE_DEFAULT_RIGHTSIDE_SEPARATOR=${TMUX_POWERLINE_DEFAULT_RIGHTSIDE_SE
 # See `man tmux` for additional formatting options for the status line.
 # The `format regular` and `format inverse` functions are provided as conveniences
 
-if [ -z $TMUX_POWERLINE_WINDOW_STATUS_CURRENT ]; then
+# shellcheck disable=SC2128
+if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_CURRENT" ]; then
 	TMUX_POWERLINE_WINDOW_STATUS_CURRENT=(
 		"#[$(format inverse)]" \
 		"$TMUX_POWERLINE_DEFAULT_LEFTSIDE_SEPARATOR" \
@@ -36,13 +39,15 @@ if [ -z $TMUX_POWERLINE_WINDOW_STATUS_CURRENT ]; then
 	)
 fi
 
-if [ -z $TMUX_POWERLINE_WINDOW_STATUS_STYLE ]; then
+# shellcheck disable=SC2128
+if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_STYLE" ]; then
 	TMUX_POWERLINE_WINDOW_STATUS_STYLE=(
 		"$(format regular)"
 	)
 fi
 
-if [ -z $TMUX_POWERLINE_WINDOW_STATUS_FORMAT ]; then
+# shellcheck disable=SC2128
+if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_FORMAT" ]; then
 	TMUX_POWERLINE_WINDOW_STATUS_FORMAT=(
 		"#[$(format regular)]" \
 		"  #I#{?window_flags,#F, } " \
@@ -80,7 +85,8 @@ fi
 # separator_foreground_color options must still be specified so that appropriate index
 # of options to support the spacing_disable and separator_disable features can be used
 
-if [ -z $TMUX_POWERLINE_LEFT_STATUS_SEGMENTS ]; then
+# shellcheck disable=SC1143,SC2128
+if [ -z "$TMUX_POWERLINE_LEFT_STATUS_SEGMENTS" ]; then
 	TMUX_POWERLINE_LEFT_STATUS_SEGMENTS=(
 		"tmux_session_info 148 234" \
 		"hostname 33 0" \
@@ -98,7 +104,8 @@ if [ -z $TMUX_POWERLINE_LEFT_STATUS_SEGMENTS ]; then
 	)
 fi
 
-if [ -z $TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS ]; then
+# shellcheck disable=SC1143,SC2128
+if [ -z "$TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS" ]; then
 	TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS=(
 		#"earthquake 3 0" \
 		"pwd 89 211" \
