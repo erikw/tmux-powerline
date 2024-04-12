@@ -11,9 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New segment kubernetes_context [#377](https://github.com/erikw/tmux-powerline/issues/377)
 - New segment vcs_rootpath [#373](https://github.com/erikw/tmux-powerline/issues/374)
 - New segment vpn [#383](https://github.com/erikw/tmux-powerline/issues/383)
+### Changed
+- Improved roll_text function [#390](https://github.com/erikw/tmux-powerline/issues/390)
+- Improved segment ifstat [#402](https://github.com/erikw/tmux-powerline/issues/402)
+- [WIP] Minor improvements, cleanup & shellcheck compliance  
+  [#392](https://github.com/erikw/tmux-powerline/pull/392), [#395](https://github.com/erikw/tmux-powerline/pull/395), [#396](https://github.com/erikw/tmux-powerline/pull/396), [#400](https://github.com/erikw/tmux-powerline/pull/400), [#401](https://github.com/erikw/tmux-powerline/pull/401), [#403](https://github.com/erikw/tmux-powerline/pull/403)
 ### Fixed
 - Fix vcs segments [#371](https://github.com/erikw/tmux-powerline/issues/371)
 - Fix wrong session_info in nested tmux session [#359](https://github.com/erikw/tmux-powerline/issues/359)
+- Fix air segment [#394](https://github.com/erikw/tmux-powerline/pull/394) & [#397](https://github.com/erikw/tmux-powerline/pull/397)
 
 
 ## [3.0.0] - 2023-10-02
