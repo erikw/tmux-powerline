@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Default values for non segment configuration options.
 
 export TMUX_POWERLINE_DEBUG_MODE_ENABLED_DEFAULT="false"
