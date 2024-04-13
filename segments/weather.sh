@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Prints the current weather in Celsius, Fahrenheits or lord Kelvins. The forecast is cached and updated with a period.
 # To configure your location, set TMUX_POWERLINE_SEG_WEATHER_LOCATION in the tmux-powerline config file.
 
@@ -15,7 +16,7 @@ fi
 
 
 generate_segmentrc() {
-	read -d '' rccontents  << EORC
+	read -r -d '' rccontents << EORC
 # The data provider to use. Currently only "yahoo" is supported.
 export TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER="${TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT}"
 # What unit to use. Can be any of {c,f,k}.
@@ -41,7 +42,7 @@ run_segment() {
 	case "$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER" in
 		"yrno") weather=$(__yrno) ;;
 		*)
-			echo "Unknown weather provider [${$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER}]";
+			echo "Unknown weather provider [$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER]";
 			return 1
 	esac
 	if [ -n "$weather" ]; then
@@ -75,9 +76,9 @@ __yrno() {
 	degree=""
 	if [ -f "$tmp_file" ]; then
 		if shell_is_osx || shell_is_bsd; then
-			last_update=$(stat -f "%m" ${tmp_file})
+			last_update=$(stat -f "%m" "${tmp_file}")
 		elif shell_is_linux; then
-			last_update=$(stat -c "%Y" ${tmp_file})
+			last_update=$(stat -c "%Y" "${tmp_file}")
 		fi
 		time_now=$(date +%s)
 
@@ -88,8 +89,7 @@ __yrno() {
 	fi
 
 	if [ -z "$degree" ]; then
-		weather_data=$(curl --max-time 4 -s "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}")
-		if [ "$?" -eq "0" ]; then
+		if weather_data=$(curl --max-time 4 -s "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}"); then
 		grep=$TMUX_POWERLINE_SEG_WEATHER_GREP_DEFAULT
 			error=$(echo "$weather_data" | $grep -i "error");
 			if [ -n "$error" ]; then
@@ -98,23 +98,8 @@ __yrno() {
 			fi
 
 			jsonparser="${TMUX_POWERLINE_SEG_WEATHER_JSON}"
-			unit=$(echo "$weather_data" | $jsonparser -r .properties.meta.units.air_temperature)
 			degree=$(echo "$weather_data" | $jsonparser -r .properties.timeseries[0].data.instant.details.air_temperature)
 			condition=$(echo "$weather_data" | $jsonparser -r .properties.timeseries[0].data.next_1_hours.summary.symbol_code)
-			# Pull the times for sunrise and sunset so we know when to change the day/night indicator
-			# <yweather:astronomy sunrise="6:56 am"   sunset="6:21 pm"/>
-			if shell_is_osx || shell_is_bsd; then
-				date_arg='-j -f "%H:%M %p "'
-			else
-				date_arg='-d'
-			fi
-
-    		# # https://api.sunrise-sunset.org/json?lat=$TMUX_POWERLINE_SEG_WEATHER_LAT&lng=$TMUX_POWERLINE_SEG_WEATHER_LON&date=today
-			# suntimes=$(curl --max-time 4 -s "https://api.sunrise-sunset.org/json?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lng=${TMUX_POWERLINE_SEG_WEATHER_LON}&date=today")
-			# sunrise=$(echo $suntimes | $jsonparser -r .results.sunrise | cut -d " " -f1)
-			# sunrise=$(date %H%M -d $sunrise)
-			# sunset=$(echo $suntimes | $jsonparser -r .results.sunset | cut -d " " -f1)
-			# sunset=$(date %H%M -d $sunset)
 		elif [ -f "${tmp_file}" ]; then
 			__read_tmp_file
 		fi
