@@ -4,12 +4,6 @@ on:
   workflow_dispatch:
   push:
     branches: main
-    paths-ignore:
-      - '**/*.md'
-  pull_request:
-    branches: main
-    paths-ignore:
-      - '**/*.md'
 
 permissions: { }
 
@@ -32,7 +26,7 @@ jobs:
         uses: super-linter/super-linter@v6.3.1
         env:
           # only validate new or edited files
-          VALIDATE_ALL_CODEBASE: false
+          VALIDATE_ALL_CODEBASE: true
           VALIDATE_BASH_EXEC: false
           VALIDATE_CPP: false
           VALIDATE_CLANG_FORMAT: false
