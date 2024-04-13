@@ -1,0 +1,35 @@
+name: Lint Pull Request
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: main
+
+permissions: { }
+
+jobs:
+  build:
+    name: Lint Pull Request
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      # To report github actions status checks
+      statuses: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          # Full git history is needed to get a proper list of changed files within `super-linter`
+          fetch-depth: 0
+      - name: Lint Code Base
+        uses: super-linter/super-linter@v6
+        env:
+          # only validate new or edited files
+          VALIDATE_ALL_CODEBASE: false
+          VALIDATE_BASH_EXEC: false
+          VALIDATE_CPP: false
+          VALIDATE_CLANG_FORMAT: false
+          VALIDATE_SHELL_SHFMT: false
+          VALIDATE_PYTHON_PYLINT: false
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
