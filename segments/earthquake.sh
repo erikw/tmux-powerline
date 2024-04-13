@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Prints the most recent earthquake (currently only supports japan)
 # It prints the location, time, and magnitude if the quake happened within
 # a timelimit and magnitude threshold
@@ -13,8 +14,9 @@ TMUX_POWERLINE_SEG_EARTHQUAKE_ALERT_TIME_WINDOW_DEFAULT="60"
 TMUX_POWERLINE_SEG_EARTHQUAKE_TIME_FORMAT_DEFAULT='(%H:%M)'
 TMUX_POWERLINE_SEG_EARTHQUAKE_MIN_MAGNITUDE_DEFAULT='3'
 
+
 generate_segmentrc() {
-	read -d '' rccontents  << EORC
+	read -r -d '' rccontents  << EORC
 # The data provider to use. Currently only "goo" is supported.
 export TMUX_POWERLINE_SEG_EARTHQUAKE_DATA_PROVIDER="${TMUX_POWERLINE_SEG_EARTHQUAKE_DATA_PROVIDER_DEFAULT}"
 # How often to update the earthquake data in seconds.
@@ -40,7 +42,7 @@ run_segment() {
 	case "$TMUX_POWERLINE_SEG_EARTHQUAKE_DATA_PROVIDER" in
 		"goo") earthquake=$(__goo_earthquake) ;;
 		*)
-			echo "Unknown earthquake-information provider [${$TMUX_POWERLINE_SEG_EARTHQUAKE_DATA_PROVIDER}]";
+			echo "Unknown earthquake-information provider [$TMUX_POWERLINE_SEG_EARTHQUAKE_DATA_PROVIDER]";
 			return 1
 	esac
 	if [ -n "$earthquake" ]; then
@@ -73,9 +75,9 @@ __goo_earthquake() {
 	timestamp=""
 	if [[ -f "$tmp_file" ]]; then
 		if shell_is_osx || shell_is_bsd; then
-			last_update=$(stat -f "%m" ${tmp_file})
+			last_update=$(stat -f "%m" "${tmp_file}")
 		elif shell_is_linux; then
-			last_update=$(stat -c "%Y" ${tmp_file})
+			last_update=$(stat -c "%Y" "${tmp_file}")
 		fi
 		time_now=$(date +%s)
 
@@ -87,10 +89,9 @@ __goo_earthquake() {
 
 	if [ -z "$magnitude" ]; then
 		# get the rss file, convert encoding to UTF-8, then delete windows carriage-returns
-		earthquake_data=$(curl --max-time 4 -s "http://weather.goo.ne.jp/earthquake/index.rdf" | iconv -f EUC-JP -t UTF-8 | tr -d "\r")
-		if [ "$?" -eq "0" ]; then
-            # This rss feed is not very clean or easy to use, but we will use it because
-            # this is all that can be found for now
+		if earthquake_data=$(curl --max-time 4 -s "http://weather.goo.ne.jp/earthquake/index.rdf" | iconv -f EUC-JP -t UTF-8 | tr -d "\r"); then
+		# This rss feed is not very clean or easy to use, but we will use it because
+		# this is all that can be found for now
 
 			# we grab the data from the title of the first item (most recent earthquake)
 			earthquake_data=${earthquake_data#*item\><title>}
@@ -98,16 +99,16 @@ __goo_earthquake() {
 			earthquake_data=${earthquake_data%%頃*}
 
 			# pluck our data
-			location=$(echo $earthquake_data | awk '{print $2}')
-			magnitude=$(echo $earthquake_data | awk '{print $4}')
+			location=$(echo "$earthquake_data" | awk '{print $2}')
+			magnitude=$(echo "$earthquake_data" | awk '{print $4}')
 			timestamp=${earthquake_data#*\(}
 
 			__convert_jp_magnitude
 			__convert_jp_timestamp
 
-			echo $location  >  $tmp_file
-			echo $magnitude >> $tmp_file
-			echo $timestamp >> $tmp_file
+			echo "$location"  >  "$tmp_file"
+			echo "$magnitude" >> "$tmp_file"
+			echo "$timestamp" >> "$tmp_file"
 		elif [ -f "$tmp_file" ]; then
 			__read_tmp_file
 		fi
@@ -115,7 +116,7 @@ __goo_earthquake() {
 	__convert_timestamp_to_fmt
 
 	# extract the numerical portion of magnitude
-	magnitude_number=$(echo $magnitude | sed -e 's/+//' -e 's/-//')
+	magnitude_number=$(echo "$magnitude" | sed -e 's/+//' -e 's/-//')
 
 	if [ -n "$magnitude" ]; then
 		if __check_alert_time_window && __check_min_magnitude ; then
@@ -135,7 +136,7 @@ __convert_jp_magnitude() {
 }
 
 __check_alert_time_window() {
-	[[ $(( ( $(date +%s) - $timestamp ) / 60 )) -lt $TMUX_POWERLINE_SEG_EARTHQUAKE_ALERT_TIME_WINDOW ]]
+	[[ $(( ( $(date +%s) - timestamp ) / 60 )) -lt $TMUX_POWERLINE_SEG_EARTHQUAKE_ALERT_TIME_WINDOW ]]
 }
 
 __check_min_magnitude() {
@@ -146,7 +147,7 @@ __convert_jp_timestamp() {
 	if shell_is_osx ; then
 		timestamp=$(date -j -f "%Y年%m月%d日 %H時%M分" "$timestamp" +"%s")
 	else
-		timestamp=$(echo $timestamp | $sed -e 's/年/-/' -e 's/月/-/' -e 's/日//' -e 's/時/:/' -e 's/分//')
+		timestamp=$(echo "$timestamp" | sed -e 's/年/-/' -e 's/月/-/' -e 's/日//' -e 's/時/:/' -e 's/分//')
 		timestamp=$(date -d "$timestamp" +"%s")
 	fi
 }
@@ -165,7 +166,7 @@ __read_tmp_file() {
 	fi
 	IFS_bak="$IFS"
 	IFS=$'\n'
-	lines=($(cat ${tmp_file}))
+	read -r -a lines <<< "${tmp_file}"
 	IFS="$IFS_bak"
 	location="${lines[0]}"
 	magnitude="${lines[1]}"
