@@ -69,26 +69,29 @@ format() {
 }
 
 __process_segment_defaults() {
+	# shellcheck disable=SC2154 # disable until we found a better solution for eval input_segments
 	for segment_index in "${!input_segments[@]}"; do
-		local input_segment=(${input_segments[segment_index]})
+		local input_segment
+		read -r -a input_segment <<< "${input_segments[segment_index]}"
 		eval "local default_separator=\$TMUX_POWERLINE_DEFAULT_${upper_side}SIDE_SEPARATOR"
 
 		powerline_segment_with_defaults=(
-			${input_segment[0]:-"no_script"} \
-			${input_segment[1]:-$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR} \
-			${input_segment[2]:-$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR} \
-			${input_segment[3]:-$default_separator} \
-			${input_segment[6]:-$spacing_disable} \
-			${input_segment[7]:-$separator_disable} \
+			"${input_segment[0]:-no_script}" \
+			"${input_segment[1]:-$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR}" \
+			"${input_segment[2]:-$TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR}" \
+			"${input_segment[3]:-$default_separator}" \
+			"${input_segment[6]:-$spacing_disable}" \
+			"${input_segment[7]:-$separator_disable}" \
 		)
 
-		powerline_segments[segment_index]="${powerline_segment_with_defaults[@]}"
+		powerline_segments[segment_index]="${powerline_segment_with_defaults[*]}"
 	done
 }
 
 __process_scripts() {
 	for segment_index in "${!powerline_segments[@]}"; do
-		local powerline_segment=(${powerline_segments[segment_index]})
+		local powerline_segment
+		read -r -a powerline_segment <<< "${powerline_segments[segment_index]}"
 
 		if [ -n "$TMUX_POWERLINE_DIR_USER_SEGMENTS" ] && [ -f "$TMUX_POWERLINE_DIR_USER_SEGMENTS/${powerline_segment[0]}.sh" ] ; then
 			local script="$TMUX_POWERLINE_DIR_USER_SEGMENTS/${powerline_segment[0]}.sh"
@@ -96,8 +99,10 @@ __process_scripts() {
 			local script="$TMUX_POWERLINE_DIR_SEGMENTS/${powerline_segment[0]}.sh"
 		fi
 
-		export TMUX_POWERLINE_CUR_SEGMENT_BG=$(__normalize_color "${powerline_segment[1]}")
-		export TMUX_POWERLINE_CUR_SEGMENT_FG=$(__normalize_color "${powerline_segment[2]}")
+		TMUX_POWERLINE_CUR_SEGMENT_BG=$(__normalize_color "${powerline_segment[1]}")
+		TMUX_POWERLINE_CUR_SEGMENT_FG=$(__normalize_color "${powerline_segment[2]}")
+		export TMUX_POWERLINE_CUR_SEGMENT_BG TMUX_POWERLINE_CUR_SEGMENT_FG
+		# shellcheck disable=SC1090
 		source "$script"
 		local output
 		output=$(run_segment)
@@ -121,20 +126,22 @@ __process_scripts() {
 				powerline_segment_contents[segment_index]=" $output "
 			fi
 		else
-			unset -v powerline_segments[segment_index]
+			unset -v "powerline_segments[segment_index]"
 		fi
 	done
 }
 
 __process_colors() {
 	for segment_index in "${!powerline_segments[@]}"; do
-		local powerline_segment=(${powerline_segments[segment_index]})
+		local powerline_segment
+		read -r -a powerline_segment <<< "${powerline_segments[segment_index]}"
 		local separator_enable=${powerline_segment[5]}
 		# Find the next segment that produces content (i.e. skip empty segments).
 		for next_segment_index in $(eval echo "{$((segment_index + 1))..${#powerline_segments}}") ; do
 			[[ -n ${powerline_segments[next_segment_index]} ]] && break
 		done
-		local next_segment=(${powerline_segments[next_segment_index]})
+		local next_segment
+		read -r -a next_segment <<< "${powerline_segments[next_segment_index]}"
 
 		if [ "$side" == 'left' ]; then
 			powerline_segment[4]=${next_segment[1]:-$TMUX_POWERLINE_DEFAULT_BACKGROUND_COLOR}
@@ -151,13 +158,14 @@ __process_colors() {
 		local previous_background_color=${powerline_segment[1]}
 		powerline_segment[6]=$separator_enable
 
-		powerline_segments[segment_index]="${powerline_segment[@]}"
+		powerline_segments[segment_index]="${powerline_segment[*]}"
 	done
 }
 
 __process_powerline() {
 	for segment_index in "${!powerline_segments[@]}"; do
-		local powerline_segment=(${powerline_segments[segment_index]})
+		local powerline_segment
+		read -r -a powerline_segment <<< "${powerline_segments[segment_index]}"
 
 		local background_color=${powerline_segment[1]}
 		local foreground_color=${powerline_segment[2]}
@@ -207,6 +215,6 @@ __segment_separator_is_thin() {
 
 __check_platform() {
 	if [ "$SHELL_PLATFORM" == "unknown" ] && debug_mode_enabled; then
-		 echo "Unknown platform; modify config/shell.sh"  &1>&2
+		 echo "Unknown platform; modify config/shell.sh"  >&2
 	fi
 }
