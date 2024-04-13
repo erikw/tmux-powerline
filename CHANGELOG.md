@@ -12,13 +12,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New segment kubernetes_context [#377](https://github.com/erikw/tmux-powerline/issues/377)
 - New segment vcs_rootpath [#373](https://github.com/erikw/tmux-powerline/issues/374)
 - New segment vpn [#383](https://github.com/erikw/tmux-powerline/issues/383)
+- Re-enable Linter [#414](https://github.com/erikw/tmux-powerline/pull/414)
 ### Changed
 - Improved roll_text function [#390](https://github.com/erikw/tmux-powerline/issues/390)
 - Improved segment ifstat [#402](https://github.com/erikw/tmux-powerline/issues/402)
-- [WIP] Minor improvements, cleanup & shellcheck compliance
+- Minor improvements, cleanup & shellcheck compliance
   [#392](https://github.com/erikw/tmux-powerline/pull/392), [#395](https://github.com/erikw/tmux-powerline/pull/395), [#396](https://github.com/erikw/tmux-powerline/pull/396), [#400](https://github.com/erikw/tmux-powerline/pull/400),
   [#401](https://github.com/erikw/tmux-powerline/pull/401), [#403](https://github.com/erikw/tmux-powerline/pull/403), [#407](https://github.com/erikw/tmux-powerline/pull/407), [#406](https://github.com/erikw/tmux-powerline/pull/406),
-  [#409](https://github.com/erikw/tmux-powerline/pull/409)
+  [#409](https://github.com/erikw/tmux-powerline/pull/409), [#408](https://github.com/erikw/tmux-powerline/pull/408), [#410](https://github.com/erikw/tmux-powerline/pull/410), [#411](https://github.com/erikw/tmux-powerline/pull/411),
+  [#409](https://github.com/erikw/tmux-powerline/pull/412)
+- Improve Linter [#418](https://github.com/erikw/tmux-powerline/pull/418)
 ### Fixed
 - Fix vcs segments [#371](https://github.com/erikw/tmux-powerline/issues/371)
 - Fix wrong session_info in nested tmux session [#359](https://github.com/erikw/tmux-powerline/issues/359)
