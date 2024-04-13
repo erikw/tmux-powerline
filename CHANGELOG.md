@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved roll_text function [#390](https://github.com/erikw/tmux-powerline/issues/390)
 - Improved segment ifstat [#402](https://github.com/erikw/tmux-powerline/issues/402)
 - [WIP] Minor improvements, cleanup & shellcheck compliance  
-  [#392](https://github.com/erikw/tmux-powerline/pull/392), [#395](https://github.com/erikw/tmux-powerline/pull/395), [#396](https://github.com/erikw/tmux-powerline/pull/396), [#400](https://github.com/erikw/tmux-powerline/pull/400), [#401](https://github.com/erikw/tmux-powerline/pull/401), [#403](https://github.com/erikw/tmux-powerline/pull/403)
+  [#392](https://github.com/erikw/tmux-powerline/pull/392), [#395](https://github.com/erikw/tmux-powerline/pull/395), [#396](https://github.com/erikw/tmux-powerline/pull/396), [#400](https://github.com/erikw/tmux-powerline/pull/400), [#401](https://github.com/erikw/tmux-powerline/pull/401), [#403](https://github.com/erikw/tmux-powerline/pull/403), [#407](https://github.com/erikw/tmux-powerline/pull/407), [#406](https://github.com/erikw/tmux-powerline/pull/406), [#409](https://github.com/erikw/tmux-powerline/pull/409)
 ### Fixed
 - Fix vcs segments [#371](https://github.com/erikw/tmux-powerline/issues/371)
 - Fix wrong session_info in nested tmux session [#359](https://github.com/erikw/tmux-powerline/issues/359)
