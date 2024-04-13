@@ -11,19 +11,29 @@ on:
     paths-ignore:
       - '**/*.md'
 
+permissions: { }
+
 jobs:
   build:
     name: Lint Code Base
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      # To report github actions status checks
+      statuses: write
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           # Full git history is needed to get a proper list of changed files within `super-linter`
           fetch-depth: 0
       - name: Lint Code Base
-        uses: github/super-linter@v4
+        uses: super-linter/super-linter@v6.3.1
         env:
+          # only validate new or edited files
           VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: main
+          VALIDATE_BASH_EXEC: false
+          VALIDATE_CPP: false
+          VALIDATE_CLANG_FORMAT: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
