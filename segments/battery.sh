@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # LICENSE This code is not under the same license as the rest of the project as it's "stolen". It's cloned from https://github.com/richoH/dotfiles/blob/master/bin/battery and just some modifications are done so it works for my laptop. Check that URL for more recent versions.
 
 TMUX_POWERLINE_SEG_BATTERY_TYPE_DEFAULT="percentage"
@@ -9,8 +10,9 @@ BATTERY_EMPTY="󱊡"
 BATTERY_CHARGE="󰂄"
 ADAPTER="󰚥"
 
+
 generate_segmentrc() {
-	read -d '' rccontents  << EORC
+	read -r -d '' rccontents  << EORC
 # How to display battery remaining. Can be {percentage, cute}.
 export TMUX_POWERLINE_SEG_BATTERY_TYPE="${TMUX_POWERLINE_SEG_BATTERY_TYPE_DEFAULT}"
 # How may hearts to show if cute indicators are used.
@@ -36,7 +38,7 @@ run_segment() {
 			output="${battery_status}%"
 			;;
 		"cute")
-			output=$(__cutinate $battery_status)
+			output=$(__cutinate "$battery_status")
 	esac
 	if [ -n "$output" ]; then
 		echo "$output"
@@ -57,7 +59,7 @@ __battery_osx() {
 		grep -o '"[^"]*" = [^ ]*' | \
 		sed -e 's/= //g' -e 's/"//g' | \
 		sort | \
-		while read key value; do
+		while read -r key value; do
 			case $key in
 				"MaxCapacity")
 					export maxcap=$value;;
@@ -65,11 +67,11 @@ __battery_osx() {
 					export curcap=$value;;
 				"ExternalConnected")
 					export extconnect=$value;;
-        "FullyCharged")
-          export fully_charged=$value;;
+				"FullyCharged")
+					export fully_charged=$value;;
 			esac
 			if [[ -n $maxcap && -n $curcap && -n $extconnect ]]; then
-				charge=`pmset -g batt | grep -o "[0-9][0-9]*\%" | rev | cut -c 2- | rev`
+				charge=$(pmset -g batt | grep -o "[0-9][0-9]*\%" | rev | cut -c 2- | rev)
 				if [[ ("$fully_charged" == "Yes" || $charge -eq 100)  && $extconnect == "Yes"  ]]; then
 					return
 				fi
@@ -97,7 +99,6 @@ __battery_osx() {
 				if [ ! -d $BATPATH ]; then
 					BATPATH=/sys/class/power_supply/BAT1
 				fi
-				STATUS=$BATPATH/status
 				BAT_FULL=$BATPATH/charge_full
 				if [ ! -r $BAT_FULL ]; then
 					BAT_FULL=$BATPATH/energy_full
@@ -106,58 +107,38 @@ __battery_osx() {
 				if [ ! -r $BAT_NOW ]; then
 					BAT_NOW=$BATPATH/energy_now
 				fi
-
-				if [[ "$1" = `cat $STATUS` || "$1" = "" ]]; then
-					__linux_get_bat
-				fi
+				__linux_get_bat
 				;;
 			"bsd")
-				STATUS=`sysctl -n hw.acpi.battery.state`
-				case $1 in
-					"Discharging")
-						if [ $STATUS -eq 1 ]; then
-							__freebsd_get_bat
-						fi
-						;;
-					"Charging")
-						if [ $STATUS -eq 2 ]; then
-							__freebsd_get_bat
-						fi
-						;;
-					"")
-						__freebsd_get_bat
-						;;
-				esac
+				__freebsd_get_bat
 				;;
 		esac
 	}
 
 	__cutinate() {
 		perc=$1
-		inc=$(( 100 / $TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS ))
+		inc=$(( 100 / TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS ))
 
-
-		for i in `seq $TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS`; do
-			if [ $perc -lt 99 ]; then
+		for _unused in $(seq "$TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS"); do
+			if [ "$perc" -lt 99 ]; then
 				echo -n $BATTERY_EMPTY
 			else
 				echo -n $BATTERY_FULL
 			fi
 			echo -n " "
-			perc=$(( $perc + $inc ))
+			perc=$(( perc + inc ))
 		done
 	}
 
 	__linux_get_bat() {
-		bf=$(cat $BAT_FULL)
-		bn=$(cat $BAT_NOW)
-		if [ $bn -gt $bf ]; then
+		bf=$(cat "$BAT_FULL")
+		bn=$(cat "$BAT_NOW")
+		if [ "$bn" -gt "$bf" ]; then
 			bn=$bf
 		fi
-		echo "$BATTERY_MED $(( 100 * $bn / $bf ))"
+		echo "$BATTERY_MED $(( 100 * bn / bf ))"
 	}
 
 	__freebsd_get_bat() {
-		echo "$BATTER_MED $(sysctl -n hw.acpi.battery.life)"
-
+		echo "$BATTERY_MED $(sysctl -n hw.acpi.battery.life)"
 	}
