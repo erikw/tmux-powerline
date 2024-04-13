@@ -36,4 +36,5 @@ jobs:
           VALIDATE_BASH_EXEC: false
           VALIDATE_CPP: false
           VALIDATE_CLANG_FORMAT: false
+          VALIDATE_SHELL_SHFMT: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
