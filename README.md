@@ -1,3 +1,4 @@
+<!-- markdownlint-disable first-line-heading -->
 <p align="center">
 <img alt="log" width="100%" height="100%" src="img/logo.png" />
 </p>
@@ -9,7 +10,8 @@
 <img alt="GitHub Forks" src="https://img.shields.io/github/forks/erikw/tmux-powerline?style=social" />
 </p>
 
-<!-- [![Lint Code Base](https://github.com/erikw/tmux-powerline/actions/workflows/linter.yml/badge.svg)](https://github.com/erikw/tmux-powerline/actions/workflows/linter.yml) -->
+<!-- markdownlint-disable no-empty-links -->
+[![Lint Code Base](https://github.com/erikw/tmux-powerline/actions/workflows/linter-full.yml/badge.svg)](https://github.com/erikw/tmux-powerline/actions/workflows/linter-full.yml)
 [![SLOC](https://img.shields.io/tokei/lines/github/erikw/tmux-powerline?logo=codefactor&logoColor=lightgrey)](#)
 [![Number of programming languages used](https://img.shields.io/github/languages/count/erikw/tmux-powerline)](#)
 [![Top programming languages used](https://img.shields.io/github/languages/top/erikw/tmux-powerline)](#)
@@ -20,21 +22,23 @@
 [![OSS Lifecycle](https://img.shields.io/osslifecycle/erikw/tmux-powerline)](https://github.com/Netflix/osstracker)
 [![Latest tag](https://img.shields.io/github/v/tag/erikw/tmux-powerline)](https://github.com/erikw/tmux-powerline/tags)
 <br>
+<!-- markdownlint-enable no-empty-links -->
 
 [![Contributors](https://img.shields.io/github/contributors/erikw/tmux-powerline)](https://github.com/erikw/tmux-powerline/graphs/contributors) including these top contributors:
-<a href = "https://github.com/erikw/tmux-powerline/graphs/contributors">
-<img src = "https://contrib.rocks/image?repo=erikw/tmux-powerline&max=36"/>
+<a href="https://github.com/erikw/tmux-powerline/graphs/contributors">
+<img alt="Top Contributors" src="https://contrib.rocks/image?repo=erikw/tmux-powerline&max=36"/>
 </a>
 
 
 # Intro
-tmux-powerline is a tmux <a title="Tmux Plugin Manager" href="https://github.com/tmux-plugins/tpm">tpm</a> plugin that gives you a slick and hackable powerline status bar consisting of segments. It's easily extensible with custom segments and themes. The plugin itself is implemented purely in bash thus minimizing system requirements. However you can make segments in any language you want (with a shell wrapper).
+tmux-powerline is a tmux <a title="Tmux Plugin Manager" href="https://github.com/tmux-plugins/tpm">tpm</a> plugin that gives you a slick and hackable powerline status bar consisting of segments. It's easily extensible with custom segments and themes.
+The plugin itself is implemented purely in bash thus minimizing system requirements. However you can make segments in any language you want (with a shell wrapper).
 
 Some examples of segments available that you can add to your tmux status bar are (full list [here](https://github.com/erikw/tmux-powerline/tree/main/segments)):
 * LAN & WAN IP addresses
-* Now Playing for MPD, Spotify (GNU/Linux native or wine, OS X), iTunes (OS X), Rhythmbox, Banshee, MOC, Audacious, Rdio (OS X), cmus, Pithos and Last.fm (last scrobbled track).
+* Now Playing for MPD, Spotify (GNU/Linux native or wine, macOS), iTunes (macOS), Rhythmbox, Banshee, MOC, Audacious, Rdio (macOS), cmus, Pithos and Last.fm (last scrobbled track).
 * New mail count for GMail, Maildir, mbox, mailcheck, and Apple Mail
-* GNU/Linux and Macintosh OS X battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery))
+* GNU/Linux and macOS battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery))
 * Weather in Celsius, Fahrenheit and Kelvin using Yahoo Weather
 * System load, cpu usage and uptime
 * Git, SVN and Mercurial branch in CWD
@@ -101,10 +105,10 @@ Some segments have their own requirements. If you enable them in your theme, mak
 * `ifstat.sh`: ifstat (there is a simpler segment not using ifstat but samples /sys/class/net)
 * `tmux_mem_cpu_load.sh`: [tmux-mem-cpu-load](https://github.com/thewtex/tmux-mem-cpu-load)
 * `rainbarf.sh`: [rainbarf](https://github.com/creaktive/rainbarf)
-* `weather.sh`: GNU `grep` with Perl regexp enabled (FreeBSD specific), `jq` for yrno weather API.
+* `weather.sh`: GNU `grep` with Perl regular expression enabled (FreeBSD specific), `jq` for yrno weather API.
 
 ## FreeBSD specific requirements
-Preinstalled `grep` in FreeBSD doesn't support Perl regexp. Solution is rather simple -- you need to use `textproc/gnugrep` port instead. You also need to make sure, that it has support for PCRE and is compiled with `--enable-perl-regexp` flag.
+Preinstalled `grep` in FreeBSD doesn't support Perl regular expressions. Solution is rather simple -- you need to use `textproc/gnugrep` port instead. You also need to make sure, that it has support for PCRE and is compiled with `--enable-perl-regexp` flag.
 
 
 # Installation
@@ -117,7 +121,8 @@ Preinstalled `grep` in FreeBSD doesn't support Perl regexp. Solution is rather s
    * The default powerline should already be visible now!
 4. Continue to the [Configuration](#configuration) section below.
 
-Note that tpm plugins should be at the bottom of you `tmux.conf`. This plugin will then override some tmux settings like `status-left`, `status-right` etc. If you had already set those in your tmux config, it is a good opportunity to remove or comment those out. Take a look at [main.tmux](https://github.com/erikw/tmux-powerline/blob/main/main.tmux) for exactly which settings are overridden.
+Note that tpm plugins should be at the bottom of you `tmux.conf`. This plugin will then override some tmux settings like `status-left`, `status-right` etc. If you had already set those in your tmux config, it is a good opportunity to remove or comment those out.
+Take a look at [main.tmux](https://github.com/erikw/tmux-powerline/blob/main/main.tmux) for exactly which settings are overridden.
 
 
 # Configuration
@@ -163,11 +168,12 @@ $EDITOR ~/.config/tmux-powerline/segments/my-segment.sh
 
 Now you can add `my-segment` to your own theme!
 
-Also see [How to make a segment](#How-to-make-a-segment) below for more details.
+Also see [How to make a segment](#how-to-make-a-segment) below for more details.
 
 
 # Debugging
-Some segments might not work on your system for various reasons such as missing programs or different versions not having the same options. To find out which segment is not working it may help to enable the debug setting in `~/.config/tmux-powerline/config.sh`. However this may not be enough to determine the error so you can inspect all executed bash commands (will be a long output) by doing
+Some segments might not work on your system for various reasons such as missing programs or different versions not having the same options. To find out which segment is not working it may help to enable the debug setting in `~/.config/tmux-powerline/config.sh`.
+However this may not be enough to determine the error so you can inspect all executed bash commands (will be a long output) by doing
 
 ```shell
 bash -x powerline.sh (left|right)
@@ -192,13 +198,14 @@ tail -f /tmp/tmux-powerline.log # or follow output like this.
 
 You can also enable the debug mode in your config file. Look for the `TMUX_POWERLINE_DEBUG_MODE_ENABLED` environment variable and set it to `true`.
 
-If you can not solve the problems you can post an [issue](https://github.com/erikw/tmux-powerline/issues?state=open) and be sure to include relevant information about your system and script output (from bash -x) and/or screenshots if needed.  Be sure to search in the [resolved issues](https://github.com/erikw/tmux-powerline/issues?page=1&state=closed) section for similar problems you're experiencing before posting.
+If you can not solve the problems you can post an [issue](https://github.com/erikw/tmux-powerline/issues?state=open) and be sure to include relevant information about your system and script output (from bash -x) and/or screenshots if needed.
+Be sure to search in the [resolved issues](https://github.com/erikw/tmux-powerline/issues?page=1&state=closed) section for similar problems you're experiencing before posting.
 
 
 
 ## Common problems
 ### Nothing is displayed
-You have edited `~/.tmux.conf` but no powerline is displayed. This might be because tmux is not aware of the changes so you have to restart your tmux session or reloaded that file by typing this on the command line (or in tmux command mode with `prefix :`)
+You have edited `~/.tmux.conf` but no powerline is displayed. This might be because tmux is not aware of the changes so you have to restart your tmux session or reloaded that file by typing this on the command-line (or in tmux command mode with `prefix :`)
 
 ```shell
 tmux source-file ~/.tmux.conf
@@ -207,12 +214,17 @@ tmux source-file ~/.tmux.conf
 If your tmux looks like [this](https://github.com/erikw/tmux-powerline/issues/125) then you may have to in iTerm uncheck [Unicode East Asian Ambiguous characters are wide] in Preferences -> Settings -> Advanced.
 
 # Hacking
-This project can only gain positively from contributions. Fork today and make your own enhancements and segments to share back! If you'd like, add your name and E-mail to AUTHORS before making a pull request so you can get some credit for your work :-)
+This project can only gain positively from contributions. Fork today and make your own enhancements and segments to share back! If you'd like, add your name and email to AUTHORS before making a pull request so you can get some credit for your work :-)
 
 ## How to make a segment
-If you want to (of course you do!) send a pull request for a cool segment you written make sure that it follows the style of existing segments, unless you have good reason for it. Each segment resides in the `segments/` directory with a descriptive and simple name. A segment must have at least one function and that is `run_segment` which is like the main function that is called from the tmux-powerline lib. What ever text is echoed out from this function to stdout is the text displayed in the tmux status bar. If the segment at a certain point does not have anything to show, simply don't echo anything out and the segment will be hidden. A successful execution of the `run_segment` function should return an exit code of 0. If the segment failed to execute in a fatal way return a non-zero exit code so the user can pick up the error and fix it when debug mode is on (e.g. missing program that is needed for the segment).
+If you want to (of course you do!) send a pull request for a cool segment you written make sure that it follows the style of existing segments, unless you have good reason for it. Each segment resides in the `segments/` directory with a descriptive and simple name.
+A segment must have at least one function and that is `run_segment` which is like the main function that is called from the tmux-powerline lib. What ever text is echoed out from this function to stdout is the text displayed in the tmux status bar.
+If the segment at a certain point does not have anything to show, simply don't echo anything out and the segment will be hidden. A successful execution of the `run_segment` function should return an exit code of 0.
+If the segment failed to execute in a fatal way return a non-zero exit code so the user can pick up the error and fix it when debug mode is on (e.g. missing program that is needed for the segment).
 
-Usage of helper function to organize the work of a segment is encourage and should be named in the format `__helper_func`. If a segment has settings it should have a function `generate_segmentrc` which outputs default values of all settings and a short explanation of the setting and its values. Study e.g. `segments/now_playing.sh` to see how it is done. A segment having settings should typically call a helper function `__process_settings` as the first statement in `run_segment` that sets default values to the settings that has not been set by the user.
+Usage of helper function to organize the work of a segment is encourage and should be named in the format `__helper_func`. If a segment has settings it should have a function `generate_segmentrc` which outputs default values of all settings and a short
+explanation of the setting and its values. Study e.g. `segments/now_playing.sh` to see how it is done. A segment having settings should typically call a helper function `__process_settings` as the first statement in `run_segment` that sets default values
+to the settings that has not been set by the user.
 
 Also, don't use bash4 features as requiring bash4 complicates installation for macOS user quite a bit. Use tabs for indentation ([discussion](https://github.com/erikw/tmux-powerline/pull/92)),
 
