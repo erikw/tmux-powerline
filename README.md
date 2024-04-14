@@ -151,7 +151,7 @@ Make a copy of the default theme and make your own, say `my-theme`:
 ```shell
 mkdir -p ~/.config/tmux-powerline/themes
 cp ~/.config/tmux/plugins/tmux-powerline/themes/default.sh ~/.config/tmux-powerline/themes/my-theme.sh
-$EDITOR ~/.config/tmux-powerline/themes/my-theme.sh.default
+$EDITOR ~/.config/tmux-powerline/themes/my-theme.sh
 ```
 
 Remember to update the configuration file to use the new theme by setting `TMUX_POWERLINE_THEME=my-theme`
