@@ -25,7 +25,7 @@ jobs:
       - name: Lint Code Base
         uses: super-linter/super-linter@v6.3.1
         env:
-          # only validate new or edited files
+          # validate full codebase
           VALIDATE_ALL_CODEBASE: true
           VALIDATE_BASH_EXEC: false
           VALIDATE_CPP: false
