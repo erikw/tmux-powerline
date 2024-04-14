@@ -3,7 +3,6 @@
 # shellcheck source=lib/tmux_adapter.sh
 source "${TMUX_POWERLINE_DIR_LIB}/tmux_adapter.sh"
 
-
 get_vcs_type_and_root_path() {
 	tmux_path=$(get_tmux_cwd)
 	cd "$tmux_path" || return
@@ -51,14 +50,14 @@ __parse_svn_root_path() {
 }
 
 __get_closest_root_path() {
-	VCS_TYPES=( git hg svn )
+	VCS_TYPES=(git hg svn)
 	path_id=0
 	highest=0
 	root_path=""
 	counter=0
 	for path in "$@"; do
 		[ "${#path}" -gt "$highest" ] && highest="${#path}" && root_path="${path}" && path_id=$counter
-		counter=$((counter+1))
+		counter=$((counter + 1))
 	done
 	echo -en "${VCS_TYPES[${path_id}]}\n${root_path}"
 }

@@ -7,9 +7,8 @@ TMUX_POWERLINE_SEG_MAILCOUNT_MAILCHECKRC="${TMUX_POWERLINE_SEG_MAILCOUNT_MAILCHE
 TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER="${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER:-gmail.com}"
 TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_INTERVAL="${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_INTERVAL:-5}"
 
-
 generate_segmentrc() {
-	read -r -d '' rccontents << EORC
+	read -r -d '' rccontents <<EORC
 # Mailbox type to use. Can be any of {apple_mail, gmail, maildir, mbox, mailcheck}
 export TMUX_POWERLINE_SEG_MAILCOUNT_MAILBOX_TYPE=""
 
@@ -50,21 +49,22 @@ run_segment() {
 
 	local count
 	case "$TMUX_POWERLINE_SEG_MAILCOUNT_MAILBOX_TYPE" in
-		"apple_mail")  count=$(__count_apple_mail) ;;
-		"gmail")  count=$(__count_gmail) ;;
-		"maildir")  count=$(__count_maildir) ;;
-		"mbox")  count=$(__count_mbox) ;;
-		"mailcheck")  count=$(__count_mailcheck) ;;
-		*)
-			echo "Unknown mailbox type [${TMUX_POWERLINE_SEG_MAILCOUNT_MAILBOX_TYPE}]";
-			return 1
+	"apple_mail") count=$(__count_apple_mail) ;;
+	"gmail") count=$(__count_gmail) ;;
+	"maildir") count=$(__count_maildir) ;;
+	"mbox") count=$(__count_mbox) ;;
+	"mailcheck") count=$(__count_mailcheck) ;;
+	*)
+		echo "Unknown mailbox type [${TMUX_POWERLINE_SEG_MAILCOUNT_MAILBOX_TYPE}]"
+		return 1
+		;;
 	esac
 	local exitcode="$?"
 	if [ "$exitcode" -ne 0 ]; then
 		return $exitcode
 	fi
 
-	if [[ -n "$count"  && "$count" -gt 0 ]]; then
+	if [[ -n "$count" && "$count" -gt 0 ]]; then
 		echo "✉ ${count}"
 	fi
 
@@ -79,7 +79,7 @@ __count_apple_mail() {
 __count_gmail() {
 	local tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/gmail_count.txt"
 	local tmp_wgetrc="${TMUX_POWERLINE_DIR_TEMPORARY}/tmp_wgetrc.txt"
-	local override_passget="false"	# When true a force reloaded will be done.
+	local override_passget="false" # When true a force reloaded will be done.
 
 	# Create the cache file if it doesn't exist.
 	if [ ! -f "$tmp_file" ]; then
@@ -88,13 +88,13 @@ __count_gmail() {
 	fi
 
 	# Refresh mail count if the tempfile is older than $interval minutes.
-	interval=$(( 60*TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_INTERVAL ))
+	interval=$((60 * TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_INTERVAL))
 	if shell_is_osx || shell_is_bsd; then
 		last_update=$(stat -f "%m" "${tmp_file}")
 	elif shell_is_linux; then
 		last_update=$(stat -c "%Y" "${tmp_file}")
 	fi
-	if [ "$(( $(date +"%s") - last_update ))" -gt "$interval" ] || [ "$override_passget" == true ]; then
+	if [ "$(($(date +"%s") - last_update))" -gt "$interval" ] || [ "$override_passget" == true ]; then
 		if [ -z "$TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_PASSWORD" ]; then # Get password from keychain if it isn't already set.
 			if shell_is_osx; then
 				__mac_keychain_get_pass "${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_USERNAME}@${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER}" "$TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER"
@@ -111,12 +111,12 @@ __count_gmail() {
 		fi
 
 		# Hide password from command line (visible with e.g. ps(1)).
-		echo -e "user=${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_USERNAME}@${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER}\npassword=${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_PASSWORD}" > "$tmp_wgetrc"
+		echo -e "user=${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_USERNAME}@${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER}\npassword=${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_PASSWORD}" >"$tmp_wgetrc"
 		mail=$(wget -q -O - "https://mail.google.com/a/${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER}/feed/atom" --config "$tmp_wgetrc" | grep -E -m 1 -o '<fullcount>(.*)</fullcount>' | sed -e 's,.*<fullcount>\([^<]*\)</fullcount>.*,\1,g')
 		rm "$tmp_wgetrc"
 
 		if [ "$mail" != "" ]; then
-			echo "$mail" > "$tmp_file"
+			echo "$mail" >"$tmp_file"
 		else
 			return 1
 		fi
@@ -124,7 +124,7 @@ __count_gmail() {
 
 	count=$(cat "$tmp_file")
 	echo "$count"
-	return 0;
+	return 0
 }
 
 __count_maildir() {
@@ -144,7 +144,7 @@ __count_maildir() {
 	fi
 
 	echo "$count"
-	return 0;
+	return 0
 }
 
 __count_mbox() {
@@ -158,11 +158,11 @@ __count_mbox() {
 	count=$(grep -c '^From [^[:space:]]\+  ... ... .. ..:..:.. ....$' "${TMUX_POWERLINE_SEG_MAILCOUNT_MBOX_INBOX}")
 
 	echo "$count"
-	return 0;
+	return 0
 }
 
 __mac_keychain_get_pass() {
-	if result=$(security 2>&1 > /dev/null find-internet-password -ga "$1" -s "$2"); then
+	if result=$(security 2>&1 >/dev/null find-internet-password -ga "$1" -s "$2"); then
 		# shellcheck disable=SC2001 # too complex for simple bash substitution
 		TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_PASSWORD=$(echo "$result" | sed -e 's/password: \"\(.*\)\"/\1/g')
 		return 0
@@ -175,5 +175,5 @@ __count_mailcheck() {
 		echo "$count"
 		return 0
 	fi
-	return 1;
+	return 1
 }

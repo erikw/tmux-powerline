@@ -20,7 +20,7 @@ TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR_DEFAULT="♫"
 TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER_DEFAULT="spotify"
 
 generate_segmentrc() {
-	read -r -d '' rccontents  << EORC
+	read -r -d '' rccontents <<EORC
 # Music player to use. Can be any of {audacious, banshee, cmus, apple_music, itunes, lastfm, plexamp, mocp, mpd, mpd_simple, pithos, playerctl, rdio, rhythmbox, spotify, spotify_wine, file}.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER="${TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER_DEFAULT}"
 # File to be read in case the song is being read from a file
@@ -86,29 +86,30 @@ run_segment() {
 
 	local np
 	local app_exit
-	IFS=',' read -ra PLAYERS <<< "$TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER"
+	IFS=',' read -ra PLAYERS <<<"$TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER"
 	for i in "${PLAYERS[@]}"; do
 		case "$i" in
-			"audacious")  np=$(__np_audacious) ;;
-			"banshee")  np=$(__np_banshee) ;;
-			"cmus")  np=$(__np_cmus) ;;
-			"apple_music")  np=$(__np_apple_music) ;;
-			"itunes")  np=$(__np_itunes) ;;
-			"lastfm")  np=$(__np_lastfm) ;;
-			"plexamp")  np=$(__np_plexamp) ;;
-			"mocp")  np=$(__np_mocp) ;;
-			"mpd")  np=$(__np_mpd) ;;
-			"mpd_simple")  np=$(__np_mpd_simple) ;;
-			"pithos") np=$(__np_pithos) ;;
-			"rdio")  np=$(__np_rdio) ;;
-			"playerctl")  np=$(__np_playerctl) ;;
-			"rhythmbox")  np=$(__np_rhythmbox) ;;
-			"spotify")  np=$(__np_spotify) ;;
-			"file")  np=$(__np_file) ;;
-			"spotify_wine")  np=$(__np_spotify_native) ;;
-			*)
-				echo "Unknown music player type [${TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER}]";
-				return 1
+		"audacious") np=$(__np_audacious) ;;
+		"banshee") np=$(__np_banshee) ;;
+		"cmus") np=$(__np_cmus) ;;
+		"apple_music") np=$(__np_apple_music) ;;
+		"itunes") np=$(__np_itunes) ;;
+		"lastfm") np=$(__np_lastfm) ;;
+		"plexamp") np=$(__np_plexamp) ;;
+		"mocp") np=$(__np_mocp) ;;
+		"mpd") np=$(__np_mpd) ;;
+		"mpd_simple") np=$(__np_mpd_simple) ;;
+		"pithos") np=$(__np_pithos) ;;
+		"rdio") np=$(__np_rdio) ;;
+		"playerctl") np=$(__np_playerctl) ;;
+		"rhythmbox") np=$(__np_rhythmbox) ;;
+		"spotify") np=$(__np_spotify) ;;
+		"file") np=$(__np_file) ;;
+		"spotify_wine") np=$(__np_spotify_native) ;;
+		*)
+			echo "Unknown music player type [${TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER}]"
+			return 1
+			;;
 		esac
 		app_exit="$?"
 		[ -n "$np" ] && break
@@ -120,12 +121,12 @@ run_segment() {
 	fi
 	if [ -n "$np" ]; then
 		case "$TMUX_POWERLINE_SEG_NOW_PLAYING_TRIM_METHOD" in
-			"roll")
-				np=$(roll_text "${np}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SPEED_DEFAULT}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_MODE}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SEPARATOR}")
-				;;
-			"trim")
-				np=${np:0:TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN}
-				;;
+		"roll")
+			np=$(roll_text "${np}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SPEED_DEFAULT}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_MODE}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SEPARATOR}")
+			;;
+		"trim")
+			np=${np:0:TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN}
+			;;
 		esac
 		echo "${TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR} ${np}"
 	fi
@@ -165,10 +166,10 @@ __process_settings() {
 	fi
 	if [ -z "$TMUX_POWERLINE_SEG_NOW_PLAYING_PLAYERCTL_FORMAT" ]; then
 		export TMUX_POWERLINE_SEG_NOW_PLAYING_PLAYERCTL_FORMAT="${TMUX_POWERLINE_SEG_NOW_PLAYING_PLAYERCTL_FORMAT_DEFAULT}"
-	fi;
+	fi
 	if [ -z "$TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT" ]; then
 		export TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT="${TMUX_POWERLINE_SEG_NOW_PLAYING_RHYTHMBOX_FORMAT_DEFAULT}"
-	fi;
+	fi
 }
 
 __np_mpd() {
@@ -187,15 +188,14 @@ __np_mpd() {
 }
 
 __np_file() {
-	np=$(tr '\n' '|' < "$TMUX_POWERLINE_SEG_NOW_PLAYING_FILE_NAME")
+	np=$(tr '\n' '|' <"$TMUX_POWERLINE_SEG_NOW_PLAYING_FILE_NAME")
 	echo "$np"
 }
-
 
 __np_mpd_simple() {
 	if np=$(MPD_HOST="$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST" MPD_PORT="$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT" mpc current -f "$TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_SIMPLE_FORMAT" 2>&1); then
 		if [ -n "$np" ]; then
-			if mpc | grep "paused" > /dev/null; then
+			if mpc | grep "paused" >/dev/null; then
 				return 1
 			fi
 		fi
@@ -203,11 +203,13 @@ __np_mpd_simple() {
 	fi
 }
 
-
 __np_audacious() {
 	if type audtool >/dev/null 2>&1; then
 		if audtool playback-playing; then
-			{ read -r artist; read -r title; } < <(audtool --current-song-tuple-data artist --current-song-tuple-data title)
+			{
+				read -r artist
+				read -r title
+			} < <(audtool --current-song-tuple-data artist --current-song-tuple-data title)
 			echo "${artist} - ${title}"
 		fi
 	fi
@@ -216,9 +218,9 @@ __np_audacious() {
 __np_banshee() {
 	banshee_pid=$(pidof banshee)
 	if [ -n "$banshee_pid" ]; then
-		banshee_status=$(banshee --query-current-state 2> /dev/null)
+		banshee_status=$(banshee --query-current-state 2>/dev/null)
 		if [[ "$banshee_status" == "current-state: playing" ]]; then
-			np=$(banshee --query-artist --query-title | cut  -d ":" -f2 | sed  -e 's/ *$//g' -e 's/^ *//g'| sed -e ':a;N;$!ba;s/\n/ - /g' )
+			np=$(banshee --query-artist --query-title | cut -d ":" -f2 | sed -e 's/ *$//g' -e 's/^ *//g' | sed -e ':a;N;$!ba;s/\n/ - /g')
 			echo "$np"
 		fi
 	fi
@@ -226,7 +228,7 @@ __np_banshee() {
 
 __np_cmus() {
 	#cmus-remote returns EXIT_FAILURE/EXIT_SUCCESS depending on whether or not cmus is running.
-	if cmus-remote -Q > /dev/null 2>&1; then
+	if cmus-remote -Q >/dev/null 2>&1; then
 		status=$(cmus-remote -Q | grep "status" | cut -d ' ' -f 2)
 		artist=$(cmus-remote -Q | grep -m 1 "artist" | cut -d ' ' -f 3-)
 		title=$(cmus-remote -Q | grep "title" | cut -d ' ' -f 3-)
@@ -280,7 +282,7 @@ __np_lastfm() {
 		url=$(printf "$ENDPOINT_FMT" "$TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_USERNAME" "$TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_API_KEY")
 		if np=$(curl --silent "$url" | jq --raw-output '.recenttracks.track[0] | "\(.artist."#text") - \(.name)"'); then
 			if [ -n "$np" ]; then
-				echo "${np}" > "$TMP_FILE"
+				echo "${np}" >"$TMP_FILE"
 			fi
 		fi
 	fi
@@ -311,7 +313,7 @@ __np_plexamp() {
 		url=$(printf "$ENDPOINT_FMT" "$TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_TAUTULLI_HOST" "$TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_TAUTULLI_API_KEY")
 		if np=$(curl --silent "$url" | jq -r ".response.data.sessions[] | select(.username==\"$TMUX_POWERLINE_SEG_NOW_PLAYING_PLEXAMP_USERNAME\" and .media_type==\"track\" and .state==\"playing\") | .grandparent_title + \" - \" + .title"); then
 			if [ -n "$np" ]; then
-				echo "${np}" > "$TMP_FILE"
+				echo "${np}" >"$TMP_FILE"
 			fi
 		fi
 	fi
@@ -364,12 +366,12 @@ __np_playerctl() {
 __np_spotify() {
 	if shell_is_linux; then
 		if type tasklist.exe >/dev/null 2>&1; then # WSL
-			np=$(tasklist.exe /fo list /v /fi "IMAGENAME eq Spotify.exe" | grep " - "  | cut -d" " -f3-)
-			np="${np//[$'\t\r\n']}"
+			np=$(tasklist.exe /fo list /v /fi "IMAGENAME eq Spotify.exe" | grep " - " | cut -d" " -f3-)
+			np="${np//[$'\t\r\n']/}"
 		else
 			if metadata=$(dbus-send --reply-timeout=42 --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata' 2>/dev/null); then
 				if [ -n "$metadata" ]; then
-					state=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus'|grep -E -A 1 "string"|cut -b 26-|cut -d '"' -f 1|grep -E -v ^$)
+					state=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus' | grep -E -A 1 "string" | cut -b 26- | cut -d '"' -f 1 | grep -E -v ^$)
 					if [[ $state == "Playing" ]]; then
 						artist=$(echo "$metadata" | grep -PA2 "string\s\"xesam:artist\"" | tail -1 | grep -Po "(?<=\").*(?=\")")
 						track=$(echo "$metadata" | grep -PA1 "string\s\"xesam:title\"" | tail -1 | grep -Po "(?<=\").*(?=\")")

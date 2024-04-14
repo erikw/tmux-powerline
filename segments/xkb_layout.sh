@@ -14,9 +14,8 @@
 
 TMUX_POWERLINE_SEG_XKB_LAYOUT_ICON="${TMUX_POWERLINE_SEG_XKB_LAYOUT_ICON:-⌨ }"
 
-
 generate_segmentrc() {
-	read -r -d '' rccontents << EORC
+	read -r -d '' rccontents <<EORC
 # Keyboard icon
 export TMUX_POWERLINE_SEG_XKB_LAYOUT_ICON="${TMUX_POWERLINE_SEG_XKB_LAYOUT_ICON}"
 EORC

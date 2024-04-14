@@ -10,9 +10,8 @@ source "${TMUX_POWERLINE_DIR_LIB}/vcs_helper.sh"
 
 TMUX_POWERLINE_SEG_VCS_STAGED_SYMBOL="${TMUX_POWERLINE_SEG_VCS_STAGED_SYMBOL:-⊕ }"
 
-
 generate_segmentrc() {
-	read -r -d '' rccontents << EORC
+	read -r -d '' rccontents <<EORC
 # Symbol for count of staged vcs files.
 # export TMUX_POWERLINE_SEG_VCS_STAGED_SYMBOL="${TMUX_POWERLINE_SEG_VCS_STAGED_SYMBOL}"
 EORC
@@ -20,7 +19,10 @@ EORC
 }
 
 run_segment() {
-	{ read -r vcs_type; read -r _unused; } < <(get_vcs_type_and_root_path)
+	{
+		read -r vcs_type
+		read -r _unused
+	} < <(get_vcs_type_and_root_path)
 	tmux_path=$(get_tmux_cwd)
 	cd "$tmux_path" || return
 
@@ -35,22 +37,21 @@ run_segment() {
 	return 0
 }
 
-
-__parse_git_stats(){
+__parse_git_stats() {
 	# Check if git.
-	[[ -z $(git rev-parse --git-dir 2> /dev/null) ]] && return
+	[[ -z $(git rev-parse --git-dir 2>/dev/null) ]] && return
 
 	# Return the number of staged items.
 	staged=$(git diff --staged --name-status | wc -l)
 	echo "$staged"
 }
 
-__parse_hg_stats(){
+__parse_hg_stats() {
 	# not yet implemented
 	return
 }
 
-__parse_svn_stats(){
+__parse_svn_stats() {
 	# not yet implemented
 	return
 }

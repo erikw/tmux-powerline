@@ -1,3 +1,4 @@
+---
 name: Lint Code Base
 
 on:
@@ -20,7 +21,8 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          # Full git history is needed to get a proper list of changed files within `super-linter`
+          # Full git history is needed to get a proper list of changed
+          # files within `super-linter`
           fetch-depth: 0
       - name: Lint Code Base
         uses: super-linter/super-linter@v6.3.1
@@ -30,6 +32,5 @@ jobs:
           VALIDATE_BASH_EXEC: false
           VALIDATE_CPP: false
           VALIDATE_CLANG_FORMAT: false
-          VALIDATE_SHELL_SHFMT: false
           VALIDATE_PYTHON_PYLINT: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

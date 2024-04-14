@@ -10,7 +10,7 @@ run_segment() {
 	# Customize via ~/.rainbarf.conf
 	stats=$(rainbarf --tmux)
 	if [ -n "$stats" ]; then
-		echo "$stats";
+		echo "$stats"
 	fi
 	return 0
 }

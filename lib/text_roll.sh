@@ -6,19 +6,19 @@
 # arg4: mode to fill {"space", "repeat"}
 # arg5: repeat separator
 roll_text() {
-	local text="$1"  # Text to print
+	local text="$1" # Text to print
 
 	if [ -z "$text" ]; then
-		return;
+		return
 	fi
 
-	local max_len="10"	# Default max length.
+	local max_len="10" # Default max length.
 
 	if [ -n "$2" ]; then
 		max_len="$2"
 	fi
 
-	local speed="1"  # Default roll speed in chars per second.
+	local speed="1" # Default roll speed in chars per second.
 
 	if [ -n "$3" ]; then
 		speed="$3"
@@ -60,13 +60,13 @@ roll_text() {
 	# Truncate text on time-based offset
 	text=${text:offset}
 
-  # Ensure text is not longer than max_len
+	# Ensure text is not longer than max_len
 	text=${text:0:max_len}
 
 	# Get fill count by substracting length of current text from max_len
 	local fill_count=$((max_len - ${#text}))
 
-	for ((index=0; index < fill_count; index++)); do
+	for ((index = 0; index < fill_count; index++)); do
 		if [ "$fill_mode" = "repeat" ]; then
 			text="${text}${repeat:index:1}"
 		elif [ "$fill_mode" = "space" ] || :; then

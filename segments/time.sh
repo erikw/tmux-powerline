@@ -3,9 +3,8 @@
 
 TMUX_POWERLINE_SEG_TIME_FORMAT="${TMUX_POWERLINE_SEG_TIME_FORMAT:-%H:%M}"
 
-
 generate_segmentrc() {
-	read -r -d '' rccontents << EORC
+	read -r -d '' rccontents <<EORC
 # date(1) format for the time. Americans might want to have "%I:%M %p".
 export TMUX_POWERLINE_SEG_TIME_FORMAT="${TMUX_POWERLINE_SEG_TIME_FORMAT}"
 # Change this to display a different timezone than the system default.
