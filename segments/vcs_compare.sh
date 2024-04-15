@@ -13,9 +13,8 @@ TMUX_POWERLINE_SEG_VCS_COMPARE_BEHIND_SYMBOL="${TMUX_POWERLINE_SEG_VCS_COMPARE_B
 TMUX_POWERLINE_SEG_VCS_COMPARE_AHEAD_SYMBOL_COLOUR="${TMUX_POWERLINE_SEG_VCS_COMPARE_AHEAD_SYMBOL_COLOUR:-$TMUX_POWERLINE_CUR_SEGMENT_FG}"
 TMUX_POWERLINE_SEG_VCS_COMPARE_BEHIND_SYMBOL_COLOUR="${TMUX_POWERLINE_SEG_VCS_COMPARE_BEHIND_SYMBOL_COLOUR:-$TMUX_POWERLINE_CUR_SEGMENT_FG}"
 
-
 generate_segmentrc() {
-	read -r -d '' rccontents << EORC
+	read -r -d '' rccontents <<EORC
 # Symbol if local branch is behind.
 # export TMUX_POWERLINE_SEG_VCS_COMPARE_AHEAD_SYMBOL="${TMUX_POWERLINE_SEG_VCS_COMPARE_AHEAD_SYMBOL}"
 # Symbol colour if local branch is ahead. Defaults to "current segment foreground colour"
@@ -29,7 +28,10 @@ EORC
 }
 
 run_segment() {
-	{ read -r vcs_type; read -r _unused; } < <(get_vcs_type_and_root_path)
+	{
+		read -r vcs_type
+		read -r _unused
+	} < <(get_vcs_type_and_root_path)
 	tmux_path=$(get_tmux_cwd)
 	cd "$tmux_path" || return
 
@@ -43,7 +45,7 @@ run_segment() {
 
 __parse_git_stats() {
 	# check if git
-	[[ -z $(git rev-parse --git-dir 2> /dev/null) ]] && return
+	[[ -z $(git rev-parse --git-dir 2>/dev/null) ]] && return
 
 	symbolic_ref=$(git symbolic-ref -q HEAD)
 	[[ -z "${symbolic_ref}" ]] && return
@@ -54,10 +56,10 @@ __parse_git_stats() {
 	read -r behind ahead < <(git rev-list --left-right --count "$tracking_branch"...HEAD)
 
 	# print out the information
-	if [[ $behind -gt 0 ]] ; then
+	if [[ $behind -gt 0 ]]; then
 		local ret="#[fg=$TMUX_POWERLINE_SEG_VCS_COMPARE_BEHIND_SYMBOL_COLOUR]${TMUX_POWERLINE_SEG_VCS_COMPARE_BEHIND_SYMBOL}#[fg=$TMUX_POWERLINE_CUR_SEGMENT_FG]$behind"
 	fi
-	if [[ $ahead -gt 0 ]] ; then
+	if [[ $ahead -gt 0 ]]; then
 		local ret="${ret}#[fg=$TMUX_POWERLINE_SEG_VCS_COMPARE_AHEAD_SYMBOL_COLOUR]${TMUX_POWERLINE_SEG_VCS_COMPARE_AHEAD_SYMBOL}#[fg=$TMUX_POWERLINE_CUR_SEGMENT_FG]$ahead"
 	fi
 	echo "$ret"

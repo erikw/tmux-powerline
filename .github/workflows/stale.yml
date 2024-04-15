@@ -1,3 +1,4 @@
+---
 name: "Close stale issues and PRs"
 on:
   workflow_dispatch:

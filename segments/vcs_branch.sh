@@ -17,9 +17,8 @@ TMUX_POWERLINE_SEG_VCS_BRANCH_HG_SYMBOL_COLOUR="${TMUX_POWERLINE_SEG_VCS_BRANCH_
 TMUX_POWERLINE_SEG_VCS_BRANCH_SVN_SYMBOL="${TMUX_POWERLINE_SEG_VCS_BRANCH_SVN_SYMBOL:-$TMUX_POWERLINE_SEG_VCS_BRANCH_DEFAULT_SYMBOL}"
 TMUX_POWERLINE_SEG_VCS_BRANCH_SVN_SYMBOL_COLOUR="${TMUX_POWERLINE_SEG_VCS_BRANCH_SVN_SYMBOL_COLOUR:-220}"
 
-
 generate_segmentrc() {
-	read -r -d '' rccontents  << EORC
+	read -r -d '' rccontents <<EORC
 # Max length of the branch name.
 export TMUX_POWERLINE_SEG_VCS_BRANCH_MAX_LEN="${TMUX_POWERLINE_SEG_VCS_BRANCH_MAX_LEN_DEFAULT}"
 # Symbol when branch length exceeds max length
@@ -45,7 +44,10 @@ EORC
 run_segment() {
 	local branch
 
-	{ read -r vcs_type; read -r vcs_rootpath; } < <(get_vcs_type_and_root_path)
+	{
+		read -r vcs_type
+		read -r vcs_rootpath
+	} < <(get_vcs_type_and_root_path)
 	tmux_path=$(get_tmux_cwd)
 	cd "$tmux_path" || return
 	branch=$(__parse_"${vcs_type}"_branch "$vcs_rootpath")
@@ -61,12 +63,12 @@ __parse_git_branch() {
 	local branch
 
 	# Quit if this is not a Git repo.
-	if ! branch=$(git symbolic-ref HEAD 2> /dev/null); then
+	if ! branch=$(git symbolic-ref HEAD 2>/dev/null); then
 		return
 	fi
-	if [[ -z $branch ]] ; then
+	if [[ -z $branch ]]; then
 		# attempt to get short-sha-name
-		if ! branch=":$(git rev-parse --short HEAD 2> /dev/null)"; then
+		if ! branch=":$(git rev-parse --short HEAD 2>/dev/null)"; then
 			return
 		fi
 	fi
@@ -129,7 +131,7 @@ __truncate_branch_name() {
 
 	# ensure branch name length is less than defined max lenght
 	if [ "${#branch}" -gt "$TMUX_POWERLINE_SEG_VCS_BRANCH_MAX_LEN" ]; then
-		branch=${branch:0:$((TMUX_POWERLINE_SEG_VCS_BRANCH_MAX_LEN-${#trunc_symbol}))}
+		branch=${branch:0:$((TMUX_POWERLINE_SEG_VCS_BRANCH_MAX_LEN - ${#trunc_symbol}))}
 		# append trunc_symbol
 		branch="${branch}${trunc_symbol}"
 	fi

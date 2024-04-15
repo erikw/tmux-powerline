@@ -8,9 +8,11 @@ source "${TMUX_POWERLINE_DIR_LIB}/tmux_adapter.sh"
 # shellcheck source=lib/vcs_helper.sh
 source "${TMUX_POWERLINE_DIR_LIB}/vcs_helper.sh"
 
-
 run_segment() {
-	{ read -r vcs_type; read -r _unused; } < <(get_vcs_type_and_root_path)
+	{
+		read -r vcs_type
+		read -r _unused
+	} < <(get_vcs_type_and_root_path)
 	tmux_path=$(get_tmux_cwd)
 	cd "$tmux_path" || return
 
@@ -31,7 +33,7 @@ __parse_git_stats() {
 	echo "${git_rev}"
 }
 
-__parse_hg_stats(){
+__parse_hg_stats() {
 	local hg_rev
 	hg_rev=$(hg id -i)
 	if [ -z "$hg_rev" ]; then
@@ -39,7 +41,7 @@ __parse_hg_stats(){
 	fi
 	echo "${hg_rev}"
 }
-__parse_svn_stats(){
+__parse_svn_stats() {
 	local svn_info
 	local svn_rev
 	svn_info=$(svn info 2>/dev/null)

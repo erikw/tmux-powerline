@@ -9,9 +9,8 @@ TMUX_POWERLINE_SEG_IFSTAT_WWAN_SYMBOL="${TMUX_POWERLINE_SEG_IFSTAT_WWAN_SYMBOL:-
 TMUX_POWERLINE_SEG_IFSTAT_INTERFACE_SEPARATOR="${TMUX_POWERLINE_SEG_IFSTAT_INTERFACE_SEPARATOR:- | }"
 TMUX_POWERLINE_SEG_IFSTAT_INTERFACE_EXCLUDES="${TMUX_POWERLINE_SEG_IFSTAT_INTERFACE_EXCLUDES:-^u?tun[0-9]+$}"
 
-
 generate_segmentrc() {
-	read -r -d '' rccontents << EORC
+	read -r -d '' rccontents <<EORC
 # Symbol for Download.
 # export TMUX_POWERLINE_SEG_IFSTAT_DOWN_SYMBOL="${TMUX_POWERLINE_SEG_IFSTAT_DOWN_SYMBOL}"
 # Symbol for Upload.
@@ -46,7 +45,7 @@ run_segment() {
 	symbol_down=$TMUX_POWERLINE_SEG_IFSTAT_DOWN_SYMBOL
 	symbol_up=$TMUX_POWERLINE_SEG_IFSTAT_UP_SYMBOL
 
-	read -r -a excludes <<< "$TMUX_POWERLINE_SEG_IFSTAT_INTERFACE_EXCLUDES"
+	read -r -a excludes <<<"$TMUX_POWERLINE_SEG_IFSTAT_INTERFACE_EXCLUDES"
 	data=$(ifstat -z -q 1 1)
 	IFS=$'    ' read -r -a interfaces < <(echo -e "${data}" | head -n 1)
 	IFS=$'    ' read -r -a flow_data < <(echo -e "${data}" | tail -n 1)
@@ -57,21 +56,25 @@ run_segment() {
 		done
 		type=""
 		case ${inf} in
-			eth*|en*) type="$TMUX_POWERLINE_SEG_IFSTAT_ETHERNET_SYMBOL"
-				;;
-			wl*) type="$TMUX_POWERLINE_SEG_IFSTAT_WLAN_SYMBOL"
-				;;
-			ww*) type="$TMUX_POWERLINE_SEG_IFSTAT_WWAN_SYMBOL"
-				;;
-			*) type="${inf:0:3}*"
-				;;
+		eth* | en*)
+			type="$TMUX_POWERLINE_SEG_IFSTAT_ETHERNET_SYMBOL"
+			;;
+		wl*)
+			type="$TMUX_POWERLINE_SEG_IFSTAT_WLAN_SYMBOL"
+			;;
+		ww*)
+			type="$TMUX_POWERLINE_SEG_IFSTAT_WWAN_SYMBOL"
+			;;
+		*)
+			type="${inf:0:3}*"
+			;;
 		esac
-		ifstat_seg+=("$(printf "$type $symbol_down %.1f $symbol_up %.1f" "${flow_data[$index]}" "${flow_data[$((index+1))]}")")
-		index=$((index+2))
+		ifstat_seg+=("$(printf "$type $symbol_down %.1f $symbol_up %.1f" "${flow_data[$index]}" "${flow_data[$((index + 1))]}")")
+		index=$((index + 2))
 	done
 	if [ "${#ifstat_seg}" -gt 0 ]; then
 		output=""
-		for (( i=0; i < "${#ifstat_seg[@]}"; i++)); do
+		for ((i = 0; i < "${#ifstat_seg[@]}"; i++)); do
 			[ "$i" -gt 0 ] && output="${output}${TMUX_POWERLINE_SEG_IFSTAT_INTERFACE_SEPARATOR}"
 			output="${output}${ifstat_seg[$i]}"
 		done

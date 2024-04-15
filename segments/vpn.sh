@@ -6,6 +6,26 @@ TMUX_POWERLINE_SEG_VPN_SYMBOL="${TMUX_POWERLINE_SEG_VPN_SYMBOL:-󱠾 }"
 TMUX_POWERLINE_SEG_VPN_SYMBOL_COLOUR="${TMUX_POWERLINE_SEG_VPN_SYMBOL_COLOUR:-255}"
 TMUX_POWERLINE_SEG_VPN_DISPLAY_SEPARATOR="${TMUX_POWERLINE_SEG_VPN_DISPLAY_SEPARATOR:-󰿟}"
 
+generate_segmentrc() {
+	read -r -d '' rccontents <<EORC
+# Mode for VPN segment {"both", "ip", "name"}. both: Show NIC/IP; ip: Show only IP; name: Show only NIC name
+# export TMUX_POWERLINE_SEG_VPN_DISPLAY_MODE="${TMUX_POWERLINE_SEG_VPN_DISPLAY_MODE}"
+# Space separated list of tunnel interface names. First match is being used. substring match, regexp can be used.
+# Examples:
+# export TMUX_POWERLINE_SEG_VPN_NICS="tun" # will match 'tun0', 'utun0', 'itun', 'tun08127387'
+# export TMUX_POWERLINE_SEG_VPN_NICS="tun0 tuntun" # will match 'tun0', 'utun0', 'tuntun'
+# export TMUX_POWERLINE_SEG_VPN_NICS="^tun0$ ^tun1$" # exactly 'tun0' and 'tun1'
+# Default:
+# export TMUX_POWERLINE_SEG_VPN_NICS='${TMUX_POWERLINE_SEG_VPN_NICS}'
+# Symbol to use for vpn tunnel.
+# export TMUX_POWERLINE_SEG_VPN_SYMBOL="${TMUX_POWERLINE_SEG_VPN_SYMBOL}"
+# Colour for vpn tunnel symbol
+# export TMUX_POWERLINE_SEG_VPN_SYMBOL_COLOUR="${TMUX_POWERLINE_SEG_VPN_SYMBOL_COLOUR}"
+# Symbol for separator
+# export TMUX_POWERLINE_SEG_VPN_DISPLAY_SEPARATOR="${TMUX_POWERLINE_SEG_VPN_DISPLAY_SEPARATOR}"
+EORC
+	echo "$rccontents"
+}
 
 run_segment() {
 	__process_settings
@@ -81,27 +101,6 @@ run_segment() {
 	fi
 }
 
-generate_segmentrc() {
-	read -r -d '' rccontents << EORC
-# Mode for VPN segment {"both", "ip", "name"}. both: Show NIC/IP; ip: Show only IP; name: Show only NIC name
-# export TMUX_POWERLINE_SEG_VPN_DISPLAY_MODE="${TMUX_POWERLINE_SEG_VPN_DISPLAY_MODE}"
-# Space separated list of tunnel interface names. First match is being used. substring match, regexp can be used.
-# Examples:
-# export TMUX_POWERLINE_SEG_VPN_NICS="tun" # will match 'tun0', 'utun0', 'itun', 'tun08127387'
-# export TMUX_POWERLINE_SEG_VPN_NICS="tun0 tuntun" # will match 'tun0', 'utun0', 'tuntun'
-# export TMUX_POWERLINE_SEG_VPN_NICS="^tun0$ ^tun1$" # exactly 'tun0' and 'tun1'
-# Default:
-# export TMUX_POWERLINE_SEG_VPN_NICS='${TMUX_POWERLINE_SEG_VPN_NICS}'
-# Symbol to use for vpn tunnel.
-# export TMUX_POWERLINE_SEG_VPN_SYMBOL="${TMUX_POWERLINE_SEG_VPN_SYMBOL}"
-# Colour for vpn tunnel symbol
-# export TMUX_POWERLINE_SEG_VPN_SYMBOL_COLOUR="${TMUX_POWERLINE_SEG_VPN_SYMBOL_COLOUR}"
-# Symbol for separator
-# export TMUX_POWERLINE_SEG_VPN_DISPLAY_SEPARATOR="${TMUX_POWERLINE_SEG_VPN_DISPLAY_SEPARATOR}"
-EORC
-	echo "$rccontents"
-}
-
 __process_settings() {
 	if [ -z "$TMUX_POWERLINE_SEG_VPN_DISPLAY_MODE" ]; then
 		export TMUX_POWERLINE_SEG_VPN_DISPLAY_MODE="${TMUX_POWERLINE_SEG_VPN_DISPLAY_MODE}"
@@ -119,4 +118,3 @@ __process_settings() {
 		export TMUX_POWERLINE_SEG_VPN_DISPLAY_SEPARATOR="${TMUX_POWERLINE_SEG_VPN_DISPLAY_SEPARATOR}"
 	fi
 }
-

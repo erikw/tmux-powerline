@@ -14,9 +14,8 @@ TMUX_POWERLINE_SEG_EARTHQUAKE_ALERT_TIME_WINDOW_DEFAULT="60"
 TMUX_POWERLINE_SEG_EARTHQUAKE_TIME_FORMAT_DEFAULT='(%H:%M)'
 TMUX_POWERLINE_SEG_EARTHQUAKE_MIN_MAGNITUDE_DEFAULT='3'
 
-
 generate_segmentrc() {
-	read -r -d '' rccontents  << EORC
+	read -r -d '' rccontents <<EORC
 # The data provider to use. Currently only "goo" is supported.
 export TMUX_POWERLINE_SEG_EARTHQUAKE_DATA_PROVIDER="${TMUX_POWERLINE_SEG_EARTHQUAKE_DATA_PROVIDER_DEFAULT}"
 # How often to update the earthquake data in seconds.
@@ -40,10 +39,11 @@ run_segment() {
 	local tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/earthquake.txt"
 	local earthquake
 	case "$TMUX_POWERLINE_SEG_EARTHQUAKE_DATA_PROVIDER" in
-		"goo") earthquake=$(__goo_earthquake) ;;
-		*)
-			echo "Unknown earthquake-information provider [$TMUX_POWERLINE_SEG_EARTHQUAKE_DATA_PROVIDER]";
-			return 1
+	"goo") earthquake=$(__goo_earthquake) ;;
+	*)
+		echo "Unknown earthquake-information provider [$TMUX_POWERLINE_SEG_EARTHQUAKE_DATA_PROVIDER]"
+		return 1
+		;;
 	esac
 	if [ -n "$earthquake" ]; then
 		echo "$earthquake_symbol #[fg=colour237]${earthquake}"
@@ -90,8 +90,8 @@ __goo_earthquake() {
 	if [ -z "$magnitude" ]; then
 		# get the rss file, convert encoding to UTF-8, then delete windows carriage-returns
 		if earthquake_data=$(curl --max-time 4 -s "http://weather.goo.ne.jp/earthquake/index.rdf" | iconv -f EUC-JP -t UTF-8 | tr -d "\r"); then
-		# This rss feed is not very clean or easy to use, but we will use it because
-		# this is all that can be found for now
+			# This rss feed is not very clean or easy to use, but we will use it because
+			# this is all that can be found for now
 
 			# we grab the data from the title of the first item (most recent earthquake)
 			earthquake_data=${earthquake_data#*item\><title>}
@@ -106,9 +106,9 @@ __goo_earthquake() {
 			__convert_jp_magnitude
 			__convert_jp_timestamp
 
-			echo "$location"  >  "$tmp_file"
-			echo "$magnitude" >> "$tmp_file"
-			echo "$timestamp" >> "$tmp_file"
+			echo "$location" >"$tmp_file"
+			echo "$magnitude" >>"$tmp_file"
+			echo "$timestamp" >>"$tmp_file"
 		elif [ -f "$tmp_file" ]; then
 			__read_tmp_file
 		fi
@@ -119,7 +119,7 @@ __goo_earthquake() {
 	magnitude_number=$(echo "$magnitude" | sed -e 's/+//' -e 's/-//')
 
 	if [ -n "$magnitude" ]; then
-		if __check_alert_time_window && __check_min_magnitude ; then
+		if __check_alert_time_window && __check_min_magnitude; then
 			echo "${location}${timestamp_fmt}:#[fg=colour0]${magnitude}"
 		fi
 	fi
@@ -128,15 +128,15 @@ __goo_earthquake() {
 __convert_jp_magnitude() {
 	magnitude=${magnitude#震度}
 	# simplify high-lower designation (only used in extreme cases: above 4)
-	if [[ "$magnitude" == *弱 ]] ; then
+	if [[ "$magnitude" == *弱 ]]; then
 		magnitude="-${magnitude%弱}"
-	elif [[ "$magnitude" == *強 ]] ; then
+	elif [[ "$magnitude" == *強 ]]; then
 		magnitude="+${magnitude%強}"
 	fi
 }
 
 __check_alert_time_window() {
-	[[ $(( ( $(date +%s) - timestamp ) / 60 )) -lt $TMUX_POWERLINE_SEG_EARTHQUAKE_ALERT_TIME_WINDOW ]]
+	[[ $((($(date +%s) - timestamp) / 60)) -lt $TMUX_POWERLINE_SEG_EARTHQUAKE_ALERT_TIME_WINDOW ]]
 }
 
 __check_min_magnitude() {
@@ -144,7 +144,7 @@ __check_min_magnitude() {
 }
 
 __convert_jp_timestamp() {
-	if shell_is_osx ; then
+	if shell_is_osx; then
 		timestamp=$(date -j -f "%Y年%m月%d日 %H時%M分" "$timestamp" +"%s")
 	else
 		timestamp=$(echo "$timestamp" | sed -e 's/年/-/' -e 's/月/-/' -e 's/日//' -e 's/時/:/' -e 's/分//')
@@ -153,7 +153,7 @@ __convert_jp_timestamp() {
 }
 
 __convert_timestamp_to_fmt() {
-	if shell_is_osx ; then
+	if shell_is_osx; then
 		timestamp_fmt=$(date -r "$timestamp" +"$TMUX_POWERLINE_SEG_EARTHQUAKE_TIME_FORMAT")
 	else
 		timestamp_fmt=$(date -d "$timestamp" +"$TMUX_POWERLINE_SEG_EARTHQUAKE_TIME_FORMAT")
@@ -166,7 +166,7 @@ __read_tmp_file() {
 	fi
 	IFS_bak="$IFS"
 	IFS=$'\n'
-	read -r -a lines <<< "${tmp_file}"
+	read -r -a lines <<<"${tmp_file}"
 	IFS="$IFS_bak"
 	location="${lines[0]}"
 	magnitude="${lines[1]}"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-TMUX_POWERLINE_DIR_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+TMUX_POWERLINE_DIR_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export TMUX_POWERLINE_DIR_HOME
 
 source "${TMUX_POWERLINE_DIR_HOME}/config/paths.sh"

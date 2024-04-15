@@ -5,7 +5,7 @@
 set -o errexit
 set -o pipefail
 
-TMUX_POWERLINE_DIR_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+TMUX_POWERLINE_DIR_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export TMUX_POWERLINE_DIR_HOME
 
 # Obtain the left/right status length settings by reading the tmux-powerline config.
@@ -39,8 +39,8 @@ if [ "$TMUX_POWERLINE_STATUS_VISIBILITY" = "2" ]; then
 		window_status=1
 		left_right_status=0
 	fi
-	tmux set-option -g  status-format["$window_status"] "${TMUX_POWERLINE_STATUS_FORMAT_WINDOW:-${TMUX_POWERLINE_STATUS_FORMAT_WINDOW_DEFAULT}}"
-	tmux set-option -g  status-format["$left_right_status"] "${TMUX_POWERLINE_STATUS_FORMAT_LEFT:-${TMUX_POWERLINE_STATUS_FORMAT_LEFT_DEFAULT}}"
+	tmux set-option -g status-format["$window_status"] "${TMUX_POWERLINE_STATUS_FORMAT_WINDOW:-${TMUX_POWERLINE_STATUS_FORMAT_WINDOW_DEFAULT}}"
+	tmux set-option -g status-format["$left_right_status"] "${TMUX_POWERLINE_STATUS_FORMAT_LEFT:-${TMUX_POWERLINE_STATUS_FORMAT_LEFT_DEFAULT}}"
 	tmux set-option -ag status-format["$left_right_status"] "${TMUX_POWERLINE_STATUS_FORMAT_RIGHT:-${TMUX_POWERLINE_STATUS_FORMAT_RIGHT_DEFAULT}}"
 fi
 

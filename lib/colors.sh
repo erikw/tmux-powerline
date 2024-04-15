@@ -19,12 +19,12 @@ __normalize_color() {
 	local result
 
 	case "$input" in
-		[0-9]|[0-9][0-9]|[0-9][0-9][0-9]) # handle 1 to 3 digits
-			result="colour$input"
-			;;
-		*) # Catch-all
-			result=$input
-			;;
+	[0-9] | [0-9][0-9] | [0-9][0-9][0-9]) # handle 1 to 3 digits
+		result="colour$input"
+		;;
+	*) # Catch-all
+		result=$input
+		;;
 	esac
 
 	echo -n "$result"

@@ -49,9 +49,8 @@ SUSPEND_MODE_TEXT_COLOR_DEFAULT="$TMUX_POWERLINE_CUR_SEGMENT_FG"
 
 SEPARATOR_TEXT_DEFAULT=" • "
 
-
 generate_segmentrc() {
-	read -r -d '' rccontents << EORC
+	read -r -d '' rccontents <<EORC
 # Whether the normal & prefix mode section should be enabled. Should be {"true, "false"}.
 export TMUX_POWERLINE_SEG_MODE_INDICATOR_NORMAL_AND_PREFIX_MODE_ENABLED="${NORMAL_AND_PREFIX_MODE_ENABLED_DEFAULT}"
 # Normal mode text & color overrides. Defaults to "normal" & the segment foreground color set in the theme used.
@@ -113,7 +112,7 @@ __normal_and_prefix_mode_indicator() {
 	prefix_mode="$prefix_text_color$TMUX_POWERLINE_SEG_MODE_INDICATOR_PREFIX_MODE_TEXT"
 	suspend_mode="$suspend_text_color$TMUX_POWERLINE_SEG_MODE_INDICATOR_SUSPEND_MODE_TEXT"
 
-	if [ "$(tmux show-option -qv key-table)" = "suspended" ] ; then
+	if [ "$(tmux show-option -qv key-table)" = "suspended" ]; then
 		normal_and_prefix_indicator="$suspend_mode"
 	else
 		normal_and_prefix_indicator="#{?client_prefix,$prefix_mode,$normal_mode}"

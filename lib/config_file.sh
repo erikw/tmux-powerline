@@ -80,12 +80,10 @@ process_settings() {
 
 		export TMUX_POWERLINE_STATUS_STYLE="fg=$fg_color,bg=$bg_color"
 	fi
-
-
 }
 
 generate_default_config() {
-	read -r -d '' config_contents << EORC
+	read -r -d '' config_contents <<EORC
 # Default configuration file for tmux-powerline.
 # Modeline {
 #	 vi: foldmarker={,} foldmethod=marker foldlevel=0 tabstop=4 filetype=sh
@@ -142,13 +140,13 @@ EORC
 		fi
 	done
 
-	echo -e "$config_contents" > "$TMUX_POWERLINE_CONFIG_FILE_DEFAULT"
+	echo -e "$config_contents" >"$TMUX_POWERLINE_CONFIG_FILE_DEFAULT"
 	echo "Default configuration file generated to: ${TMUX_POWERLINE_CONFIG_FILE_DEFAULT}"
 	echo "Copy/move it to \"${TMUX_POWERLINE_CONFIG_FILE}\" and make your changes."
 }
 
 __read_config_file() {
-	if [  -f "$TMUX_POWERLINE_CONFIG_FILE" ]; then
+	if [ -f "$TMUX_POWERLINE_CONFIG_FILE" ]; then
 		# shellcheck disable=SC1090
 		source "$TMUX_POWERLINE_CONFIG_FILE"
 	fi

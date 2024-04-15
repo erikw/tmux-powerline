@@ -51,7 +51,6 @@ sky_blue="#a7c7e7"
 spotify_green="#1db954"
 spotify_black="#191414"
 
-
 TMUX_POWERLINE_SEPARATOR_LEFT_BOLD=""
 TMUX_POWERLINE_SEPARATOR_LEFT_THIN=""
 TMUX_POWERLINE_SEPARATOR_RIGHT_BOLD=""
@@ -72,13 +71,13 @@ TMUX_POWERLINE_DEFAULT_RIGHTSIDE_SEPARATOR=${TMUX_POWERLINE_DEFAULT_RIGHTSIDE_SE
 # shellcheck disable=SC2128
 if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_CURRENT" ]; then
 	TMUX_POWERLINE_WINDOW_STATUS_CURRENT=(
-		"#[$(format regular)]" \
-		"$TMUX_POWERLINE_DEFAULT_RIGHTSIDE_SEPARATOR" \
-		"#[$(format inverse)]" \
-		" #I#F " \
-		"$TMUX_POWERLINE_SEPARATOR_THIN" \
-		" #W " \
-		"#[$(format regular)]" \
+		"#[$(format regular)]"
+		"$TMUX_POWERLINE_DEFAULT_RIGHTSIDE_SEPARATOR"
+		"#[$(format inverse)]"
+		" #I#F "
+		"$TMUX_POWERLINE_SEPARATOR_THIN"
+		" #W "
+		"#[$(format regular)]"
 		"$TMUX_POWERLINE_DEFAULT_LEFTSIDE_SEPARATOR"
 	)
 fi
@@ -93,9 +92,9 @@ fi
 # shellcheck disable=SC2128
 if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_FORMAT" ]; then
 	TMUX_POWERLINE_WINDOW_STATUS_FORMAT=(
-		"#[$(format regular)]" \
-		"  #I#{?window_flags,#F, } " \
-		"$TMUX_POWERLINE_SEPARATOR_THIN" \
+		"#[$(format regular)]"
+		"  #I#{?window_flags,#F, } "
+		"$TMUX_POWERLINE_SEPARATOR_THIN"
 		" #W "
 	)
 fi
@@ -132,39 +131,39 @@ fi
 # shellcheck disable=SC1143,SC2128
 if [ -z "$TMUX_POWERLINE_LEFT_STATUS_SEGMENTS" ]; then
 	TMUX_POWERLINE_LEFT_STATUS_SEGMENTS=(
-		"tmux_session_info $blue $thm_bg" \
-		"hostname $eggplant $thm_bg" \
-		#"ifstat 30 255" \
-		#"ifstat_sys 30 255" \
-		"lan_ip $sky_blue $thm_bg ${TMUX_POWERLINE_SEPARATOR_RIGHT_THIN}" \
-		"wan_ip $sky_blue $thm_bg" \
-		"vcs_branch $thm_gray" \
-		#"air ${TMUX_POWERLINE_SEG_AIR_COLOR} $thm_bg" \
-		#"vcs_compare 60 255" \
-		#"vcs_staged 64 255" \
-		#"vcs_modified 9 255" \
-		#"vcs_others 245 0" \
+		"tmux_session_info $blue $thm_bg"
+		"hostname $eggplant $thm_bg"
+		#"ifstat 30 255"
+		#"ifstat_sys 30 255"
+		"lan_ip $sky_blue $thm_bg ${TMUX_POWERLINE_SEPARATOR_RIGHT_THIN}"
+		"wan_ip $sky_blue $thm_bg"
+		"vcs_branch $thm_gray"
+		#"air ${TMUX_POWERLINE_SEG_AIR_COLOR} $thm_bg"
+		#"vcs_compare 60 255"
+		#"vcs_staged 64 255"
+		#"vcs_modified 9 255"
+		#"vcs_others 245 0"
 	)
 fi
 
 # shellcheck disable=SC1143,SC2128
 if [ -z "$TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS" ]; then
 	TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS=(
-		# "earthquake 3 0" \
-		"pwd $mauve $surface0" \
-		#"macos_notification_count 29 255" \
-		#"mailcount 9 255" \
-		"now_playing $spotify_green $spotify_black" \
-		#"cpu 240 136" \
-		#"load 237 167" \
-		#"tmux_mem_cpu_load 234 136" \
-		"battery $blue $thm_bg" \
-		#"weather 37 255" \
-		#"rainbarf 0 ${TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR}" \
-		#"xkb_layout 125 117" \
-		"date_day $teal $thm_bg" \
-		"date $teal $thm_bg ${TMUX_POWERLINE_SEPARATOR_LEFT_THIN}" \
-		"time $teal $thm_bg ${TMUX_POWERLINE_SEPARATOR_LEFT_THIN}" \
-		#"utc_time 235 136 ${TMUX_POWERLINE_SEPARATOR_LEFT_THIN}" \
+		# "earthquake 3 0"
+		"pwd $mauve $surface0"
+		#"macos_notification_count 29 255"
+		#"mailcount 9 255"
+		"now_playing $spotify_green $spotify_black"
+		#"cpu 240 136"
+		#"load 237 167"
+		#"tmux_mem_cpu_load 234 136"
+		"battery $blue $thm_bg"
+		#"weather 37 255"
+		#"rainbarf 0 ${TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR}"
+		#"xkb_layout 125 117"
+		"date_day $teal $thm_bg"
+		"date $teal $thm_bg ${TMUX_POWERLINE_SEPARATOR_LEFT_THIN}"
+		"time $teal $thm_bg ${TMUX_POWERLINE_SEPARATOR_LEFT_THIN}"
+		#"utc_time 235 136 ${TMUX_POWERLINE_SEPARATOR_LEFT_THIN}"
 	)
 fi

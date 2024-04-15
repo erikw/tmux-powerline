@@ -27,8 +27,8 @@ run_segment() {
 		RXBN=$(</sys/class/net/"$iface"/statistics/rx_bytes)
 		TXBN=$(</sys/class/net/"$iface"/statistics/tx_bytes)
 	fi
-	RXDIF=$(echo "$((RXBN - RXB)) / 1024 / ${sleeptime}" | bc )
-	TXDIF=$(echo "$((TXBN - TXB)) / 1024 / ${sleeptime}" | bc )
+	RXDIF=$(echo "$((RXBN - RXB)) / 1024 / ${sleeptime}" | bc)
+	TXDIF=$(echo "$((TXBN - TXB)) / 1024 / ${sleeptime}" | bc)
 
 	if [ "$RXDIF" -gt 1024 ]; then
 		RXDIF=$(echo "scale=1;${RXDIF} / 1024" | bc)
@@ -44,6 +44,6 @@ run_segment() {
 	fi
 
 	# NOTE: '%5.01' for fixed length always
-	printf "${type} ⇊ %5.01f${RXDIF_UNIT} ⇈ %5.01f${TXDIF_UNIT}"  "${RXDIF}" "${TXDIF}"
+	printf "${type} ⇊ %5.01f${RXDIF_UNIT} ⇈ %5.01f${TXDIF_UNIT}" "${RXDIF}" "${TXDIF}"
 	return 0
 }
