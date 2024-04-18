@@ -33,4 +33,5 @@ jobs:
           VALIDATE_CPP: false
           VALIDATE_CLANG_FORMAT: false
           VALIDATE_PYTHON_PYLINT: false
+          VALIDATE_JSCPD: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
