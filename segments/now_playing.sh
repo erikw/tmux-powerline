@@ -3,12 +3,17 @@
 
 # shellcheck source=lib/text_roll.sh
 source "${TMUX_POWERLINE_DIR_LIB}/text_roll.sh"
+# shellcheck source=lib/util.sh
+source "${TMUX_POWERLINE_DIR_LIB}/util.sh"
 
 TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN_DEFAULT="40"
 TMUX_POWERLINE_SEG_NOW_PLAYING_TRIM_METHOD_DEFAULT="trim"
 TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SPEED_DEFAULT="2"
 TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_MODE="${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_MODE:-repeat}"
 TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SEPARATOR="${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SEPARATOR:-   }"
+TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_ENABLE="${TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_ENABLE:-false}"
+TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_FILEPATH="${TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_FILEPATH:-${HOME}/.now_playing.log}"
+TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_MAX_ENTRIES="${TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_MAX_ENTRIES:-100}"
 TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST_DEFAULT="localhost"
 TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_PORT_DEFAULT="6600"
 TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_UPDATE_PERIOD_DEFAULT="30"
@@ -35,6 +40,12 @@ export TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SPEED="${TMUX_POWERLINE_SEG_NOW_PLAYI
 # export TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_MODE="${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_MODE}"
 # Separator for "repeat" roll mode
 # export TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SEPARATOR="${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SEPARATOR}"
+# If set to 'true', 'yes', 'on' or '1', played tracks will be logged to a file.
+# export TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_ENABLE="${TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_ENABLE}"
+# If enabled, log played tracks to the following file:
+# export TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_FILEPATH="${TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_FILEPATH}"
+# Maximum number of logged song entries. Set to "unlimited" for unlimited entries.
+# export TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_MAX_ENTRIES="${TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_MAX_ENTRIES}"
 
 # Hostname for MPD server in the format "[password@]host"
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST="${TMUX_POWERLINE_SEG_NOW_PLAYING_MPD_HOST_DEFAULT}"
@@ -120,6 +131,33 @@ run_segment() {
 		return ${exitcode}
 	fi
 	if [ -n "$np" ]; then
+		if is_flag_enabled "${TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_ENABLE}"; then
+			local last_track
+			last_track=$(
+				awk -F': ' 'END { for (i = 2; i <= NF; ++i) printf("%s%s", $i, (i < NF) ? FS : "") }' \
+					<"$TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_FILEPATH" 2>/dev/null
+			)
+			if [[ "$np" != "$last_track" ]]; then
+				local next_entry
+				next_entry="$(date +"%Y-%m-%d %H:%M:%S"): ${np}"
+				if [[ "${TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_MAX_ENTRIES}" == "unlimited" ]]; then
+					echo "$next_entry" >>"$TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_FILEPATH"
+				else
+					local tmp_log_file
+					tmp_log_file="$(mktemp)" &&
+						{
+							tail -n $((TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_MAX_ENTRIES - 1)) \
+								"$TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_FILEPATH" 2>/dev/null
+							echo "$next_entry"
+						} >"$tmp_log_file" &&
+						if [[ -f "$tmp_log_file" ]]; then
+							# Use `cat` to preserve destination file attributes rather than source file attributes
+							cat "$tmp_log_file" >"$TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_FILEPATH"
+							rm "$tmp_log_file"
+						fi
+				fi
+			fi
+		fi
 		case "$TMUX_POWERLINE_SEG_NOW_PLAYING_TRIM_METHOD" in
 		"roll")
 			np=$(roll_text "${np}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SPEED_DEFAULT}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_MODE}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SEPARATOR}")
