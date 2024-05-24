@@ -12,7 +12,6 @@ EORC
 }
 
 run_segment() {
-	__process_settings
 	local opts=""
 	if [ "$TMUX_POWERLINE_SEG_HOSTNAME_FORMAT" == "short" ]; then
 		if shell_is_osx || shell_is_bsd; then
