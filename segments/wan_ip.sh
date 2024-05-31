@@ -39,7 +39,7 @@ run_segment() {
 	fi
 
 	if [ -z "$wan_ip" ]; then
-		if wan_ip=$(curl --max-time 2 -s http://whatismyip.akamai.com/); then
+		if wan_ip=$(curl --max-time 2 -s https://whatismyip.akamai.com/); then
 			echo "${wan_ip}" >"$tmp_file"
 		elif [ -f "${tmp_file}" ]; then
 			wan_ip=$(cat "$tmp_file")
