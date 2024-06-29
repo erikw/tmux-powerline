@@ -77,7 +77,7 @@ __parse_git_branch() {
 	branch=${branch#refs\/heads\/}
 	branch=$(__truncate_branch_name "$branch")
 
-	echo -n "#[fg=colour${TMUX_POWERLINE_SEG_VCS_BRANCH_GIT_SYMBOL_COLOUR}]${TMUX_POWERLINE_SEG_VCS_BRANCH_GIT_SYMBOL} #[fg=${TMUX_POWERLINE_CUR_SEGMENT_FG}]${branch}"
+	echo -n "#[fg=${TMUX_POWERLINE_SEG_VCS_BRANCH_GIT_SYMBOL_COLOUR}]${TMUX_POWERLINE_SEG_VCS_BRANCH_GIT_SYMBOL} #[fg=${TMUX_POWERLINE_CUR_SEGMENT_FG}]${branch}"
 }
 
 # Show SVN branch.
