@@ -50,7 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - tmux-powerline is now installable as a [tpm](https://github.com/tmux-plugins/tpm) plugin! Long requested feature. [#189](https://github.com/erikw/tmux-powerline/issues/189)
 - Theme config: add ability to selectively disable spacing and segment characters. [#302](https://github.com/erikw/tmux-powerline/pull/302)
 ### Changed
-- Improved the README with config instructions and include user segment instructions.
+- Improved the README.md with config instructions and include user segment instructions.
 ### Removed
 - Dropped support for `$(tmux -V)` <2.2.
 
