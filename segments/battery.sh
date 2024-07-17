@@ -9,6 +9,8 @@ BATTERY_MED="󱊢"
 BATTERY_EMPTY="󱊡"
 BATTERY_CHARGE="󰂄"
 ADAPTER="󰚥"
+BATTERY_CUTE_FULL=""
+BATTERY_CUTE_EMPTY="♥"
 
 generate_segmentrc() {
 	read -r -d '' rccontents <<EORC
@@ -24,8 +26,10 @@ run_segment() {
 	__process_settings
 	if shell_is_osx; then
 		battery_status=$(__battery_osx)
+		battery_icon=$(__battery_icon_osx "$battery_status")
 	else
 		battery_status=$(__battery_linux)
+		battery_icon=$(__battery_icon_linux "$battery_status")
 	fi
 	if [ -z "$battery_status" ]; then
 		echo "$ADAPTER "
@@ -34,10 +38,14 @@ run_segment() {
 
 	case "$TMUX_POWERLINE_SEG_BATTERY_TYPE" in
 	"percentage")
-		output="${battery_status}%"
+		output="$battery_icon ${battery_status}%"
 		;;
 	"cute")
 		output=$(__cutinate "$battery_status")
+		# only show charge icon to keep it simple
+		if [ "$battery_icon" == "$BATTERY_CHARGE" ]; then
+			output="$battery_icon $output"
+		fi
 		;;
 	esac
 	if [ -n "$output" ]; then
@@ -74,26 +82,78 @@ __battery_osx() {
 				export fully_charged=$value
 				;;
 			esac
-			if [[ -n $maxcap && -n $curcap && -n $extconnect ]]; then
-				charge=$(pmset -g batt | grep -o "[0-9][0-9]*\%" | rev | cut -c 2- | rev)
-				if [[ ("$fully_charged" == "Yes" || $charge -eq 100) && $extconnect == "Yes" ]]; then
-					return
-				fi
-				if [[ "$extconnect" == "Yes" ]]; then
-					echo "$BATTERY_CHARGE $charge"
-				else
-					if [[ $charge -lt 50 ]]; then
-						echo -n "#[fg=#ff0000]"
-						echo "$BATTERY_EMPTY $charge"
-					elif [[ $charge -lt 80 ]]; then
-						echo "$BATTERY_MED $charge"
-					else
-						echo "$BATTERY_FULL $charge"
-					fi
-				fi
+
+			# We've gotten all the values we care about
+			if [[ -n $maxcap && -n $curcap && -n $extconnect && -n $fully_charged ]]; then
 				break
 			fi
 		done
+	charge=$(pmset -g batt | grep -o "[0-9][0-9]*\%" | rev | cut -c 2- | rev)
+	if [[ ("$fully_charged" == "Yes" || $charge -eq 100) && $extconnect == "Yes" ]]; then
+		return
+	fi
+	echo $charge
+}
+
+__battery_icon_osx() {
+	charge=$1
+	if [[ -n $charge ]]; then
+		return
+	fi
+
+	ioreg -c AppleSmartBattery -w0 |
+		grep -o '"[^"]*" = [^ ]*' |
+		sed -e 's/= //g' -e 's/"//g' |
+		sort |
+		while read -r key value; do
+			case $key in
+			"MaxCapacity")
+				export maxcap=$value
+				;;
+			"CurrentCapacity")
+				export curcap=$value
+				;;
+			"ExternalConnected")
+				export extconnect=$value
+				;;
+			"FullyCharged")
+				export fully_charged=$value
+				;;
+			esac
+			if [[ -n $maxcap && -n $curcap && -n $extconnect && -n $fully_charged ]]; then
+				break
+			fi
+		done
+
+	if [[ "$extconnect" == "Yes" ]]; then
+		echo "$BATTERY_CHARGE"
+	elif [[ $charge -lt 50 ]]; then
+		echo -n "#[fg=#ff0000]"
+		echo "$BATTERY_EMPTY"
+	elif [[ $charge -lt 80 ]]; then
+		echo "$BATTERY_MED"
+	else
+		echo "$BATTERY_FULL"
+	fi
+}
+
+__battery_icon_linux() {
+	perc=$1
+	case "$SHELL_PLATFORM" in
+	"linux")
+		BATSTATUS=$(cat /sys/class/power_supply/battery/status)
+		if [ "$BATSTATUS" == "Charging" ]; then
+			icon="$BATTERY_CHARGE"
+		elif [[ $perc -lt 50 ]]; then
+			icon="#[fg=#ff0000]$BATTERY_EMPTY"
+		elif [[ $perc -lt 80 ]]; then
+			icon="$BATTERY_MED"
+		else
+			icon="$BATTERY_FULL"
+		fi
+		echo $icon
+		;;
+	esac
 }
 
 __battery_linux() {
@@ -103,13 +163,23 @@ __battery_linux() {
 		if [ ! -d $BATPATH ]; then
 			BATPATH=/sys/class/power_supply/BAT1
 		fi
+		if [ ! -d $BATPATH ]; then
+			BATPATH=/sys/class/power_supply/battery
+		fi
 		BAT_FULL=$BATPATH/charge_full
 		if [ ! -r $BAT_FULL ]; then
 			BAT_FULL=$BATPATH/energy_full
 		fi
+		# WSL reports battery as a percentage already
+		if [ ! -r $BAT_FULL ]; then
+			BAT_FULL=100
+		fi
 		BAT_NOW=$BATPATH/charge_now
 		if [ ! -r $BAT_NOW ]; then
 			BAT_NOW=$BATPATH/energy_now
+		fi
+		if [ ! -r $BAT_NOW ]; then
+			BAT_NOW=$BATPATH/capacity
 		fi
 		__linux_get_bat
 		;;
@@ -125,24 +195,27 @@ __cutinate() {
 
 	for _unused in $(seq "$TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS"); do
 		if [ "$perc" -lt 99 ]; then
-			echo -n $BATTERY_EMPTY
+			echo -n $BATTERY_CUTE_EMPTY
 		else
-			echo -n $BATTERY_FULL
+			echo -n $BATTERY_CUTE_FULL
 		fi
-		echo -n " "
 		perc=$((perc + inc))
 	done
 }
 
 __linux_get_bat() {
-	bf=$(cat "$BAT_FULL")
+	if [ "$BAT_FULL" -eq 100 ]; then
+		bf=$BAT_FULL
+	else
+		bf=$(cat "$BAT_FULL")
+	fi
 	bn=$(cat "$BAT_NOW")
 	if [ "$bn" -gt "$bf" ]; then
 		bn=$bf
 	fi
-	echo "$BATTERY_MED $((100 * bn / bf))"
+	echo "$((100 * bn / bf))"
 }
 
 __freebsd_get_bat() {
-	echo "$BATTERY_MED $(sysctl -n hw.acpi.battery.life)"
+	echo "$(sysctl -n hw.acpi.battery.life)"
 }
