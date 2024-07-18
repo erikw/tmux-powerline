@@ -92,7 +92,7 @@ __battery_osx() {
 	if [[ ("$fully_charged" == "Yes" || $charge -eq 100) && $extconnect == "Yes" ]]; then
 		return
 	fi
-	echo $charge
+	echo "$charge"
 }
 
 __battery_icon_osx() {
@@ -151,7 +151,7 @@ __battery_icon_linux() {
 		else
 			icon="$BATTERY_FULL"
 		fi
-		echo $icon
+		echo "$icon"
 		;;
 	esac
 }
@@ -217,5 +217,5 @@ __linux_get_bat() {
 }
 
 __freebsd_get_bat() {
-	echo "$(sysctl -n hw.acpi.battery.life)"
+	sysctl -n hw.acpi.battery.life
 }
