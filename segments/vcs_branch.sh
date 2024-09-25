@@ -58,7 +58,7 @@ run_segment() {
 	return 0
 }
 
-# Show git banch.
+# Show git branch.
 __parse_git_branch() {
 	local branch
 
