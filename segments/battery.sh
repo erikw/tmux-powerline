@@ -39,6 +39,8 @@ run_segment() {
 	"cute")
 		output=$(__cutinate "$battery_status")
 		;;
+	"hearts")
+		output=$(__generate_hearts "$battery_status")
 	esac
 	if [ -n "$output" ]; then
 		echo "$output"
@@ -132,6 +134,21 @@ __cutinate() {
 		echo -n " "
 		perc=$((perc + inc))
 	done
+}
+
+__generate_hearts() {
+	perc=$1
+	num_hearts=$TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS
+	hearts_output=""
+
+	for i in $(seq 1 "$num_hearts"); do
+		if [ "$perc" -ge $((i * 100 / num_hearts)) ]; then
+			hearts_output+="$BATTERY_FULL "
+		else
+			hearts_output+="$BATTERY_EMPTY "
+		fi
+	done
+	echo "$hearts_output"
 }
 
 __linux_get_bat() {
