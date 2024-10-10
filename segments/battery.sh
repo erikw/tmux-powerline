@@ -42,7 +42,7 @@ run_segment() {
 		output=$(__cutinate "$battery_status")
 		;;
 	"hearts")
-		output=$(__generate_hearts "$battery_status")
+		output=$(__generate_hearts "${battery_status/* /}")
 		;;
 	esac
 	if [ -n "$output" ]; then
