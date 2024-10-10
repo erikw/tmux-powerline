@@ -2,8 +2,10 @@
 # LICENSE This code is not under the same license as the rest of the project as it's "stolen". It's cloned from https://github.com/richoH/dotfiles/blob/master/bin/battery and just some modifications are done so it works for my laptop. Check that URL for more recent versions.
 
 TMUX_POWERLINE_SEG_BATTERY_TYPE_DEFAULT="percentage"
-TMUX_POWERLINE_SEG_BATTERY_NUM_BATTERIES_DEFAULT=5
+TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS_DEFAULT=5
 
+HEART_FULL="♥"
+HEART_EMPTY="♡"
 BATTERY_FULL="󱊣"
 BATTERY_MED="󱊢"
 BATTERY_EMPTY="󱊡"
@@ -12,10 +14,10 @@ ADAPTER="󰚥"
 
 generate_segmentrc() {
 	read -r -d '' rccontents <<EORC
-# How to display battery remaining. Can be {percentage, cute}.
+# How to display battery remaining. Can be {percentage, cute, hearts}.
 export TMUX_POWERLINE_SEG_BATTERY_TYPE="${TMUX_POWERLINE_SEG_BATTERY_TYPE_DEFAULT}"
 # How may hearts to show if cute indicators are used.
-export TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS="${TMUX_POWERLINE_SEG_BATTERY_NUM_BATTERIES_DEFAULT}"
+export TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS="${TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS_DEFAULT}"
 EORC
 	echo "$rccontents"
 }
@@ -39,6 +41,9 @@ run_segment() {
 	"cute")
 		output=$(__cutinate "$battery_status")
 		;;
+	"hearts")
+		output=$(__generate_hearts "${battery_status/* /}")
+		;;
 	esac
 	if [ -n "$output" ]; then
 		echo "$output"
@@ -50,7 +55,7 @@ __process_settings() {
 		export TMUX_POWERLINE_SEG_BATTERY_TYPE="${TMUX_POWERLINE_SEG_BATTERY_TYPE_DEFAULT}"
 	fi
 	if [ -z "$TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS" ]; then
-		export TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS="${TMUX_POWERLINE_SEG_BATTERY_NUM_BATTERIES_DEFAULT}"
+		export TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS="${TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS_DEFAULT}"
 	fi
 }
 
@@ -132,6 +137,21 @@ __cutinate() {
 		echo -n " "
 		perc=$((perc + inc))
 	done
+}
+
+__generate_hearts() {
+	perc=$1
+	num_hearts=$TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS
+	hearts_output=""
+
+	for i in $(seq 1 "$num_hearts"); do
+		if [ "$perc" -ge $((i * 100 / num_hearts)) ]; then
+			hearts_output+="$HEART_FULL "
+		else
+			hearts_output+="$HEART_EMPTY "
+		fi
+	done
+	echo "$hearts_output"
 }
 
 __linux_get_bat() {
