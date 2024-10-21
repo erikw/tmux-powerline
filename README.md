@@ -89,7 +89,7 @@ Laptop mode: a battery segment.
 
 # Requirements
 Requirements for the lib to work are:
-* `tmux -V` >= 2.1
+* `tmux -V` >= 2.9
 * `bash --version` >= 3.2 (Does not have to be your default shell.)
 * Nerd Font. Follow instructions at [Font Installation](https://github.com/ryanoasis/nerd-fonts?tab=readme-ov-file#font-installation). However you can use other substitute symbols as well; see `config.sh`.
 
