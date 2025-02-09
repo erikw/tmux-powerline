@@ -42,3 +42,7 @@ is_tmp_valid() {
 	fi
 
 }
+
+is_command_found () {
+	command -v $1 > /dev/null
+ }
