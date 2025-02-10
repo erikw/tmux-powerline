@@ -20,7 +20,7 @@ run_segment() {
 			opts="--short"
 		fi
 	fi
-	
+
 	if command_exists hostname; then
 		hostname ${opts}
 	elif command_exists hostnamectl; then
