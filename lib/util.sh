@@ -43,6 +43,6 @@ is_tmp_valid() {
 
 }
 
-is_command_found () {
+command_exists () {
 	command -v $1 > /dev/null
  }
