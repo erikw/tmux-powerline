@@ -3,6 +3,10 @@
 
 TMUX_POWERLINE_SEG_HOSTNAME_FORMAT="${TMUX_POWERLINE_SEG_HOSTNAME_FORMAT:-short}"
 
+command_exists() {
+	command -v $1 > /dev/null 
+}
+
 generate_segmentrc() {
 	read -r -d '' rccontents <<EORC
 # Use short or long format for the hostname. Can be {"short, long"}.
@@ -20,7 +24,14 @@ run_segment() {
 			opts="--short"
 		fi
 	fi
-
-	hostname ${opts}
+	
+	if command_exists hostname; then
+		hostname ${opts}
+	elif command_exists hostnamectl; then
+		hostnamectl hostname
+	else
+		echo 'Host'
+	fi
 	return 0
+
 }
