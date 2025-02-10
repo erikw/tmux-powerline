@@ -28,6 +28,6 @@ run_segment() {
 	else
 		echo 'Hostname could not be determined'
 	fi
-	return 0
 
+	return 0
 }
