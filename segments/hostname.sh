@@ -1,6 +1,9 @@
 # shellcheck shell=bash
 # Prints the hostname.
 
+# shellcheck source=lib/util.sh
+source "${TMUX_POWERLINE_DIR_LIB}/util.sh"
+
 TMUX_POWERLINE_SEG_HOSTNAME_FORMAT="${TMUX_POWERLINE_SEG_HOSTNAME_FORMAT:-short}"
 
 generate_segmentrc() {
