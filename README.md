@@ -12,7 +12,7 @@
 
 <!-- markdownlint-disable no-empty-links -->
 [![Lint Code Base](https://github.com/erikw/tmux-powerline/actions/workflows/linter-full.yml/badge.svg)](https://github.com/erikw/tmux-powerline/actions/workflows/linter-full.yml)
-[![SLOC](https://tokei.rs/b1/github/erikw/tmux-powerline?category=code&style=flat)](#)
+[![SLOC](https://sloc.xyz/github/erikw/tmux-powerline?lower=true)](#)
 [![Number of programming languages used](https://img.shields.io/github/languages/count/erikw/tmux-powerline)](#)
 [![Top programming languages used](https://img.shields.io/github/languages/top/erikw/tmux-powerline)](#)
 [![Open issues](https://img.shields.io/github/issues/erikw/tmux-powerline)](https://github.com/erikw/tmux-powerline/issues)
