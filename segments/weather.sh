@@ -97,8 +97,8 @@ __yrno() {
 			fi
 
 			jsonparser="${TMUX_POWERLINE_SEG_WEATHER_JSON}"
-			degree=$(echo "$weather_data" | $jsonparser -r .properties.timeseries[0].data.instant.details.air_temperature)
-			condition=$(echo "$weather_data" | $jsonparser -r .properties.timeseries[0].data.next_1_hours.summary.symbol_code)
+			degree=$(echo "$weather_data" | $jsonparser -r '.properties.timeseries | .[0].data.instant.details.air_temperature')
+			condition=$(echo "$weather_data" | $jsonparser -r '.properties.timeseries | .[0].data.next_1_hours.summary.symbol_code')
 		elif [ -f "${tmp_file}" ]; then
 			__read_tmp_file
 		fi
