@@ -5,6 +5,7 @@
 set -eux
 
 # Defensive (aggressive?) sysop: in case user's dotfiles installed tmux configs already.
+# NOTE unfortunately there is not devcontainer command that runs after the setup of dotfiles. So these rm's might not have the intended effect... Just run this script manually once if you happen to have any own tmux confs installed via dotfiles in your Codespaces. Ref: https://containers.dev/implementors/json_reference/#lifecycle-scripts
 ## Tmux
 rm -rf "${XDG_CONFIG_HOME:-$HOME/.config}"/tmux
 rm -rf "$HOME"/.tmux
