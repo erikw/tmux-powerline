@@ -217,7 +217,14 @@ If your tmux looks like [this](https://github.com/erikw/tmux-powerline/issues/12
 # Hacking (Development)
 This project can only gain positively from contributions. Fork today and make your own enhancements and segments to share back! If you'd like, add your name and email to AUTHORS before making a pull request so you can get some credit for your work :-)
 
+## Codespaces Devcontainer
 You can fork this project and then start coding right away with GitHub Codespaces as this project is set up to install all development dependencies and install tmux-powerline on the devcontainer. See [devcontainer.json](.devcontainer/devcontainer.json) and [devcontainer_postCreateCommand.sh](scripts/devcontainer_postCreateCommand.sh). After starting the devcontainer, just type `tmux` in the terminal and you should see a working tmux-powerline already to start playing with.
+
+Note: if you have set up your own dotfiles to be installed with GitHub Codespaces, and there was some tmux config files installed from your dotfiles to the devcontainer, then you might have to run this script to wipe your config in favour of the setup provided by this repo's initialization:
+
+```shell
+./scripts/devcontainer_postCreateCommand.sh
+```
 
 ## How to make a segment
 If you want to (of course you do!) send a pull request for a cool segment you written make sure that it follows the style of existing segments, unless you have good reason for it. Each segment resides in the `segments/` directory with a descriptive and simple name.
