@@ -238,6 +238,15 @@ to the settings that has not been set by the user.
 
 Also, don't use bash4 features as requiring bash4 complicates installation for macOS user quite a bit. Use tabs for indentation ([discussion](https://github.com/erikw/tmux-powerline/pull/92)),
 
+# Releasing
+Create a new version of this project by using [semver-cli](https://github.com/maykonlsf/semver-cli).
+
+```shell
+vi CHANGELOG.md
+semver up minor
+ver=$(semver get release)
+git commit -am "Bump version to $ver" && git tag $ver && git push --atomic origin main $ver
+```
 
 # More tmux plugins
 I have another tmux plugin that might interest you:
