@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [3.1.0] - 2025-03-03
 ### Added
 - Dual status bar support [#379](https://github.com/erikw/tmux-powerline/issues/379)
 - New segment date_week [#375](https://github.com/erikw/tmux-powerline/issues/375)
