@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New segment vcs_rootpath [#373](https://github.com/erikw/tmux-powerline/issues/374)
 - New segment vpn [#383](https://github.com/erikw/tmux-powerline/issues/383)
 - Re-enable Linter [#414](https://github.com/erikw/tmux-powerline/pull/414)
+- GitHub Codespaces devcontainer config setting up all dependencies and installs tmux-powerline in the container. See [devcontainer.json](.devcontainer/devcontainer.json) and [devcontainer_postCreateCommand.sh](scripts/devcontainer_postCreateCommand.sh). 
+
 ### Changed
 - Improved roll_text function [#390](https://github.com/erikw/tmux-powerline/issues/390)
 - Improved segment ifstat [#402](https://github.com/erikw/tmux-powerline/issues/402)
