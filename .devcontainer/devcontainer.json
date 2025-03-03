@@ -5,7 +5,7 @@
 			"packages": "shellcheck tmux ifstat" 
 		}
 	},
-	"postCreateCommand": "bash scripts/devcontainer_postCreateCommand.sh",
+	"postStartCommand": "bash scripts/devcontainer_postCreateCommand.sh",
 	"customizations": {
 		"vscode": {
 			"extensions": [
