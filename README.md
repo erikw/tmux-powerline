@@ -6,11 +6,12 @@
 <hr>
 
 <p align="center">
-<img src="https://img.shields.io/github/stars/erikw/tmux-powerline?style=social" alt="GitHub Stars"  />
-<img src="https://img.shields.io/github/forks/erikw/tmux-powerline?style=social" alt="GitHub Forks"  />
+   <img src="https://img.shields.io/github/stars/erikw/tmux-powerline?style=social" alt="GitHub Stars"  />
+   <img src="https://img.shields.io/github/forks/erikw/tmux-powerline?style=social" alt="GitHub Forks"  />
 </p>
 <p align="center">
-<a href="https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=4647320" title="Open in GitHub Codespaces" ><img alt="Open in GitHub Codespaces" src="https://github.com/codespaces/badge.svg"></a>
+    <!-- Ref: https://dev.to/azure/adding-a-github-codespace-button-to-your-readme-5f6l -->
+    <a href="https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=4647320" title="Open in GitHub Codespaces" ><img alt="Open in GitHub Codespaces" src="https://github.com/codespaces/badge.svg"></a>
 </p>
 
 <!-- markdownlint-disable no-empty-links -->
