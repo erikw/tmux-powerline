@@ -7,3 +7,4 @@ segments/xkb_layout
 themes/*
 !themes/default.sh
 !themes/bubble.sh
+!themes/base16.sh
