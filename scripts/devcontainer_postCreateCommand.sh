@@ -40,8 +40,8 @@ TMUXCONF
 
 # Set up config:
 $TMUX_POWERLINE_PATH/generate_config.sh
-mv $HOME/.config/tmux-powerline/config.sh.default $HOME/.config/tmux-powerline/config.sh
+mv "$HOME/.config/tmux-powerline/config.sh.default" "$HOME/.config/tmux-powerline/config.sh"
 
 # Set up theme:
-mkdir -p $HOME/.config/tmux-powerline/themes
-cp $TMUX_POWERLINE_PATH/themes/default.sh $HOME/.config/tmux-powerline/themes/
+mkdir -p "$HOME/.config/tmux-powerline/themes"
+cp "$TMUX_POWERLINE_PATH/themes/default.sh" "$HOME/.config/tmux-powerline/themes/"
