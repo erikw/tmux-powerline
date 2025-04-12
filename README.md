@@ -6,13 +6,17 @@
 <hr>
 
 <p align="center">
-<img alt="GitHub Stars" src="https://img.shields.io/github/stars/erikw/tmux-powerline?style=social" />
-<img alt="GitHub Forks" src="https://img.shields.io/github/forks/erikw/tmux-powerline?style=social" />
+   <img src="https://img.shields.io/github/stars/erikw/tmux-powerline?style=social" alt="GitHub Stars"  />
+   <img src="https://img.shields.io/github/forks/erikw/tmux-powerline?style=social" alt="GitHub Forks"  />
+</p>
+<p align="center">
+    <!-- Ref: https://dev.to/azure/adding-a-github-codespace-button-to-your-readme-5f6l -->
+    <a href="https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=4647320" title="Open in GitHub Codespaces" ><img alt="Open in GitHub Codespaces" src="https://github.com/codespaces/badge.svg"></a>
 </p>
 
 <!-- markdownlint-disable no-empty-links -->
 [![Lint Code Base](https://github.com/erikw/tmux-powerline/actions/workflows/linter-full.yml/badge.svg)](https://github.com/erikw/tmux-powerline/actions/workflows/linter-full.yml)
-[![SLOC](https://tokei.rs/b1/github/erikw/tmux-powerline?category=code&style=flat)](#)
+[![SLOC](https://sloc.xyz/github/erikw/tmux-powerline?lower=true)](#)
 [![Number of programming languages used](https://img.shields.io/github/languages/count/erikw/tmux-powerline)](#)
 [![Top programming languages used](https://img.shields.io/github/languages/top/erikw/tmux-powerline)](#)
 [![Open issues](https://img.shields.io/github/issues/erikw/tmux-powerline)](https://github.com/erikw/tmux-powerline/issues)
@@ -122,8 +126,9 @@ Preinstalled `grep` in FreeBSD doesn't support Perl regular expressions. Solutio
    * The default powerline should already be visible now!
 4. Continue to the [Configuration](#configuration) section below.
 
-Note that tpm plugins should be at the bottom of you `tmux.conf`. This plugin will then override some tmux settings like `status-left`, `status-right` etc. If you had already set those in your tmux config, it is a good opportunity to remove or comment those out.
-Take a look at [main.tmux](https://github.com/erikw/tmux-powerline/blob/main/main.tmux) for exactly which settings are overridden.
+> [!NOTE]
+> Note that tpm plugins should be at the bottom of you `tmux.conf`. This plugin will then override some tmux settings like `status-left`, `status-right` etc. If you had already set those in your tmux config, it is a good opportunity to remove or comment those out.
+> Take a look at [main.tmux](https://github.com/erikw/tmux-powerline/blob/main/main.tmux) for exactly which settings are overridden.
 
 
 # Configuration
@@ -155,7 +160,8 @@ cp ~/.config/tmux/plugins/tmux-powerline/themes/default.sh ~/.config/tmux-powerl
 $EDITOR ~/.config/tmux-powerline/themes/my-theme.sh
 ```
 
-Remember to update the configuration file to use the new theme by setting `TMUX_POWERLINE_THEME=my-theme`
+> [!IMPORTANT]
+> Remember to update the configuration file to use the new theme by setting `TMUX_POWERLINE_THEME=my-theme`
 
 ## Custom segments
 In the same was as themes, you can create your own segments at `TMUX_POWERLINE_DIR_USER_SEGMENTS` which defaults to `~/.config/tmux-powerline/segments`.
@@ -204,18 +210,30 @@ Be sure to search in the [resolved issues](https://github.com/erikw/tmux-powerli
 
 
 
-## Common problems
+## Common Problems
 ### Nothing is displayed
 You have edited `~/.tmux.conf` but no powerline is displayed. This might be because tmux is not aware of the changes so you have to restart your tmux session or reloaded that file by typing this on the command-line (or in tmux command mode with `prefix :`)
 
 ```shell
 tmux source-file ~/.tmux.conf
 ```
+
 ### Multiple lines in bash or no powerline in Zsh using iTerm (macOS)
 If your tmux looks like [this](https://github.com/erikw/tmux-powerline/issues/125) then you may have to in iTerm uncheck [Unicode East Asian Ambiguous characters are wide] in Preferences -> Settings -> Advanced.
 
-# Hacking
+
+# Hacking (Development)
 This project can only gain positively from contributions. Fork today and make your own enhancements and segments to share back! If you'd like, add your name and email to AUTHORS before making a pull request so you can get some credit for your work :-)
+
+## Codespaces Devcontainer
+You can fork this project and then start coding right away with GitHub Codespaces as this project is set up to install all development dependencies and install tmux-powerline on the devcontainer. See [devcontainer.json](.devcontainer/devcontainer.json) and [devcontainer_postCreateCommand.sh](scripts/devcontainer_postCreateCommand.sh). After starting the devcontainer, just type `tmux` in the terminal and you should see a working tmux-powerline already to start playing with.
+
+> [!IMPORTANT]
+> If you have set up your own dotfiles to be installed with GitHub Codespaces, and there was some tmux config files installed from your dotfiles to the devcontainer, then you might have to run this script to wipe your config in favour of the setup provided by this repo's initialization:
+> 
+> ```shell
+> ./scripts/devcontainer_postCreateCommand.sh
+> ```
 
 ## How to make a segment
 If you want to (of course you do!) send a pull request for a cool segment you written make sure that it follows the style of existing segments, unless you have good reason for it. Each segment resides in the `segments/` directory with a descriptive and simple name.
@@ -227,8 +245,18 @@ Usage of helper function to organize the work of a segment is encourage and shou
 explanation of the setting and its values. Study e.g. `segments/now_playing.sh` to see how it is done. A segment having settings should typically call a helper function `__process_settings` as the first statement in `run_segment` that sets default values
 to the settings that has not been set by the user.
 
-Also, don't use bash4 features as requiring bash4 complicates installation for macOS user quite a bit. Use tabs for indentation ([discussion](https://github.com/erikw/tmux-powerline/pull/92)),
+> [!IMPORTANT]
+> Also, don't use bash4 features as requiring bash4 complicates installation for macOS user quite a bit. Use tabs for indentation ([discussion](https://github.com/erikw/tmux-powerline/pull/92)),
 
+# Releasing
+Create a new version of this project by using [semver-cli](https://github.com/maykonlsf/semver-cli).
+
+```shell
+vi CHANGELOG.md
+semver up minor
+ver=$(semver get release)
+git commit -am "Bump version to $ver" && git tag $ver && git push --atomic origin main $ver
+```
 
 # More tmux plugins
 I have another tmux plugin that might interest you:

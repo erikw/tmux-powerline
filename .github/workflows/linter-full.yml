@@ -25,13 +25,9 @@ jobs:
           # files within `super-linter`
           fetch-depth: 0
       - name: Lint Code Base
-        uses: super-linter/super-linter@v6
+        uses: super-linter/super-linter@v7
         env:
           # validate full codebase
           VALIDATE_ALL_CODEBASE: true
-          VALIDATE_BASH_EXEC: false
-          VALIDATE_CPP: false
-          VALIDATE_CLANG_FORMAT: false
-          VALIDATE_PYTHON_PYLINT: false
-          VALIDATE_JSCPD: false
+          VALIDATE_BASH: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
