@@ -2,6 +2,8 @@
 # Devcontainer postCreateCommand.
 # Install dependencies for running this project in GitHub Codespaces.
 
+TMUX_POWERLINE_PATH="/workspaces/tmux-powerline"
+
 set -eux
 
 # For git version tagging:
@@ -26,7 +28,7 @@ cat << TMUXCONF > "$HOME"/.tmux.conf
 # List of plugins
 set -g @plugin 'tmux-plugins/tpm'
 # Install tmux-powerline as a "local plugin". Ref: https://github.com/tmux-plugins/tpm/issues/220#issuecomment-1082686994
-run '/workspaces/tmux-powerline/main.tmux'
+run '${TMUX_POWERLINE_PATH}/main.tmux'
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'
@@ -34,3 +36,12 @@ TMUXCONF
 
 # Install TPM plugins
 "$HOME"/.tmux/plugins/tpm/bin/install_plugins
+
+
+# Set up config:
+$TMUX_POWERLINE_PATH/generate_config.sh
+mv $HOME/.config/tmux-powerline/config.sh.default $HOME/.config/tmux-powerline/config.sh
+
+# Set up theme:
+mkdir -p $HOME/.config/tmux-powerline/themes
+cp $TMUX_POWERLINE_PATH/themes/default.sh $HOME/.config/tmux-powerline/themes/
