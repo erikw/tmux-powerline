@@ -27,6 +27,7 @@ export TMUX_POWERLINE_SEG_WEATHER_GREP="${TMUX_POWERLINE_SEG_WEATHER_GREP_DEFAUL
 export TMUX_POWERLINE_SEG_WEATHER_JSON="${TMUX_POWERLINE_SEG_WEATHER_JSON_DEFAULT}"
 # Your location
 # Latitude and Longtitude for use with yr.no
+# Set both to "auto" to detect automatically based on your IP address
 TMUX_POWERLINE_SEG_WEATHER_LAT=""
 TMUX_POWERLINE_SEG_WEATHER_LON=""
 EORC
@@ -65,8 +66,12 @@ __process_settings() {
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_JSON" ]; then
 		export TMUX_POWERLINE_SEG_WEATHER_JSON="${TMUX_POWERLINE_SEG_WEATHER_JSON_DEFAULT}"
 	fi
-	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_LON" ] && [ -z "$TMUX_POWERLINE_SEG_WEATHER_LAT" ]; then
-		echo "No location defined."
+	if [ "$TMUX_POWERLINE_SEG_WEATHER_LAT" = "auto" ] || [ "$TMUX_POWERLINE_SEG_WEATHER_LON" = "auto" ]; then
+		if ! get_auto_location; then
+			exit 8
+		fi
+	elif [ -z "$TMUX_POWERLINE_SEG_WEATHER_LON" ] || [ -z "$TMUX_POWERLINE_SEG_WEATHER_LAT" ]; then
+		echo "No location defined." >&2
 		exit 8
 	fi
 }
@@ -178,4 +183,54 @@ __read_tmp_file() {
 	fi
 	cat "${tmp_file}"
 	exit
+}
+
+get_auto_location() {
+	local cache_file="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_location_cache.txt"
+    local max_cache_age=86400  # 24 hours
+
+    if [[ -f "$cache_file" ]]; then
+        local cache_age=$(($(date +%s) - $(stat -c %Y "$cache_file" 2>/dev/null || echo 0)))
+        if (( cache_age < max_cache_age )); then
+            TMUX_POWERLINE_SEG_WEATHER_LAT=$(grep -oP "(?<=TMUX_POWERLINE_SEG_WEATHER_LAT=')[^']*" "$cache_file")
+            TMUX_POWERLINE_SEG_WEATHER_LON=$(grep -oP "(?<=TMUX_POWERLINE_SEG_WEATHER_LON=')[^']*" "$cache_file")
+            if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
+                return 0
+            fi
+        fi
+    fi
+
+    local location_data
+    for api in "https://ipapi.co/json" "https://ipinfo.io/json"; do
+        if location_data=$(curl --max-time 4 -s "$api"); then
+            case "$api" in
+                *ipapi.co*)
+                    TMUX_POWERLINE_SEG_WEATHER_LAT=$(echo "$location_data" | jq -r '.latitude')
+                    TMUX_POWERLINE_SEG_WEATHER_LON=$(echo "$location_data" | jq -r '.longitude')
+                    ;;
+                *ipinfo.io*)
+                    IFS=',' read -ra loc <<< "$(echo "$location_data" | jq -r '.loc')"
+                    TMUX_POWERLINE_SEG_WEATHER_LAT="${loc[0]}"
+                    TMUX_POWERLINE_SEG_WEATHER_LON="${loc[1]}"
+                    ;;
+            esac
+            if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
+                mkdir -p "$(dirname "$cache_file")"
+                echo "TMUX_POWERLINE_SEG_WEATHER_LAT='$TMUX_POWERLINE_SEG_WEATHER_LAT'" > "$cache_file"
+                echo "TMUX_POWERLINE_SEG_WEATHER_LON='$TMUX_POWERLINE_SEG_WEATHER_LON'" >> "$cache_file"
+                return 0
+            fi
+        fi
+    done
+    if [[ -f "$cache_file" ]]; then
+        echo "Warning: Using stale location data (failed to refresh)" >&2
+        TMUX_POWERLINE_SEG_WEATHER_LAT=$(grep -oP "(?<=TMUX_POWERLINE_SEG_WEATHER_LAT=')[^']*" "$cache_file")
+        TMUX_POWERLINE_SEG_WEATHER_LON=$(grep -oP "(?<=TMUX_POWERLINE_SEG_WEATHER_LON=')[^']*" "$cache_file")
+        if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
+            return 0
+        fi
+    fi
+
+    echo "Could not detect location automatically" >&2
+    return 1
 }
