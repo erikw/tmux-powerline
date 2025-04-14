@@ -5,7 +5,7 @@
 TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT="yrno"
 TMUX_POWERLINE_SEG_WEATHER_JSON_DEFAULT="jq"
 TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAULT="c"
-TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT="600"
+TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT="100"
 
 if shell_is_bsd && [ -f /user/local/bin/grep ]; then
 	TMUX_POWERLINE_SEG_WEATHER_GREP_DEFAULT="/usr/local/bin/grep"
@@ -186,21 +186,25 @@ __read_tmp_file() {
 }
 
 get_auto_location() {
-    local cache_file="${TMUX_POWERLINE_DIR_USER:-/tmp}/.weather_location_cache"
+	local cache_file="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_location_cache.txt"
     local max_cache_age=86400  # 24 hours
+
     if [[ -f "$cache_file" ]]; then
         local cache_age=$(($(date +%s) - $(stat -c %Y "$cache_file" 2>/dev/null || echo 0)))
         if (( cache_age < max_cache_age )); then
-            source "$cache_file"
-            return 0
+            TMUX_POWERLINE_SEG_WEATHER_LAT=$(grep -oP "(?<=TMUX_POWERLINE_SEG_WEATHER_LAT=')[^']*" "$cache_file")
+            TMUX_POWERLINE_SEG_WEATHER_LON=$(grep -oP "(?<=TMUX_POWERLINE_SEG_WEATHER_LON=')[^']*" "$cache_file")
+            if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
+                return 0
+            fi
         fi
     fi
+
+	set -x
+exec 2>/tmp/tmux-powerline.log
+
     local location_data
-    local -a apis=(
-        "https://ipapi.co/json"
-        "https://ipinfo.io/json"
-    )
-    for api in "${apis[@]}"; do
+    for api in "https://ipapi.co/json" "https://ipinfo.io/json"; do
         if location_data=$(curl --max-time 4 -s "$api"); then
             case "$api" in
                 *ipapi.co*)
@@ -208,24 +212,29 @@ get_auto_location() {
                     TMUX_POWERLINE_SEG_WEATHER_LON=$(echo "$location_data" | jq -r '.longitude')
                     ;;
                 *ipinfo.io*)
-                    IFS=',' read -ra loc <<< $(echo "$location_data" | jq -r '.loc')
+                    IFS=',' read -ra loc <<< "$(echo "$location_data" | jq -r '.loc')"
                     TMUX_POWERLINE_SEG_WEATHER_LAT="${loc[0]}"
                     TMUX_POWERLINE_SEG_WEATHER_LON="${loc[1]}"
                     ;;
-           esac
-			if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
+            esac
+            if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
                 mkdir -p "$(dirname "$cache_file")"
-                echo "export TMUX_POWERLINE_SEG_WEATHER_LAT='$TMUX_POWERLINE_SEG_WEATHER_LAT'" > "$cache_file"
-                echo "export TMUX_POWERLINE_SEG_WEATHER_LON='$TMUX_POWERLINE_SEG_WEATHER_LON'" >> "$cache_file"
+                echo "TMUX_POWERLINE_SEG_WEATHER_LAT='$TMUX_POWERLINE_SEG_WEATHER_LAT'" > "$cache_file"
+                echo "TMUX_POWERLINE_SEG_WEATHER_LON='$TMUX_POWERLINE_SEG_WEATHER_LON'" >> "$cache_file"
                 return 0
             fi
         fi
     done
     if [[ -f "$cache_file" ]]; then
         echo "Warning: Using stale location data (failed to refresh)" >&2
-        source "$cache_file"
-        return 0
+        TMUX_POWERLINE_SEG_WEATHER_LAT=$(grep -oP "(?<=TMUX_POWERLINE_SEG_WEATHER_LAT=')[^']*" "$cache_file")
+        TMUX_POWERLINE_SEG_WEATHER_LON=$(grep -oP "(?<=TMUX_POWERLINE_SEG_WEATHER_LON=')[^']*" "$cache_file")
+        if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
+            return 0
+        fi
     fi
+
     echo "Could not detect location automatically" >&2
     return 1
+	set +x
 }
