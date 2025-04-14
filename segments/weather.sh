@@ -200,9 +200,6 @@ get_auto_location() {
         fi
     fi
 
-	set -x
-exec 2>/tmp/tmux-powerline.log
-
     local location_data
     for api in "https://ipapi.co/json" "https://ipinfo.io/json"; do
         if location_data=$(curl --max-time 4 -s "$api"); then
@@ -236,5 +233,4 @@ exec 2>/tmp/tmux-powerline.log
 
     echo "Could not detect location automatically" >&2
     return 1
-	set +x
 }
