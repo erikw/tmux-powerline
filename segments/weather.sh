@@ -37,9 +37,9 @@ EORC
 
 run_segment() {
 	local tmp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/temp_weather_file.txt"
-  local cache_file="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_location_cache.txt"
+	local cache_file="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_location_cache.txt"
 	local weather
-  __process_settings
+	__process_settings
 	case "$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER" in
 	"yrno") weather=$(__yrno) ;;
 	*)
