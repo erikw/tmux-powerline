@@ -62,7 +62,7 @@ __process_settings() {
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD" ]; then
 		export TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT}"
 	fi
-  if [ -z "$TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD" ]; then
+	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD" ]; then
 		export TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD_DEFAULT}"
 	fi
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_GREP" ]; then
@@ -82,28 +82,28 @@ __process_settings() {
 }
 
 __yrno() {
-  #set -x
-  #exec 2> /tmp/tmux-weather-yrno.log 
-  #exec > /tmp/tmux-weather-yrno.log 2>&1 
+	#set -x
+	#exec 2> /tmp/tmux-weather-yrno.log 
+	#exec > /tmp/tmux-weather-yrno.log 2>&1 
 	degree=""
 	if [ -f "$tmp_file" ]; then
-    last_update=$(__read_file_last_update $tmp_file)
+		last_update=$(__read_file_last_update $tmp_file)
 		time_now=$(date +%s)
 
 		up_to_date=$(echo "(${time_now}-${last_update}) < ${TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD}" | bc)
 		if [ "$up_to_date" -eq 1 ]; then
 			__read_file_content $tmp_file
-      exit
+			exit
 		fi
 	fi
 
 	if [ -z "$degree" ]; then
-    # There's a chance that you will get rate limited or both location APIs are not working
-    # Then long and lat will be null
-    if [ -z $TMUX_POWERLINE_SEG_WEATHER_LAT -o -z $TMUX_POWERLINE_SEG_WEATHER_LON -o $TMUX_POWERLINE_SEG_WEATHER_LAT == null -o $TMUX_POWERLINE_SEG_WEATHER_LON == null ]; then
-      echo "N/A"
-      exit
-    fi
+		# There's a chance that you will get rate limited or both location APIs are not working
+		# Then long and lat will be null
+		if [ -z $TMUX_POWERLINE_SEG_WEATHER_LAT -o -z $TMUX_POWERLINE_SEG_WEATHER_LON -o $TMUX_POWERLINE_SEG_WEATHER_LAT == null -o $TMUX_POWERLINE_SEG_WEATHER_LON == null ]; then
+			echo "N/A"
+			exit 1
+		fi
 		if weather_data=$(curl --max-time 4 -s "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}"); then
 			grep=$TMUX_POWERLINE_SEG_WEATHER_GREP
 			error=$(echo "$weather_data" | $grep -i "error")
@@ -116,8 +116,8 @@ __yrno() {
 			degree=$(echo "$weather_data" | $jsonparser -r '.properties.timeseries | .[0].data.instant.details.air_temperature')
 			condition=$(echo "$weather_data" | $jsonparser -r '.properties.timeseries | .[0].data.next_1_hours.summary.symbol_code')
 		elif [ -f "${tmp_file}" ]; then
-      __read_file_content $tmp_file
-      exit
+			__read_file_content $tmp_file
+			exit
 		fi
 	fi
 
@@ -130,11 +130,14 @@ __yrno() {
 		fi
 		# condition_symbol=$(__get_yrno_condition_symbol "$condition" "$sunrise" "$sunset")
 		condition_symbol=$(__get_yrno_condition_symbol "$condition")
-    # Write the <content @ date>, separated by 2 spaces and @, so we can fetch it later on without having to call 'stat'
-    echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')@$(date +%s)" > $tmp_file
-    __read_file_content $tmp_file
+		# Write the <content @ date>, separated by 2 spaces and @, so we can fetch it later on without having to call 'stat'
+		echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')@$(date +%s)" > $tmp_file
+		__read_file_content $tmp_file
+		exit
 	fi
-  #set +x
+	echo "N/A"
+	exit 1
+	#set +x
 }
 
 # Get symbol for condition. Available symbol names: https://api.met.no/weatherapi/weathericon/2.0/documentation#List_of_symbols
@@ -196,23 +199,23 @@ __read_file_content() {
 	if [ ! -f "$1" ]; then
 		return
 	fi
-  local -a file_arr
-  IFS='@' read -ra file_arr <<< "$(cat $1)"
-  echo ${file_arr[0]}
+	local -a file_arr
+	IFS='@' read -ra file_arr <<< "$(cat $1)"
+	echo ${file_arr[0]}
 }
 
 __read_file_last_update() {
 	if [ ! -f "$1" ]; then
-    echo 0
+		echo 0
 		return
 	fi
-  local -a file_arr
-  IFS='@' read -ra file_arr <<< "$(cat $1)"
-  if [ -z ${file_arr[1]} ]; then
-    echo 0
-    return
-  fi
-  echo ${file_arr[1]}
+	local -a file_arr
+	IFS='@' read -ra file_arr <<< "$(cat $1)"
+	if [ -z ${file_arr[1]} ]; then
+		echo 0
+		return
+	fi
+	echo ${file_arr[1]}
 }
 
 get_auto_location() {
