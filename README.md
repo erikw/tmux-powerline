@@ -100,17 +100,20 @@ Requirements for the lib to work are:
 ## Segment Requirements
 Some segments have their own requirements. If you enable them in your theme, make sure all requirements are met for those.
 
-* `wan_ip.sh`, `now_playing.sh` (last.fm), `weather_yahoo.sh`: curl, bc
+* `github_notifications.sh`: `jq`
+* `ifstat.sh`: `ifstat` (there is a simpler segment `ifstat_sys.sh` not using ifstat)
+* `mailcount.sh`
+   * gmail: `wget`
+   *mailcheck: [mailcheck](http://packages.debian.org/sid/mailcheck)
 * `now_playing.sh`
-  * mpd: [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
-  * last.fm: `jq`
-* `xkb_layout.sh`: X11, XKB
-* `mailcount.sh` (gmail): wget, (mailcheck): [mailcheck](http://packages.debian.org/sid/mailcheck).
-* `ifstat.sh`: ifstat (there is a simpler segment not using ifstat but samples /sys/class/net)
-* `tmux_mem_cpu_load.sh`: [tmux-mem-cpu-load](https://github.com/thewtex/tmux-mem-cpu-load)
+   * mpd: [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
+   * last.fm: `jq`, `curl`
 * `rainbarf.sh`: [rainbarf](https://github.com/creaktive/rainbarf)
-* `weather.sh`: GNU `grep` with Perl regular expression enabled (FreeBSD specific), `jq` for yrno weather API.
-* `github_notifications.sh`: `jq` for GitHub API.
+* `tmux_mem_cpu_load.sh`: [tmux-mem-cpu-load](https://github.com/thewtex/tmux-mem-cpu-load)
+* `wan_ip.sh: `curl`
+* `weather.sh`:
+   * Provider yrno: `jq`, `curl`, GNU `grep` with Perl regular expression enabled (FreeBSD specific)
+* `xkb_layout.sh`: X11, XKB
 
 ## FreeBSD specific requirements
 Preinstalled `grep` in FreeBSD doesn't support Perl regular expressions. Solution is rather simple -- you need to use `textproc/gnugrep` port instead. You also need to make sure, that it has support for PCRE and is compiled with `--enable-perl-regexp` flag.
