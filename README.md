@@ -104,7 +104,7 @@ Some segments have their own requirements. If you enable them in your theme, mak
 * **ifstat.sh**: `ifstat` (there is a simpler segment `ifstat_sys.sh` not using ifstat)
 * **mailcount.sh**
    * gmail: `wget`
-   *mailcheck: [mailcheck](http://packages.debian.org/sid/mailcheck)
+   * mailcheck: [mailcheck](http://packages.debian.org/sid/mailcheck)
 * **now_playing.sh**
    * mpd: [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
    * last.fm: `jq`, `curl`
