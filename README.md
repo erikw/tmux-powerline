@@ -223,7 +223,7 @@ If your tmux looks like [this](https://github.com/erikw/tmux-powerline/issues/12
 
 
 # Hacking (Development)
-This project can only gain positively from contributions. Fork today and make your own enhancements and segments to share back! If you'd like, add your name and email to AUTHORS before making a pull request so you can get some credit for your work :-)
+This project can only gain positively from contributions. Fork today and make your own enhancements and segments to share back!
 
 ## Codespaces Devcontainer
 You can fork this project and then start coding right away with GitHub Codespaces as this project is set up to install all development dependencies and install tmux-powerline on the devcontainer. See [devcontainer.json](.devcontainer/devcontainer.json) and [devcontainer_postCreateCommand.sh](scripts/devcontainer_postCreateCommand.sh). After starting the devcontainer, just type `tmux` in the terminal and you should see a working tmux-powerline already to start playing with.
