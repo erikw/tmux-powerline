@@ -220,7 +220,7 @@ __read_file_last_update() {
 }
 
 get_auto_location() {
-	local max_cache_age=$TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD
+    local max_cache_age=$TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD
     local -a lat_lon_arr
 
     if [[ -f "$cache_file" ]]; then
