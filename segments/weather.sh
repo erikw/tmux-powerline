@@ -53,6 +53,9 @@ run_segment() {
 }
 
 __process_settings() {
+    #set -x
+    #exec 2> /tmp/tmux-weather-settings.log
+    #exec > /tmp/tmux-weather-settings.log 2>&1
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER" ]; then
 		export TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER="${TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT}"
 	fi
@@ -79,6 +82,7 @@ __process_settings() {
 		echo "No location defined." >&2
 		exit 8
 	fi
+	#set +x
 }
 
 __yrno() {
@@ -258,15 +262,18 @@ get_auto_location() {
                     TMUX_POWERLINE_SEG_WEATHER_LON="${loc[1]}"
                     ;;
             esac
-            if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
-                mkdir -p "$(dirname "$cache_file")"
-				# If we couldn't find out the lat and long, then don't write to the file. We don't want to overwrite the previous actual coordinates
-				if [[ $TMUX_POWERLINE_SEG_WEATHER_LAT == null || $TMUX_POWERLINE_SEG_WEATHER_LON == null || $TMUX_POWERLINE_SEG_WEATHER_LAT == '' || $TMUX_POWERLINE_SEG_WEATHER_LON == '' ]]; then
-					return 1
-				fi
-                echo "$TMUX_POWERLINE_SEG_WEATHER_LAT $TMUX_POWERLINE_SEG_WEATHER_LON@$(date +%s)" > $cache_file
-                return 0
-            fi
+
+			# There's no data, move on to the next API, there's a case where lat/lon was set to "null"
+			if [[ ! -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" ||
+				  ! -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ||
+				  "$TMUX_POWERLINE_SEG_WEATHER_LAT" == "null" ||
+				  "$TMUX_POWERLINE_SEG_WEATHER_LON" == "null" ]]; then
+				continue
+			fi
+				
+			mkdir -p "$(dirname "$cache_file")"
+			echo "$TMUX_POWERLINE_SEG_WEATHER_LAT $TMUX_POWERLINE_SEG_WEATHER_LON@$(date +%s)" > $cache_file
+			return 0
         fi
     done
 
