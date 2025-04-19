@@ -133,7 +133,7 @@ __yrno() {
 	fi
 
 	__read_file_content $tmp_file
-	exit 1
+	exit
 }
 
 # Get symbol for condition. Available symbol names: https://api.met.no/weatherapi/weathericon/2.0/documentation#List_of_symbols
@@ -220,7 +220,7 @@ __read_file_last_update() {
 }
 
 get_auto_location() {
-    local max_cache_age=$TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD
+	local max_cache_age=$TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD
     local -a lat_lon_arr
 
     if [[ -f "$cache_file" ]]; then
@@ -251,18 +251,18 @@ get_auto_location() {
                     ;;
             esac
 
-			# There's no data, move on to the next API, just don't overwrite the previous location
-			# Also, there's a case where lat/lon was set to "null" as a string, gotta handle it
-			if [[ ! -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" ||
-				  ! -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ||
-				  "$TMUX_POWERLINE_SEG_WEATHER_LAT" == "null" ||
-				  "$TMUX_POWERLINE_SEG_WEATHER_LON" == "null" ]]; then
-				continue
-			fi
-				
-			mkdir -p "$(dirname "$cache_file")"
-			echo "$TMUX_POWERLINE_SEG_WEATHER_LAT $TMUX_POWERLINE_SEG_WEATHER_LON@$(date +%s)" > $cache_file
-			return 0
+            # There's no data, move on to the next API, just don't overwrite the previous location
+            # Also, there's a case where lat/lon was set to "null" as a string, gotta handle it
+            if [[ ! -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" ||
+                  ! -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ||
+                  "$TMUX_POWERLINE_SEG_WEATHER_LAT" == "null" ||
+                  "$TMUX_POWERLINE_SEG_WEATHER_LON" == "null" ]]; then
+                continue
+            fi
+            	
+            mkdir -p "$(dirname "$cache_file")"
+            echo "$TMUX_POWERLINE_SEG_WEATHER_LAT $TMUX_POWERLINE_SEG_WEATHER_LON@$(date +%s)" > $cache_file
+            return 0
         fi
     done
 
