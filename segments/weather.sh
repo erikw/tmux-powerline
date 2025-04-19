@@ -95,8 +95,8 @@ __yrno() {
 
 	if [ -z "$degree" ]; then
 		# There's a chance that you will get rate limited or both location APIs are not working
-		# Then long and lat will be null
-		if [ -z $TMUX_POWERLINE_SEG_WEATHER_LAT -o -z $TMUX_POWERLINE_SEG_WEATHER_LON -o $TMUX_POWERLINE_SEG_WEATHER_LAT == null -o $TMUX_POWERLINE_SEG_WEATHER_LON == null ]; then
+		# Then long and lat will be "null", as literal string
+		if [ -z $TMUX_POWERLINE_SEG_WEATHER_LAT ] || [ -z $TMUX_POWERLINE_SEG_WEATHER_LON ] || [ $TMUX_POWERLINE_SEG_WEATHER_LAT == null ] || [ $TMUX_POWERLINE_SEG_WEATHER_LON == null ]; then
 			__read_file_content $tmp_file
 			exit 1
 		fi
