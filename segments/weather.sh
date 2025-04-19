@@ -55,9 +55,6 @@ run_segment() {
 }
 
 __process_settings() {
-    #set -x
-    #exec 2> /tmp/tmux-weather-settings.log
-    #exec > /tmp/tmux-weather-settings.log 2>&1
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER" ]; then
 		export TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER="${TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT}"
 	fi
@@ -81,13 +78,9 @@ __process_settings() {
 			exit 8
 		fi
 	fi
-	#set +x
 }
 
 __yrno() {
-	#set -x
-	#exec 2> /tmp/tmux-weather-yrno.log 
-	#exec > /tmp/tmux-weather-yrno.log 2>&1 
 	degree=""
 	if [ -f "$tmp_file" ]; then
 		last_update=$(__read_file_last_update $tmp_file)
@@ -141,7 +134,6 @@ __yrno() {
 
 	__read_file_content $tmp_file
 	exit 1
-	#set +x
 }
 
 # Get symbol for condition. Available symbol names: https://api.met.no/weatherapi/weathericon/2.0/documentation#List_of_symbols
@@ -228,9 +220,6 @@ __read_file_last_update() {
 }
 
 get_auto_location() {
-    #set -x
-    #exec 2> /tmp/tmux-weather-location.log
-    #exec > /tmp/tmux-weather-location.log 2>&1
     local max_cache_age=$TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD
     local -a lat_lon_arr
 
@@ -289,5 +278,4 @@ get_auto_location() {
 
     echo "Could not detect location automatically" >&2
     return 1
-    #set +x
 }
