@@ -101,7 +101,7 @@ __yrno() {
 		# There's a chance that you will get rate limited or both location APIs are not working
 		# Then long and lat will be null
 		if [ -z $TMUX_POWERLINE_SEG_WEATHER_LAT -o -z $TMUX_POWERLINE_SEG_WEATHER_LON -o $TMUX_POWERLINE_SEG_WEATHER_LAT == null -o $TMUX_POWERLINE_SEG_WEATHER_LON == null ]; then
-			echo "N/A"
+			__read_file_content $tmp_file
 			exit 1
 		fi
 		if weather_data=$(curl --max-time 4 -s "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}"); then
@@ -135,7 +135,8 @@ __yrno() {
 		__read_file_content $tmp_file
 		exit
 	fi
-	echo "N/A"
+
+	__read_file_content $tmp_file
 	exit 1
 	#set +x
 }
@@ -197,10 +198,15 @@ __get_yrno_condition_symbol() {
 
 __read_file_content() {
 	if [ ! -f "$1" ]; then
+		echo "N/A"
 		return
 	fi
 	local -a file_arr
 	IFS='@' read -ra file_arr <<< "$(cat $1)"
+	if [ -z ${file_arr[0]} ]; then
+		echo "N/A"
+		return
+	fi
 	echo ${file_arr[0]}
 }
 
@@ -254,11 +260,16 @@ get_auto_location() {
             esac
             if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
                 mkdir -p "$(dirname "$cache_file")"
+				# If we couldn't find out the lat and long, then don't write to the file. We don't want to overwrite the previous actual coordinates
+				if [[ $TMUX_POWERLINE_SEG_WEATHER_LAT == null || $TMUX_POWERLINE_SEG_WEATHER_LON == null || $TMUX_POWERLINE_SEG_WEATHER_LAT == '' || $TMUX_POWERLINE_SEG_WEATHER_LON == '' ]]; then
+					return 1
+				fi
                 echo "$TMUX_POWERLINE_SEG_WEATHER_LAT $TMUX_POWERLINE_SEG_WEATHER_LON@$(date +%s)" > $cache_file
                 return 0
             fi
         fi
     done
+
     if [[ -f "$cache_file" ]]; then
         echo "Warning: Using stale location data (failed to refresh)" >&2
         IFS=' ' read -ra lat_lon_arr <<< "$(__read_file_content $cache_file)"
@@ -273,4 +284,3 @@ get_auto_location() {
     return 1
     #set +x
 }
-
