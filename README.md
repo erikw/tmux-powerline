@@ -223,6 +223,9 @@ If your tmux looks like [this](https://github.com/erikw/tmux-powerline/issues/12
 
 
 # Hacking (Development)
+> [!IMPORTANT]
+> Please read and follow the [CONTRIBUTING.md](.github/CONTRIBUTING.md) guidelines!
+
 This project can only gain positively from contributions. Fork today and make your own enhancements and segments to share back!
 
 ## Codespaces Devcontainer
@@ -245,8 +248,6 @@ Usage of helper function to organize the work of a segment is encourage and shou
 explanation of the setting and its values. Study e.g. `segments/now_playing.sh` to see how it is done. A segment having settings should typically call a helper function `__process_settings` as the first statement in `run_segment` that sets default values
 to the settings that has not been set by the user.
 
-> [!IMPORTANT]
-> Also, don't use bash4 features as requiring bash4 complicates installation for macOS user quite a bit. Use tabs for indentation ([discussion](https://github.com/erikw/tmux-powerline/pull/92)),
 
 # Releasing
 Create a new version of this project by using [semver-cli](https://github.com/maykonlsf/semver-cli).
