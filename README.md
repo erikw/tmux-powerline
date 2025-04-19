@@ -112,7 +112,7 @@ Some segments have their own requirements. If you enable them in your theme, mak
 * **tmux_mem_cpu_load.sh**: [tmux-mem-cpu-load](https://github.com/thewtex/tmux-mem-cpu-load)
 * **wan_ip.sh**: `curl`
 * **weather.sh**:
-   * Provider yrno: `jq`, `curl`, GNU `grep` with Perl regular expression enabled (FreeBSD specific)
+   * Provider *yrno*: `jq`, `curl`, GNU `grep` with Perl regular expression enabled (FreeBSD specific)
 * **xkb_layout.sh**: X11, XKB
 
 ## FreeBSD specific requirements
