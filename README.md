@@ -88,7 +88,7 @@ Laptop mode: a battery segment.
 
 ![dual-line status bar](img/dual-line-status-bar.png)
 
-# Co-maintainer
+# Co-Maintainer
 [@xx4h](https://github.com/xx4h) is helping out developing, maintaining and managing this project!
 
 # Requirements
