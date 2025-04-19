@@ -7,6 +7,8 @@ TMUX_POWERLINE_SEG_WEATHER_JSON_DEFAULT="jq"
 TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAULT="c"
 TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT="600"
 TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD_DEFAULT="86400" # 24 hours
+TMUX_POWERLINE_SEG_WEATHER_LAT_DEFAULT="auto"
+TMUX_POWERLINE_SEG_WEATHER_LON_DEFAULT="auto"
 
 if shell_is_bsd && [ -f /user/local/bin/grep ]; then
 	TMUX_POWERLINE_SEG_WEATHER_GREP_DEFAULT="/usr/local/bin/grep"
@@ -28,9 +30,9 @@ export TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_W
 export TMUX_POWERLINE_SEG_WEATHER_JSON="${TMUX_POWERLINE_SEG_WEATHER_JSON_DEFAULT}"
 # Your location
 # Latitude and Longtitude for use with yr.no
-# Set both to "auto" to detect automatically based on your IP address
-export TMUX_POWERLINE_SEG_WEATHER_LAT=""
-export TMUX_POWERLINE_SEG_WEATHER_LON=""
+# Set both to "auto" to detect automatically based on your IP address, or set them manually
+export TMUX_POWERLINE_SEG_WEATHER_LAT="${TMUX_POWERLINE_SEG_WEATHER_LAT_DEFAULT}"
+export TMUX_POWERLINE_SEG_WEATHER_LON="${TMUX_POWERLINE_SEG_WEATHER_LON_DEFAULT}"
 EORC
 	echo "$rccontents"
 }
@@ -74,13 +76,10 @@ __process_settings() {
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_JSON" ]; then
 		export TMUX_POWERLINE_SEG_WEATHER_JSON="${TMUX_POWERLINE_SEG_WEATHER_JSON_DEFAULT}"
 	fi
-	if [ "$TMUX_POWERLINE_SEG_WEATHER_LAT" = "auto" ] || [ "$TMUX_POWERLINE_SEG_WEATHER_LON" = "auto" ]; then
+	if [ "$TMUX_POWERLINE_SEG_WEATHER_LAT" = "auto" ] || [ "$TMUX_POWERLINE_SEG_WEATHER_LON" = "auto" ] || [ -z "$TMUX_POWERLINE_SEG_WEATHER_LON" ] || [ -z "$TMUX_POWERLINE_SEG_WEATHER_LAT" ]; then
 		if ! get_auto_location; then
 			exit 8
 		fi
-	elif [ -z "$TMUX_POWERLINE_SEG_WEATHER_LON" ] || [ -z "$TMUX_POWERLINE_SEG_WEATHER_LAT" ]; then
-		echo "No location defined." >&2
-		exit 8
 	fi
 	#set +x
 }
@@ -263,7 +262,8 @@ get_auto_location() {
                     ;;
             esac
 
-			# There's no data, move on to the next API, there's a case where lat/lon was set to "null"
+			# There's no data, move on to the next API, just don't overwrite the previous location
+			# Also, there's a case where lat/lon was set to "null" as a string, gotta handle it
 			if [[ ! -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" ||
 				  ! -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ||
 				  "$TMUX_POWERLINE_SEG_WEATHER_LAT" == "null" ||
