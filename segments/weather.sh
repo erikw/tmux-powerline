@@ -83,12 +83,12 @@ __process_settings() {
 __yrno() {
 	degree=""
 	if [ -f "$tmp_file" ]; then
-		last_update=$(__read_file_last_update $tmp_file)
+		last_update=$(__read_file_last_update "$tmp_file")
 		time_now=$(date +%s)
 
 		up_to_date=$(echo "(${time_now}-${last_update}) < ${TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD}" | bc)
 		if [ "$up_to_date" -eq 1 ]; then
-			__read_file_content $tmp_file
+			__read_file_content "$tmp_file"
 			exit
 		fi
 	fi
@@ -96,8 +96,8 @@ __yrno() {
 	if [ -z "$degree" ]; then
 		# There's a chance that you will get rate limited or both location APIs are not working
 		# Then long and lat will be "null", as literal string
-		if [ -z $TMUX_POWERLINE_SEG_WEATHER_LAT ] || [ -z $TMUX_POWERLINE_SEG_WEATHER_LON ] || [ $TMUX_POWERLINE_SEG_WEATHER_LAT == null ] || [ $TMUX_POWERLINE_SEG_WEATHER_LON == null ]; then
-			__read_file_content $tmp_file
+		if [ -z "$TMUX_POWERLINE_SEG_WEATHER_LAT" ] || [ -z "$TMUX_POWERLINE_SEG_WEATHER_LON" ] || [ "$TMUX_POWERLINE_SEG_WEATHER_LAT" == null ] || [ "$TMUX_POWERLINE_SEG_WEATHER_LON" == null ]; then
+			__read_file_content "$tmp_file"
 			exit 1
 		fi
 		if weather_data=$(curl --max-time 4 -s "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}"); then
@@ -112,7 +112,7 @@ __yrno() {
 			degree=$(echo "$weather_data" | $jsonparser -r '.properties.timeseries | .[0].data.instant.details.air_temperature')
 			condition=$(echo "$weather_data" | $jsonparser -r '.properties.timeseries | .[0].data.next_1_hours.summary.symbol_code')
 		elif [ -f "${tmp_file}" ]; then
-			__read_file_content $tmp_file
+			__read_file_content "$tmp_file"
 			exit
 		fi
 	fi
@@ -127,12 +127,12 @@ __yrno() {
 		# condition_symbol=$(__get_yrno_condition_symbol "$condition" "$sunrise" "$sunset")
 		condition_symbol=$(__get_yrno_condition_symbol "$condition")
 		# Write the <content @ date>, separated by 2 spaces and @, so we can fetch it later on without having to call 'stat'
-		echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')@$(date +%s)" > $tmp_file
-		__read_file_content $tmp_file
+		echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')@$(date +%s)" > "$tmp_file"
+		__read_file_content "$tmp_file"
 		exit
 	fi
 
-	__read_file_content $tmp_file
+	__read_file_content "$tmp_file"
 	exit
 }
 
@@ -197,12 +197,12 @@ __read_file_content() {
 		return
 	fi
 	local -a file_arr
-	IFS='@' read -ra file_arr <<< "$(cat $1)"
-	if [ -z ${file_arr[0]} ]; then
+	IFS='@' read -ra file_arr <<< "$(cat "$1")"
+	if [ -z "${file_arr[0]}" ]; then
 		echo "N/A"
 		return
 	fi
-	echo ${file_arr[0]}
+	echo "${file_arr[0]}"
 }
 
 __read_file_last_update() {
@@ -211,12 +211,12 @@ __read_file_last_update() {
 		return
 	fi
 	local -a file_arr
-	IFS='@' read -ra file_arr <<< "$(cat $1)"
-	if [ -z ${file_arr[1]} ]; then
+	IFS='@' read -ra file_arr <<< "$(cat "$1")"
+	if [ -z "${file_arr[1]}" ]; then
 		echo 0
 		return
 	fi
-	echo ${file_arr[1]}
+	echo "${file_arr[1]}"
 }
 
 get_auto_location() {
@@ -224,9 +224,9 @@ get_auto_location() {
     local -a lat_lon_arr
 
     if [[ -f "$cache_file" ]]; then
-        local cache_age=$(($(date +%s) - $(__read_file_last_update $cache_file 2>/dev/null || echo 0)))
+        local cache_age=$(($(date +%s) - $(__read_file_last_update "$cache_file" 2>/dev/null || echo 0)))
         if (( cache_age < max_cache_age )); then
-            IFS=' ' read -ra lat_lon_arr <<< "$(__read_file_content $cache_file)"
+            IFS=' ' read -ra lat_lon_arr <<< "$(__read_file_content "$cache_file")"
             TMUX_POWERLINE_SEG_WEATHER_LAT=${lat_lon_arr[0]}
             TMUX_POWERLINE_SEG_WEATHER_LON=${lat_lon_arr[1]}
             if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
@@ -253,22 +253,22 @@ get_auto_location() {
 
             # There's no data, move on to the next API, just don't overwrite the previous location
             # Also, there's a case where lat/lon was set to "null" as a string, gotta handle it
-            if [[ ! -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" ||
-                  ! -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ||
+            if [[ -z "$TMUX_POWERLINE_SEG_WEATHER_LAT" ||
+                  -z "$TMUX_POWERLINE_SEG_WEATHER_LON" ||
                   "$TMUX_POWERLINE_SEG_WEATHER_LAT" == "null" ||
                   "$TMUX_POWERLINE_SEG_WEATHER_LON" == "null" ]]; then
                 continue
             fi
             	
             mkdir -p "$(dirname "$cache_file")"
-            echo "$TMUX_POWERLINE_SEG_WEATHER_LAT $TMUX_POWERLINE_SEG_WEATHER_LON@$(date +%s)" > $cache_file
+            echo "$TMUX_POWERLINE_SEG_WEATHER_LAT $TMUX_POWERLINE_SEG_WEATHER_LON@$(date +%s)" > "$cache_file"
             return 0
         fi
     done
 
     if [[ -f "$cache_file" ]]; then
         echo "Warning: Using stale location data (failed to refresh)" >&2
-        IFS=' ' read -ra lat_lon_arr <<< "$(__read_file_content $cache_file)"
+        IFS=' ' read -ra lat_lon_arr <<< "$(__read_file_content "$cache_file")"
         TMUX_POWERLINE_SEG_WEATHER_LAT=${lat_lon_arr[0]}
         TMUX_POWERLINE_SEG_WEATHER_LON=${lat_lon_arr[1]}        
         if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
