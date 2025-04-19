@@ -1,5 +1,5 @@
-# Welcome to tmux-powerline contributing guide
-🚀 Thank you for wanting to contibute to the powerline of tmux!
+# Welcome to tmux-powerline Contributing Guide
+🚀 Thank you for wanting to contribute to the powerline of tmux!
 
 
 # Pull Requests
