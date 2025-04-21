@@ -1,4 +1,3 @@
----
 name: Lint Pull Request
 
 on:
@@ -6,28 +5,33 @@ on:
   pull_request:
     branches: main
 
-permissions: { }
+
+permissions: {}
 
 jobs:
   build:
-    name: Lint Pull Request
+    name: Lint
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
       packages: read
-      # To report github actions status checks
+      # To report GitHub Actions status checks
       statuses: write
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          # Full git history is needed to get a proper list of changed
-          # files within `super-linter`
+          # super-linter needs the full git history to get the
+          # list of files that changed across commits
           fetch-depth: 0
-      - name: Lint Code Base
-        uses: super-linter/super-linter@v7
+
+      - name: Super-linter
+        uses: super-linter/super-linter@v7.3.0
         env:
-          # only validate new or edited files
+          # To report GitHub Actions status checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BRANCH: main
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_BASH: true
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
