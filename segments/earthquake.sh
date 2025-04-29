@@ -74,7 +74,7 @@ __goo_earthquake() {
 	magnitude_number=""
 	timestamp=""
 	if [[ -f "$tmp_file" ]]; then
-		if shell_is_osx || shell_is_bsd; then
+		if shell_is_macos || shell_is_bsd; then
 			last_update=$(stat -f "%m" "${tmp_file}")
 		elif shell_is_linux; then
 			last_update=$(stat -c "%Y" "${tmp_file}")
@@ -144,7 +144,7 @@ __check_min_magnitude() {
 }
 
 __convert_jp_timestamp() {
-	if shell_is_osx; then
+	if shell_is_macos; then
 		timestamp=$(date -j -f "%Y年%m月%d日 %H時%M分" "$timestamp" +"%s")
 	else
 		timestamp=$(echo "$timestamp" | sed -e 's/年/-/' -e 's/月/-/' -e 's/日//' -e 's/時/:/' -e 's/分//')
@@ -153,7 +153,7 @@ __convert_jp_timestamp() {
 }
 
 __convert_timestamp_to_fmt() {
-	if shell_is_osx; then
+	if shell_is_macos; then
 		timestamp_fmt=$(date -r "$timestamp" +"$TMUX_POWERLINE_SEG_EARTHQUAKE_TIME_FORMAT")
 	else
 		timestamp_fmt=$(date -d "$timestamp" +"$TMUX_POWERLINE_SEG_EARTHQUAKE_TIME_FORMAT")

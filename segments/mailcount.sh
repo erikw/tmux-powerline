@@ -16,7 +16,7 @@ export TMUX_POWERLINE_SEG_MAILCOUNT_MAILBOX_TYPE=""
 # Enter your Gmail username here WITH OUT @gmail.com.( OR @domain)
 export TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_USERNAME=""
 # Google password. Recomenned to use application specific password (https://accounts.google.com/b/0/IssuedAuthSubTokens) Leave this empty to get password from OS X keychain.
-# For OSX users : MAKE SURE that you add a key to the keychain in the format as follows
+# For macOS users : MAKE SURE that you add a key to the keychain in the format as follows
 # Keychain Item name : http://<value-you-fill-in-server-variable-below>
 # Account name : <username-below>@<server-below>
 # Password : Your password ( Once again, try to use 2 step-verification and application-specific password)
@@ -89,14 +89,14 @@ __count_gmail() {
 
 	# Refresh mail count if the tempfile is older than $interval minutes.
 	interval=$((60 * TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_INTERVAL))
-	if shell_is_osx || shell_is_bsd; then
+	if shell_is_macos || shell_is_bsd; then
 		last_update=$(stat -f "%m" "${tmp_file}")
 	elif shell_is_linux; then
 		last_update=$(stat -c "%Y" "${tmp_file}")
 	fi
 	if [ "$(($(date +"%s") - last_update))" -gt "$interval" ] || [ "$override_passget" == true ]; then
 		if [ -z "$TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_PASSWORD" ]; then # Get password from keychain if it isn't already set.
-			if shell_is_osx; then
+			if shell_is_macos; then
 				__mac_keychain_get_pass "${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_USERNAME}@${TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER}" "$TMUX_POWERLINE_SEG_MAILCOUNT_GMAIL_SERVER"
 			else
 				echo "Implement your own sexy password fetching mechanism here."
@@ -139,7 +139,7 @@ __count_maildir() {
 	count=$(ls "$TMUX_POWERLINE_SEG_MAILCOUNT_MAILDIR_INBOX" | wc -l)
 
 	# Fix for mac, otherwise whitespace is left in output
-	if shell_is_osx; then
+	if shell_is_macos; then
 		count=${count//[[:space:]]/}
 	fi
 

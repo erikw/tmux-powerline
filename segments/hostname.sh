@@ -17,7 +17,7 @@ EORC
 run_segment() {
 	local opts=""
 	if [ "$TMUX_POWERLINE_SEG_HOSTNAME_FORMAT" == "short" ]; then
-		if shell_is_osx || shell_is_bsd; then
+		if shell_is_macos || shell_is_bsd; then
 			opts="-s"
 		else
 			opts="--short"

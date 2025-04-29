@@ -8,14 +8,14 @@ export SHELL_PLATFORM='unknown'
 
 case "$(ostype)" in
 *'linux'*) SHELL_PLATFORM='linux' ;;
-*'darwin'*) SHELL_PLATFORM='osx' ;;
+*'darwin'*) SHELL_PLATFORM='macos' ;;
 *'bsd'*) SHELL_PLATFORM='bsd' ;;
 esac
 
 shell_is_linux() { [[ $SHELL_PLATFORM == 'linux' || $SHELL_PLATFORM == 'bsd' ]]; }
-shell_is_osx() { [[ $SHELL_PLATFORM == 'osx' ]]; }
-shell_is_bsd() { [[ $SHELL_PLATFORM == 'bsd' || $SHELL_PLATFORM == 'osx' ]]; }
+shell_is_macos() { [[ $SHELL_PLATFORM == 'macos' ]]; }
+shell_is_bsd() { [[ $SHELL_PLATFORM == 'bsd' || $SHELL_PLATFORM == 'macos' ]]; }
 
 export -f shell_is_linux
-export -f shell_is_osx
+export -f shell_is_macos
 export -f shell_is_bsd
