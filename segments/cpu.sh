@@ -7,7 +7,7 @@ run_segment() {
 		cpu_user=$(echo "$cpu_line" | grep -Po "(\d+(.\d+)?)(?=%?\s?(us(er)?))")
 		cpu_system=$(echo "$cpu_line" | grep -Po "(\d+(.\d+)?)(?=%?\s?(sys?))")
 		cpu_idle=$(echo "$cpu_line" | grep -Po "(\d+(.\d+)?)(?=%?\s?(id(le)?))")
-	elif shell_is_osx; then
+	elif shell_is_macos; then
 		cpus_line=$(top -e -l 1 | grep "CPU usage:" | sed 's/CPU usage: //')
 		cpu_user=$(echo "$cpus_line" | awk '{print $1}' | sed 's/%//')
 		cpu_system=$(echo "$cpus_line" | awk '{print $3}' | sed 's/%//')

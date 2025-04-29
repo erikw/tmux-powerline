@@ -24,8 +24,8 @@ EORC
 
 run_segment() {
 	__process_settings
-	if shell_is_osx; then
-		battery_status=$(__battery_osx)
+	if shell_is_macos; then
+		battery_status=$(__battery_macos)
 	else
 		battery_status=$(__battery_linux)
 	fi
@@ -59,7 +59,7 @@ __process_settings() {
 	fi
 }
 
-__battery_osx() {
+__battery_macos() {
 	ioreg -c AppleSmartBattery -w0 |
 		grep -o '"[^"]*" = [^ ]*' |
 		sed -e 's/= //g' -e 's/"//g' |

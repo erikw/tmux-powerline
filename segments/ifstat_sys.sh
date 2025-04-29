@@ -4,7 +4,7 @@
 
 run_segment() {
 	sleeptime="0.5"
-	if shell_is_osx; then
+	if shell_is_macos; then
 		iface=$(route get default | grep -i interface | awk '{print $2}')
 		if [ -z "$iface" ]; then
 			iface="en0"

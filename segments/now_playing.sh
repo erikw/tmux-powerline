@@ -284,13 +284,13 @@ __np_cmus() {
 }
 
 __np_apple_music() {
-	! shell_is_osx && return 1
+	! shell_is_macos && return 1
 	np=$("${TMUX_POWERLINE_DIR_SEGMENTS}/np_apple_music.script")
 	echo "$np"
 }
 
 __np_itunes() {
-	! shell_is_osx && return 1
+	! shell_is_macos && return 1
 	np=$("${TMUX_POWERLINE_DIR_SEGMENTS}/np_itunes.script")
 	echo "$np"
 }
@@ -301,7 +301,7 @@ __np_lastfm() {
 	local ENDPOINT_FMT="http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&format=json&limit=1&user=%s&api_key=%s"
 
 	if [ -f "$TMP_FILE" ]; then
-		if shell_is_osx || shell_is_bsd; then
+		if shell_is_macos || shell_is_bsd; then
 			last_update=$(stat -f "%m" "${TMP_FILE}")
 		elif shell_is_linux; then
 			last_update=$(stat -c "%Y" "${TMP_FILE}")
@@ -332,7 +332,7 @@ __np_plexamp() {
 	local ENDPOINT_FMT="https://%s/api/v2?cmd=get_activity&apikey=%s"
 
 	if [ -f "$TMP_FILE" ]; then
-		if shell_is_osx || shell_is_bsd; then
+		if shell_is_macos || shell_is_bsd; then
 			last_update=$(stat -f "%m" "${TMP_FILE}")
 		elif shell_is_linux; then
 			last_update=$(stat -c "%Y" "${TMP_FILE}")
@@ -376,7 +376,7 @@ __np_mocp() {
 }
 
 __np_rdio() {
-	! shell_is_osx && return 1
+	! shell_is_macos && return 1
 	np=$(osascript "${TMUX_POWERLINE_DIR_SEGMENTS}/np_rdio_mac.script")
 	echo "$np"
 }
@@ -418,7 +418,7 @@ __np_spotify() {
 				fi
 			fi
 		fi
-	elif shell_is_osx; then
+	elif shell_is_macos; then
 		np=$("${TMUX_POWERLINE_DIR_SEGMENTS}/np_spotify_mac.script")
 	fi
 	echo "$np"
