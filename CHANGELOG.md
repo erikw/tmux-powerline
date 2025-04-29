@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - weather.sh segment: auto detection of location by GeoIP [#464](https://github.com/erikw/tmux-powerline/pull/464)
+### Removed
+- now_playing: removed Spotify though wine. Not likely this is used anymore. If someone still uses, shout at me and I'll add it back :-). [#](https://github.com/erikw/tmux-powerline/pull/)
 
 
 ## [3.1.0] - 2025-03-03
