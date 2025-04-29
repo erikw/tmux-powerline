@@ -26,7 +26,7 @@ TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER_DEFAULT="spotify"
 
 generate_segmentrc() {
 	read -r -d '' rccontents <<EORC
-# Music player to use. Can be any of {audacious, banshee, cmus, apple_music, itunes, lastfm, plexamp, mocp, mpd, mpd_simple, pithos, playerctl, rdio, rhythmbox, spotify, spotify_wine, file}.
+# Music player to use. Can be any of {audacious, banshee, cmus, apple_music, itunes, lastfm, plexamp, mocp, mpd, mpd_simple, pithos, playerctl, rdio, rhythmbox, spotify, file}.
 export TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER="${TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER_DEFAULT}"
 # File to be read in case the song is being read from a file
 export TMUX_POWERLINE_SEG_NOW_PLAYING_FILE_NAME=""
@@ -116,7 +116,6 @@ run_segment() {
 		"rhythmbox") np=$(__np_rhythmbox) ;;
 		"spotify") np=$(__np_spotify) ;;
 		"file") np=$(__np_file) ;;
-		"spotify_wine") np=$(__np_spotify_native) ;;
 		*)
 			echo "Unknown music player type [${TMUX_POWERLINE_SEG_NOW_PLAYING_MUSIC_PLAYER}]"
 			return 1
@@ -422,14 +421,4 @@ __np_spotify() {
 		np=$("${TMUX_POWERLINE_DIR_SEGMENTS}/np_spotify_mac.script")
 	fi
 	echo "$np"
-}
-
-__np_spotify_wine() {
-	! shell_is_linux && return 1
-	spotify_id=$(xwininfo -root -tree | grep '("spotify' | cut -f1 -d'"' | sed 's/ //g')
-	echo "$spotify_id"
-	if [ -n "$spotify_id" ]; then
-		np=$(xwininfo -id "$spotify_id" | grep "xwininfo.*Spotify -" | grep -Po "(?<=\"Spotify - ).*(?=\"$)")
-		echo "$np"
-	fi
 }
