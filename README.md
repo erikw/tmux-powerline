@@ -112,12 +112,8 @@ Some segments have their own requirements. If you enable them in your theme, mak
 * **tmux_mem_cpu_load.sh**: [tmux-mem-cpu-load](https://github.com/thewtex/tmux-mem-cpu-load)
 * **wan_ip.sh**: `curl`
 * **weather.sh**:
-   * Provider *yrno*: `jq`, `curl`, GNU `grep` with Perl regular expression enabled (FreeBSD specific)
+   * Provider *yrno*: `jq`, `curl`
 * **xkb_layout.sh**: X11, XKB
-
-## FreeBSD specific requirements
-Preinstalled `grep` in FreeBSD doesn't support Perl regular expressions. Solution is rather simple -- you need to use `textproc/gnugrep` port instead. You also need to make sure, that it has support for PCRE and is compiled with `--enable-perl-regexp` flag.
-
 
 # Installation
 1. Install [tpm](https://github.com/tmux-plugins/tpm) and make sure it's working.
