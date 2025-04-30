@@ -9,9 +9,10 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
+				"EditorConfig.EditorConfig",
+				"mads-hartmann.bash-ide-vscode",
 				"rogalmic.bash-debug",
 				"timonwong.shellcheck",
-				"mads-hartmann.bash-ide-vscode"
 			]
 		}
 	}
