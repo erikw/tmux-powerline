@@ -1,6 +1,6 @@
 # shellcheck shell=bash
 # Prints the current weather in Celsius, Fahrenheits or lord Kelvins. The forecast is cached and updated with a period.
-# To configure your location, set TMUX_POWERLINE_SEG_WEATHER_LOCATION in the tmux-powerline config file.
+# To configure your location, set TMUX_POWERLINE_SEG_WEATHER_(LAT|LON) in the tmux-powerline config file.
 
 TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT="yrno"
 TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAULT="c"
@@ -8,6 +8,7 @@ TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT="600"
 TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD_DEFAULT="86400" # 24 hours
 TMUX_POWERLINE_SEG_WEATHER_LAT_DEFAULT="auto"
 TMUX_POWERLINE_SEG_WEATHER_LON_DEFAULT="auto"
+
 
 generate_segmentrc() {
 	read -r -d '' rccontents <<EORC
@@ -27,6 +28,7 @@ export TMUX_POWERLINE_SEG_WEATHER_LON="${TMUX_POWERLINE_SEG_WEATHER_LON_DEFAULT}
 EORC
 	echo "$rccontents"
 }
+
 
 run_segment() {
 	local cache_weather_file="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data.txt"
@@ -63,6 +65,7 @@ run_segment() {
 	echo "$weather"
 }
 
+
 __process_settings() {
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER" ]; then
 		export TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER="${TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT}"
@@ -82,6 +85,7 @@ __process_settings() {
 		fi
 	fi
 }
+
 
 # An implementation of a weather provider, just need to echo the result, run_segment() will take care of the rest
 __yrno() {
@@ -110,16 +114,31 @@ __yrno() {
 	fi
 
 	if [ "$TMUX_POWERLINE_SEG_WEATHER_UNIT" == "k" ]; then
-		degree=$(echo "${degree} + 273.15" | bc)
+		degree=$(__degree_c2k "$degree")
 	fi
 	if [ "$TMUX_POWERLINE_SEG_WEATHER_UNIT" == "f" ]; then
-		degree=$(echo "${degree} * 9 / 5 + 32" | bc)
+		degree=$(__degree_c2f "$degree")
 	fi
 	# condition_symbol=$(__get_yrno_condition_symbol "$condition" "$sunrise" "$sunset")
 	condition_symbol=$(__get_yrno_condition_symbol "$condition")
 	# Write the <content@date>, separated by a @ character, so we can fetch it later on without having to call 'stat'
 	echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')@$(date +%s)"
 }
+
+
+# Convert from Celcius to Lord Kelvins.
+__degree_c2k() {
+	local c="$1"
+	echo "${c} + 273.15" | bc
+}
+
+
+# Convert from Celcius to Fahrenheits.
+__degree_c2f() {
+	local c="$1"
+	echo "${c} * 9 / 5 + 32" | bc
+}
+
 
 # Get symbol for condition. Available symbol names: https://api.met.no/weatherapi/weathericon/2.0/documentation#List_of_symbols
 __get_yrno_condition_symbol() {
@@ -176,6 +195,7 @@ __get_yrno_condition_symbol() {
 	esac
 }
 
+
 __read_file_split() {
 	file_to_read="$1"
 	lookup_index="$2"
@@ -193,15 +213,18 @@ __read_file_split() {
 	echo "${file_arr[$lookup_index]}"
 }
 
+
 # Default to empty/blank
 __read_file_content() {
 	__read_file_split "$1" 0 ""
 }
 
+
 # Default to 0
 __read_file_last_update() {
 	__read_file_split "$1" 1 0
 }
+
 
 get_auto_location() {
     local max_cache_age=$TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD
