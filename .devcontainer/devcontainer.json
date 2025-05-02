@@ -2,7 +2,7 @@
 	"features": {
 		"ghcr.io/devcontainers-extra/features/apt-get-packages:1": {
 			"version": "latest",
-			"packages": "shellcheck tmux ifstat" 
+			"packages": ["shellcheck", "tmux", "ifstat"] 
 		}
 	},
 	"postCreateCommand": "bash scripts/devcontainer_postCreateCommand.sh",
