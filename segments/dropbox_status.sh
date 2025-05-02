@@ -1,4 +1,4 @@
-# shellcheck=bash
+# shellcheck shell=bash
 
 # https://www.nerdfonts.com/cheat-sheet?q=nf-fa-dropbox
 TMUX_POWERLINE_SEG_DROPBOX_GLYPH_DEFAULT=$'\uf16b'
