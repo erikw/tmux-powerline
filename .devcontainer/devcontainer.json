@@ -1,7 +1,6 @@
 {
 	"features": {
 		"ghcr.io/devcontainers-extra/features/apt-get-packages:1": {
-			"version": "latest",
 			"packages": ["shellcheck", "tmux", "ifstat"] 
 		}
 	},
