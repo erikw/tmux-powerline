@@ -42,7 +42,7 @@ EORC
 run_segment() {
 	__process_settings
 	if ! command -v dropbox-cli &>/dev/null; then
-		printf "%s ${TMUX_POWERLINE_SEG_DROPBOX_GLYPH} " "dropbox-cli not found"
+		printf "#[bg=colour124] %s ${TMUX_POWERLINE_SEG_DROPBOX_GLYPH} " "dropbox-cli not found"
 		return 1
 	fi
 	status_text=$(dropbox-cli status \
