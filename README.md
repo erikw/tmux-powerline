@@ -2,13 +2,15 @@
 <p align="center">
 <img alt="log" width="100%" height="100%" src="img/logo.png" />
 </p>
-<p align="center"><i>Empowering your tmux (status bar) experience!</i></p>
+<p align="center">
+    <i>Empowering your tmux (status bar) experience!</i>
+    <a href="https://x.com/intent/post?text=%E2%9A%A1%EF%B8%8Ftmux-powerline%E2%9A%A1%EF%B8%8F:%20A%20tmux%20plugin%20for%20a%20hackable%20status%20bar%20consisting%20of%20segments&url=https%3A%2F%2Fgithub.com%2Ferikw%2Ftmux-powerline&via=erik_westrup&hashtags=tmux%2Ctmux_powerline%2Cstatusbar" title="Post on X"><img src="https://img.shields.io/twitter/url/http/shields.io.svg?style=social" alt="Post on X" /></a>
+</p>
 <hr>
 
 <p align="center">
    <img src="https://img.shields.io/github/stars/erikw/tmux-powerline?style=social" alt="GitHub Stars"  />
    <img src="https://img.shields.io/github/forks/erikw/tmux-powerline?style=social" alt="GitHub Forks"  />
-   <a href="https://x.com/intent/post?text=%E2%9A%A1%EF%B8%8Ftmux-powerline%E2%9A%A1%EF%B8%8F:%20A%20tmux%20plugin%20for%20a%20hackable%20status%20bar%20consisting%20of%20segments&url=https%3A%2F%2Fgithub.com%2Ferikw%2Ftmux-powerline&via=erik_westrup&hashtags=tmux%2Ctmux_powerline%2Cstatusbar" title="Post on X"><img src="https://img.shields.io/twitter/url/http/shields.io.svg?style=social" alt="Post on X"  /></a>
 </p>
 <p align="center">
     <!-- Ref: https://dev.to/azure/adding-a-github-codespace-button-to-your-readme-5f6l -->
