@@ -11,8 +11,7 @@ TMUX_POWERLINE_SEG_DROPBOX_INDEX_GLYPH_DEFAULT=$'\uf02e'
 # https://www.nerdfonts.com/cheat-sheet?q=nf-oct-sync
 TMUX_POWERLINE_SEG_DROPBOX_SYNC_GLYPH_DEFAULT=$'\uf46a'
 
-__dropbox_sed_script() {
-	read -r -d '' sedscript <<EOSED
+IFS= read -r -d '' TMUX_POWERLINE_SEG_DROPBOX_SED_SCRIPT <<EOSED
 s/\(^.*\)\.\.\./\1/g
 s/Syncing \([0-9]\+\) \(.*\)$/\${TMUX_POWERLINE_SEG_DROPBOX_SYNC_GLYPH} \1/g
 s/Indexing \([0-9]\+\) \(.*\)$/\${TMUX_POWERLINE_SEG_DROPBOX_INDEX_GLYPH} \1/g
@@ -23,8 +22,6 @@ s/Indexing \(.*\)$/\${TMUX_POWERLINE_SEG_DROPBOX_INDEX_GLYPH} 1/g
 s/Uploading \(.*\)$/\${TMUX_POWERLINE_SEG_DROPBOX_UPLOAD_GLYPH} 1/g
 s/Downloading \(.*\)$/\${TMUX_POWERLINE_SEG_DROPBOX_DOWNLOAD_GLYPH} 1/g
 EOSED
-	echo "$sedscript"
-}
 
 generate_segmentrc() {
 	read -r -d '' rccontents <<EORC
@@ -49,7 +46,7 @@ run_segment() {
 		return 1
 	fi
 	status_text=$(dropbox-cli status \
-			| sed "$(__dropbox_sed_script)" \
+			| sed "$TMUX_POWERLINE_SEG_DROPBOX_SED_SCRIPT" \
 			| sed -z 's/\n/ /g;s/\(.*\) /\1/g' \
 			| envsubst
 	)
