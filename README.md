@@ -1,6 +1,6 @@
 <!-- markdownlint-disable first-line-heading -->
 <p align="center">
-<img alt="log" width="100%" height="100%" src="img/logo.png" />
+<img alt="log" width="80%" src="img/logo.png" />
 </p>
 <p align="center">
     <i>Empowering your tmux (status bar) experience!</i>
