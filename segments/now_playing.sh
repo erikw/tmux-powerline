@@ -72,7 +72,7 @@ export TMUX_POWERLINE_SEG_NOW_PLAYING_LASTFM_UPDATE_PERIOD="${TMUX_POWERLINE_SEG
 # Fancy char to display before now playing track
 export TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR="${TMUX_POWERLINE_SEG_NOW_PLAYING_NOTE_CHAR_DEFAULT}"
 
-# Plexamp 
+# Plexamp
 # Set up steps for Plexamp
 # 1. Make sure jq(1) is installed on the system.
 # 2. Make sure you have an instance of Tautulli that is accessible by the computer running tmux-powerline.
@@ -410,8 +410,8 @@ __np_spotify() {
 				if [ -n "$metadata" ]; then
 					state=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus' | grep -E -A 1 "string" | cut -b 26- | cut -d '"' -f 1 | grep -E -v ^$)
 					if [[ $state == "Playing" ]]; then
-						artist=$(echo "$metadata" | grep -PA2 "string\s\"xesam:artist\"" | tail -1 | grep -Po "(?<=\").*(?=\")")
-						track=$(echo "$metadata" | grep -PA1 "string\s\"xesam:title\"" | tail -1 | grep -Po "(?<=\").*(?=\")")
+						artist=$(echo "$metadata" | awk '/string\s+"xesam:artist"/{m=1;next};m && /string/{sub(/^.*string\s+/,"");print substr($0,2,length($0)-2);m=0}')
+						track=$(echo "$metadata" | awk '/string\s+"xesam:title"/{m=1;next};m && /string/{sub(/^.*string\s+/,"");print substr($0,2,length($0)-2);m=0}')
 						np="${artist} - ${track}"
 					fi
 				fi
