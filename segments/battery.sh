@@ -104,18 +104,6 @@ __battery_macos() {
 __battery_linux() {
 	case "$SHELL_PLATFORM" in
 	"linux")
-		BATPATH=/sys/class/power_supply/BAT0
-		if [ ! -d $BATPATH ]; then
-			BATPATH=/sys/class/power_supply/BAT1
-		fi
-		BAT_FULL=$BATPATH/charge_full
-		if [ ! -r $BAT_FULL ]; then
-			BAT_FULL=$BATPATH/energy_full
-		fi
-		BAT_NOW=$BATPATH/charge_now
-		if [ ! -r $BAT_NOW ]; then
-			BAT_NOW=$BATPATH/energy_now
-		fi
 		__linux_get_bat
 		;;
 	"bsd")
@@ -158,28 +146,26 @@ __linux_get_bat() {
 	local total_full=0
 	local total_now=0
 
-	for bat in /sys/class/power_supply/BAT*; do
-		if [ -d "$bat" ]; then
-			local full="$bat/charge_full"
-			local now="$bat/charge_now"
+	while read -r bat; do
+		local full="$bat/charge_full"
+		local now="$bat/charge_now"
 
-			if [ ! -r "$full" ]; then
-				full="$bat/energy_full"
-			fi
-			if [ ! -r "$now" ]; then
-				now="$bat/energy_now"
-			fi
-
-			if [ -r "$full" ] && [ -r "$now" ]; then
-				local bf
-				local bn
-				bf=$(cat "$full")
-				bn=$(cat "$now")
-				total_full=$((total_full + bf))
-				total_now=$((total_now + bn))
-			fi
+		if [ ! -r "$full" ]; then
+			full="$bat/energy_full"
 		fi
-	done
+		if [ ! -r "$now" ]; then
+			now="$bat/energy_now"
+		fi
+
+		if [ -r "$full" ] && [ -r "$now" ]; then
+			local bf
+			local bn
+			bf=$(cat "$full")
+			bn=$(cat "$now")
+			total_full=$((total_full + bf))
+			total_now=$((total_now + bn))
+		fi
+	done <<<"$(grep -l "Battery" /sys/class/power_supply/*/type | sed -e 's,/type$,,')"
 
 	if [ "$total_full" -gt 0 ]; then
 		if [ "$total_now" -gt "$total_full" ]; then
