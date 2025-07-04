@@ -2,6 +2,9 @@
 # Prints the current weather in Celsius, Fahrenheits or lord Kelvins. The forecast is cached and updated with a period.
 # To configure your location, set TMUX_POWERLINE_SEG_WEATHER_(LAT|LON) in the tmux-powerline config file.
 
+# shellcheck source=lib/util.sh
+source "${TMUX_POWERLINE_DIR_LIB}/util.sh"
+
 TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT="yrno"
 TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAULT="c"
 TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT="600"
@@ -94,14 +97,14 @@ __yrno() {
 	# There's a chance that you will get rate limited or both location APIs are not working
 	# Then long and lat will be "null", as literal string
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_LAT" ] || [ -z "$TMUX_POWERLINE_SEG_WEATHER_LON" ]; then
-		echo "Err: Unable to auto-detect your location" >&2
+		__err "Err: Unable to auto-detect your location"
 		return 1
 	fi
 
 	if weather_data=$(curl --max-time 4 -s "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}"); then
 		error=$(echo "$weather_data" | grep -i "error")
 		if [ -n "$error" ]; then
-			echo "Err: yr.no err: error in api return" >&2
+			__err "Err: yr.no err: error in api return"
 			return 1
 		fi
 		degree=$(echo "$weather_data" | jq -r '.properties.timeseries | .[0].data.instant.details.air_temperature')
@@ -109,7 +112,7 @@ __yrno() {
 	fi
 
 	if [ -z "$degree" ]; then
-		echo "Err: yr.no err: unable to fetch weather data" >&2
+		__err "Err: yr.no err: unable to fetch weather data"
 		return 1
 	fi
 
@@ -272,7 +275,7 @@ get_auto_location() {
     done
 
     if [[ -f "$cache_location_file" ]]; then
-        echo "Warning: Using stale location data (failed to refresh)" >&2
+        __err "Warning: Using stale location data (failed to refresh)"
         IFS=' ' read -ra lat_lon_arr <<< "$(__read_file_content "$cache_location_file")"
         TMUX_POWERLINE_SEG_WEATHER_LAT=${lat_lon_arr[0]}
         TMUX_POWERLINE_SEG_WEATHER_LON=${lat_lon_arr[1]}
@@ -281,6 +284,10 @@ get_auto_location() {
         fi
     fi
 
-    echo "Could not detect location automatically" >&2
+    __err "Could not detect location automatically"
     return 1
+}
+
+__err() {
+	err "weather.sh" "$*"
 }
