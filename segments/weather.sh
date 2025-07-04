@@ -44,7 +44,7 @@ run_segment() {
 			weather=$(__read_file_content "$cache_weather_file")
 		fi
 	fi
-	
+
 	# Fetch from provider if empty
 	# If a new provider is implemented, please set the $weather variable!
 	if [ -z "$weather" ]; then
@@ -94,14 +94,14 @@ __yrno() {
 	# There's a chance that you will get rate limited or both location APIs are not working
 	# Then long and lat will be "null", as literal string
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_LAT" ] || [ -z "$TMUX_POWERLINE_SEG_WEATHER_LON" ]; then
-		echo "Err: Unable to auto-detect your location"
+		echo "Err: Unable to auto-detect your location" >&2
 		return 1
 	fi
 
 	if weather_data=$(curl --max-time 4 -s "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}"); then
 		error=$(echo "$weather_data" | grep -i "error")
 		if [ -n "$error" ]; then
-			echo "error"
+			echo "Err: yr.no err: error in api return" >&2
 			return 1
 		fi
 		degree=$(echo "$weather_data" | jq -r '.properties.timeseries | .[0].data.instant.details.air_temperature')
@@ -109,7 +109,7 @@ __yrno() {
 	fi
 
 	if [ -z "$degree" ]; then
-		echo "yr.no err: unable to fetch weather data"
+		echo "Err: yr.no err: unable to fetch weather data" >&2
 		return 1
 	fi
 
@@ -275,7 +275,7 @@ get_auto_location() {
         echo "Warning: Using stale location data (failed to refresh)" >&2
         IFS=' ' read -ra lat_lon_arr <<< "$(__read_file_content "$cache_location_file")"
         TMUX_POWERLINE_SEG_WEATHER_LAT=${lat_lon_arr[0]}
-        TMUX_POWERLINE_SEG_WEATHER_LON=${lat_lon_arr[1]}        
+        TMUX_POWERLINE_SEG_WEATHER_LON=${lat_lon_arr[1]}
         if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
             return 0
         fi
