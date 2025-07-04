@@ -104,14 +104,14 @@ __process_scripts() {
 		export TMUX_POWERLINE_CUR_SEGMENT_BG TMUX_POWERLINE_CUR_SEGMENT_FG
 		# shellcheck disable=SC1090
 		source "$script"
+		tp_seg_name="${script##*/}"
 		local output
 		output=$(run_segment)
 		local exit_code="$?"
 		unset -f run_segment
 
 		if [ "$exit_code" -ne 0 ] && debug_mode_enabled; then
-			local seg_name="${script##*/}"
-			echo "Segment '${seg_name}' exited with code ${exit_code}. Aborting."
+			echo "Segment '${tp_seg_name}' exited with code ${exit_code}. Aborting."
 			exit 1
 		fi
 
@@ -128,6 +128,7 @@ __process_scripts() {
 		else
 			unset -v "powerline_segments[segment_index]"
 		fi
+		unset -v tp_seg_name
 	done
 }
 
