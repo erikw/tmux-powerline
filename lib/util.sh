@@ -46,3 +46,18 @@ is_tmp_valid() {
 command_exists() {
 	command -v "$1" >/dev/null
 }
+
+err() {
+	if [ "$TMUX_POWERLINE_ERROR_LOGS_ENABLED" != "false" ]; then
+		scope="$1"
+		shift
+		if [ "$TMUX_POWERLINE_ERROR_LOGS_SCOPES" != "" ]; then
+			# split by word and log the respective file
+			if [[ "$TMUX_POWERLINE_ERROR_LOGS_SCOPES" =~ ( |^)$scope( |$) ]]; then
+				echo "[$(date)] $*" >> "${TMUX_POWERLINE_DIR_TEMPORARY}/${scope}_error.log"
+			fi
+		else
+			echo "[$(date)][$scope] $*" >> "${TMUX_POWERLINE_DIR_TEMPORARY}/error.log"
+		fi
+	fi
+}
