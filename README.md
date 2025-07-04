@@ -183,6 +183,9 @@ Also see [How to make a segment](#how-to-make-a-segment) below for more details.
 
 # Debugging
 Some segments might not work on your system for various reasons such as missing programs or different versions not having the same options. To find out which segment is not working it may help to enable the debug setting in `~/.config/tmux-powerline/config.sh`.
+
+Next step would be to enable the error logging in general or even with a scope, see `TMUX_POWERLINE_ERROR_LOGS_ENABLED` and `TMUX_POWERLINE_ERROR_LOGS_SCOPES` in your config.
+
 However this may not be enough to determine the error so you can inspect all executed bash commands (will be a long output) by doing
 
 ```shell
@@ -236,7 +239,7 @@ You can fork this project and then start coding right away with GitHub Codespace
 
 > [!IMPORTANT]
 > If you have set up your own dotfiles to be installed with GitHub Codespaces, and there was some tmux config files installed from your dotfiles to the devcontainer, then you might have to run this script to wipe your config in favour of the setup provided by this repo's initialization:
-> 
+>
 > ```shell
 > ./scripts/devcontainer_postCreateCommand.sh
 > ```
