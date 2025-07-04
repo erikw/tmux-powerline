@@ -101,7 +101,8 @@ __process_scripts() {
 
 		TMUX_POWERLINE_CUR_SEGMENT_BG=$(__normalize_color "${powerline_segment[1]}")
 		TMUX_POWERLINE_CUR_SEGMENT_FG=$(__normalize_color "${powerline_segment[2]}")
-		export TMUX_POWERLINE_CUR_SEGMENT_BG TMUX_POWERLINE_CUR_SEGMENT_FG
+		TMUX_POWERLINE_CUR_SEGMENT_NAME="${script##*/}"
+		export TMUX_POWERLINE_CUR_SEGMENT_BG TMUX_POWERLINE_CUR_SEGMENT_FG TMUX_POWERLINE_CUR_SEGMENT_NAME
 		# shellcheck disable=SC1090
 		source "$script"
 		local output
@@ -110,8 +111,7 @@ __process_scripts() {
 		unset -f run_segment
 
 		if [ "$exit_code" -ne 0 ] && debug_mode_enabled; then
-			local seg_name="${script##*/}"
-			echo "Segment '${seg_name}' exited with code ${exit_code}. Aborting."
+			echo "Segment '${TMUX_POWERLINE_CUR_SEGMENT_NAME}' exited with code ${exit_code}. Aborting."
 			exit 1
 		fi
 
@@ -128,6 +128,7 @@ __process_scripts() {
 		else
 			unset -v "powerline_segments[segment_index]"
 		fi
+		unset -v TMUX_POWERLINE_CUR_SEGMENT_NAME
 	done
 }
 

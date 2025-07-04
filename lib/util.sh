@@ -46,3 +46,23 @@ is_tmp_valid() {
 command_exists() {
 	command -v "$1" >/dev/null
 }
+
+tp_err() {
+	if [ "$TMUX_POWERLINE_ERROR_LOGS_ENABLED" != "false" ]; then
+		local scope="$1"
+		shift
+		if [ "$TMUX_POWERLINE_ERROR_LOGS_SCOPES" != "" ]; then
+			# split by word and log the respective file
+			if [[ "$TMUX_POWERLINE_ERROR_LOGS_SCOPES" =~ ( |^)$scope( |$) ]]; then
+				echo "[$(date)] $*" >> "${TMUX_POWERLINE_DIR_TEMPORARY}/${scope}_error.log"
+			fi
+		else
+			echo "[$(date)][$scope] $*" >> "${TMUX_POWERLINE_DIR_TEMPORARY}/error.log"
+		fi
+	fi
+}
+
+tp_err_seg() {
+	# TMUX_POWERLINE_CUR_SEGMENT_NAME is being set before each segment run
+	tp_err "${TMUX_POWERLINE_CUR_SEGMENT_NAME:-unknown_segment}" "$*"
+}
