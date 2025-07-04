@@ -104,7 +104,7 @@ Requirements for the lib to work are:
 Some segments have their own requirements. If you enable them in your theme, make sure all requirements are met for those.
 
 * **dropbox_status.sh**: `dropbox-cli`
-* **github_notifications.sh**: `jq`
+* **github_notifications.sh**: `jq`, `curl`
 * **ifstat.sh**: `ifstat` (there is a simpler segment `ifstat_sys.sh` not using ifstat)
 * **mailcount.sh**
    * gmail: `wget`
