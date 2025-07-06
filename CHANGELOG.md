@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `weather.sh`: auto detection of location by GeoIP. [#464](https://github.com/erikw/tmux-powerline/pull/464)
 - `.editorconfig` for consistent coding style. [#477](https://github.com/erikw/tmux-powerline/pull/477)
 - `dropbox_status.sh` a new segment showing Dropbox operation statuses. [#478](https://github.com/erikw/tmux-powerline/pull/478)
+- Proper error logging in segments with function `tp_err_seg()`. [#486](https://github.com/erikw/tmux-powerline/pull/486) [#485](https://github.com/erikw/tmux-powerline/pull/485)
 ### Removed
 - `now_playing.sh`: removed Spotify though wine. Not likely this is used anymore. If someone still uses, shout at me and I'll add it back :-). [#473](https://github.com/erikw/tmux-powerline/pull/473)
 - `weather.sh`: Removed GNU Grep dependency [#468](https://github.com/erikw/tmux-powerline/pull/468)
