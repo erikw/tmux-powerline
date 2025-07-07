@@ -8,29 +8,48 @@ TMUX_POWERLINE_SEG_HOSTNAME_FORMAT="${TMUX_POWERLINE_SEG_HOSTNAME_FORMAT:-short}
 
 generate_segmentrc() {
 	read -r -d '' rccontents <<EORC
-# Use short or long format for the hostname. Can be {"short, long"}.
+# Use short, long or custom format for the hostname. Can be {"short", "long", "custom"}.
 export TMUX_POWERLINE_SEG_HOSTNAME_FORMAT="${TMUX_POWERLINE_SEG_HOSTNAME_FORMAT}"
+# Custom name to be used when format is "custom"
+export TMUX_POWERLINE_SEG_HOSTNAME_CUSTOM="${TMUX_POWERLINE_SEG_HOSTNAME_CUSTOM}"
 EORC
 	echo "$rccontents"
 }
 
 run_segment() {
-	local opts=""
 	if [ "$TMUX_POWERLINE_SEG_HOSTNAME_FORMAT" == "short" ]; then
-		if shell_is_macos || shell_is_bsd; then
-			opts="-s"
-		else
-			opts="--short"
+		_get_hostname short || return 1
+	elif [ "$TMUX_POWERLINE_SEG_HOSTNAME_FORMAT" == "long" ]; then
+		_get_hostname long || return 1
+	elif [ "$TMUX_POWERLINE_SEG_HOSTNAME_FORMAT" == "custom" ]; then
+		if [ -z "$TMUX_POWERLINE_SEG_HOSTNAME_CUSTOM" ]; then
+			tp_err_seg "Err: TMUX_POWERLINE_SEG_HOSTNAME_CUSTOM is unset. Please set it if you want to use the custom format."
+			return 1
 		fi
+		echo "$TMUX_POWERLINE_SEG_HOSTNAME_CUSTOM"
+	else
+		tp_err_seg "Err: Invalid hostname format: $TMUX_POWERLINE_SEG_HOSTNAME_FORMAT {\"short\", \"long\", \"custom\"}"
+		return 1
 	fi
+	return 0
+}
+
+_get_hostname() {
+	local format=$1
+	local hname=""
 
 	if command_exists hostname; then
-		hostname ${opts}
+		hname=$(hostname)
 	elif command_exists hostnamectl; then
-		hostnamectl hostname
+		hname=$(hostnamectl hostname)
 	else
-		echo 'Hostname could not be determined'
+		tp_err_seg 'Err: Hostname could not be determined (neither hostname nor hostnamectl command available)'
+		return 1
 	fi
 
-	return 0
+	if [ "$format" == "short" ]; then
+		echo "${hname/.*/}"
+	elif [ "$format" == "long" ]; then
+		echo "${hname}"
+	fi
 }
