@@ -54,7 +54,7 @@ tp_err() {
 		if [ "$TMUX_POWERLINE_ERROR_LOGS_SCOPES" != "" ]; then
 			# split by word and log the respective file
 			if [[ "$TMUX_POWERLINE_ERROR_LOGS_SCOPES" =~ ( |^)$scope( |$) ]]; then
-				echo "[$(date)] $*" >> "${TMUX_POWERLINE_DIR_TEMPORARY}/${scope}_error.log"
+				echo "[$(date)] $*" >> "${TMUX_POWERLINE_DIR_TEMPORARY}/${scope//\//_}_error.log"
 			fi
 		else
 			echo "[$(date)][$scope] $*" >> "${TMUX_POWERLINE_DIR_TEMPORARY}/error.log"
