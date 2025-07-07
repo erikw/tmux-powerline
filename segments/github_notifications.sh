@@ -68,7 +68,7 @@ run_segment() {
 		return 0
 	fi
 
-	if [ -z "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_TOKEN" ] && ! is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_TEST_MODE"; then
+	if [ -z "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_TOKEN" ] && ! tp_is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_TEST_MODE"; then
 		return 0
 	fi
 
@@ -82,15 +82,15 @@ run_segment() {
 
 	api_url="https://api.github.com/notifications"
 
-	if is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_SINCE_ENABLE"; then
+	if tp_is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_SINCE_ENABLE"; then
 		api_query="since=${TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_SINCE}&"
 	fi
 	api_query="${api_query}per_page=${TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_PER_PAGE}"
 
 	auth_header="Authorization: Bearer $TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_TOKEN"
 
-	if ! is_tmp_valid "$tmp_file" "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_UPDATE_INTERVAL"; then
-		if is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_TEST_MODE"; then
+	if ! tp_is_tmp_valid "$tmp_file" "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_UPDATE_INTERVAL"; then
+		if tp_is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_TEST_MODE"; then
 			notifications=$_GITHUB_NOTIFICATIONS_TEST_RESPONSE
 		else
 			read -r -d '' notifications < <(curl -s --url "${api_url}?${api_query}" -D "$tmp_headers_file" --header "$auth_header")
@@ -120,11 +120,11 @@ run_segment() {
 			IFS=$':' read -r reason separator <<<"$reason_entry"
 			count="$(echo "$notifications" | jq -c '.[] | select( .reason == "'"$reason"'" )' | jq -s 'length')"
 
-			if [ "$count" -eq 0 ] && is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_HIDE_NO_NOTIFICATIONS"; then
+			if [ "$count" -eq 0 ] && tp_is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_HIDE_NO_NOTIFICATIONS"; then
 				continue
 			fi
 
-			if is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_SUMMARIZE"; then
+			if tp_is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_SUMMARIZE"; then
 				all_count="$((all_count + count))"
 			else
 				if ! [[ "$separator" =~ ^-.*$ ]]; then
@@ -135,14 +135,14 @@ run_segment() {
 			fi
 		done
 
-		if is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_SUMMARIZE"; then
-			if [ "$all_count" -gt 0 ] || ! is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_HIDE_NO_NOTIFICATIONS"; then
+		if tp_is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_SUMMARIZE"; then
+			if [ "$all_count" -gt 0 ] || ! tp_is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_HIDE_NO_NOTIFICATIONS"; then
 				echo " $all_count" >"$tmp_file"
 			else
 				echo -n >"$tmp_file"
 			fi
 		else
-			if [ -n "$result" ] || ! is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_HIDE_NO_NOTIFICATIONS"; then
+			if [ -n "$result" ] || ! tp_is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_HIDE_NO_NOTIFICATIONS"; then
 				echo " $result" >"$tmp_file"
 			else
 				echo -n >"$tmp_file"
@@ -155,7 +155,7 @@ run_segment() {
 
 __process_settings() {
 	if [ -z "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_REASONS" ]; then
-		if is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_SYMBOL_MODE"; then
+		if tp_is_flag_enabled "$TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_SYMBOL_MODE"; then
 			export TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_REASONS="approval_requested:-󰴄 |assign:-󰎔 |author:-󰔗 |comment:- |ci_activity:-󰙨 |invitation:- |manual:-󱥃 |mention:- |review_requested:- |security_alert:-󰒃 |state_change:-󱇯 |subscribed:- |team_mention:- "
 		else
 			export TMUX_POWERLINE_SEG_GITHUB_NOTIFICATIONS_REASONS="approval_requested:areq|assign:as|author:au|comment:co|ci_activity:ci|invitation:in|manual:ma|mention:me|review_requested:rreq|security_alert:sec|state_change:st|subscribed:sub|team_mention:team"

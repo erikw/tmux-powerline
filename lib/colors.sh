@@ -4,6 +4,9 @@
 # Dependencies:
 #		- none
 
+# shellcheck source=lib/util.sh
+source "${TMUX_POWERLINE_DIR_LIB}/util.sh"
+
 #######################################
 # Accepts a single argument containing a color, returning a normalized color based
 # on the input
@@ -30,7 +33,13 @@ __normalize_color() {
 	echo -n "$result"
 }
 
-air_color() {
+# deprecated, function will be removed in future release, use tp_air_color instead
+air_color(){
+	tp_err "lib/colors.sh" "Deprecated function \"air_color\" will be removed in future release, update your theme and use \"tp_air_color\" instead"
+	tp_air_color "$@"
+}
+
+tp_air_color() {
 	TMUX_POWERLINE_DIR_TEMPORARY="/tmp/tmux-powerline_${USER}"
 	air_temp_file="${TMUX_POWERLINE_DIR_TEMPORARY}/temp_air_file.txt"
 

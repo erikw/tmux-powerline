@@ -38,9 +38,9 @@ _get_hostname() {
 	local format=$1
 	local hname=""
 
-	if command_exists hostname; then
+	if tp_command_exists hostname; then
 		hname=$(hostname)
-	elif command_exists hostnamectl; then
+	elif tp_command_exists hostnamectl; then
 		hname=$(hostnamectl hostname)
 	else
 		tp_err_seg 'Err: Hostname could not be determined (neither hostname nor hostnamectl command available)'

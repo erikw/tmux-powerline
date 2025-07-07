@@ -1,7 +1,10 @@
 # shellcheck shell=bash
 # Library functions
 
-print_powerline_side() {
+# shellcheck source=lib/util.sh
+source "${TMUX_POWERLINE_DIR_LIB}/util.sh"
+
+tp_print_powerline_side() {
 	local side="$1"
 	local upper_side
 
@@ -19,7 +22,7 @@ print_powerline_side() {
 	__process_powerline
 }
 
-print_powerline_window_status_current_format() {
+tp_print_powerline_window_status_current_format() {
 	if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_CURRENT" ]; then
 		TMUX_POWERLINE_WINDOW_STATUS_CURRENT=(
 			"#[$(format inverse)]"
@@ -35,7 +38,7 @@ print_powerline_window_status_current_format() {
 	printf '%s' "${TMUX_POWERLINE_WINDOW_STATUS_CURRENT[@]}"
 }
 
-print_powerline_window_status_format() {
+tp_print_powerline_window_status_format() {
 	if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_FORMAT" ]; then
 		TMUX_POWERLINE_WINDOW_STATUS_FORMAT=(
 			"#[$(format regular)]"
@@ -48,7 +51,13 @@ print_powerline_window_status_format() {
 	printf '%s' "${TMUX_POWERLINE_WINDOW_STATUS_FORMAT[@]}"
 }
 
-format() {
+# deprecated, function will be removed in future release, use tp_format instead
+format(){
+	tp_err "lib/powerline.sh" "Deprecated function \"format\" will be removed in future release, update your theme and use \"tp_format\" instead"
+	tp_format "$@"
+}
+
+tp_format() {
 	local type="$1"
 	local bg_color
 	local fg_color
@@ -110,7 +119,7 @@ __process_scripts() {
 		local exit_code="$?"
 		unset -f run_segment
 
-		if [ "$exit_code" -ne 0 ] && debug_mode_enabled; then
+		if [ "$exit_code" -ne 0 ] && tp_debug_mode_enabled; then
 			echo "Segment '${TMUX_POWERLINE_CUR_SEGMENT_NAME}' exited with code ${exit_code}. Aborting."
 			exit 1
 		fi
@@ -240,7 +249,7 @@ __segment_separator_is_thin() {
 }
 
 __check_platform() {
-	if [ "$SHELL_PLATFORM" == "unknown" ] && debug_mode_enabled; then
+	if [ "$SHELL_PLATFORM" == "unknown" ] && tp_debug_mode_enabled; then
 		echo "Unknown platform; modify config/shell.sh" >&2
 	fi
 }

@@ -14,7 +14,7 @@ EORC
 }
 
 run_segment() {
-	if shell_is_bsd || shell_is_macos; then
+	if tp_shell_is_bsd || tp_shell_is_macos; then
 		default_route_nic=$(route get default | grep -i interface | awk '{print $2}')
 		all_nics=$(ifconfig 2>/dev/null | awk -F':' '/^[a-z]/ && !/^lo/ { print $1 }' | tr '\n' ' ')
 		IFS=' ' read -ra all_nics_array <<<"$all_nics"

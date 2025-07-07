@@ -24,7 +24,7 @@ EORC
 
 run_segment() {
 	__process_settings
-	if shell_is_macos; then
+	if tp_shell_is_macos; then
 		battery_status=$(__battery_macos)
 	else
 		battery_status=$(__battery_linux)

@@ -36,7 +36,7 @@ run_segment() {
 	display_nic_ip=""
 
 	# different handling for mac/bsd and linux
-	if shell_is_bsd || shell_is_macos; then
+	if tp_shell_is_bsd || tp_shell_is_macos; then
 		# iterate through interface list
 		while read -r line; do
 			# check if line is interface

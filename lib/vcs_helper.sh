@@ -3,8 +3,8 @@
 # shellcheck source=lib/tmux_adapter.sh
 source "${TMUX_POWERLINE_DIR_LIB}/tmux_adapter.sh"
 
-get_vcs_type_and_root_path() {
-	tmux_path=$(get_tmux_cwd)
+tp_get_vcs_type_and_root_path() {
+	tmux_path=$(tp_get_tmux_cwd)
 	cd "$tmux_path" || return
 	root_path=""
 	git_root_path="$(__parse_git_root_path)"

@@ -10,7 +10,7 @@ export TMUX_POWERLINE_DIR_HOME
 
 # Obtain the left/right status length settings by reading the tmux-powerline config.
 source "${TMUX_POWERLINE_DIR_HOME}/lib/headers.sh"
-process_settings
+tp_process_settings
 
 # Apply default status-format to ensure default single-line status bar is working as
 # expected, especially when switching from dual-line status-bar.

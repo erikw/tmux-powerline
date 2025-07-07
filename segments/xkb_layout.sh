@@ -23,7 +23,7 @@ EORC
 }
 
 run_segment() {
-	if ! shell_is_linux; then
+	if ! tp_shell_is_linux; then
 		return 1
 	fi
 

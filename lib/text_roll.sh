@@ -9,7 +9,7 @@
 # shellcheck source=lib/util.sh
 source "${TMUX_POWERLINE_DIR_LIB}/util.sh"
 
-roll_text() {
+tp_roll_text() {
 	local text="$1" # Text to print
 
 	if [ -z "$text" ]; then
