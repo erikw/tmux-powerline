@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 # Read user config file.
 
-process_settings() {
+tp_process_settings() {
 	__read_config_file
 
 	if [ -z "$TMUX_POWERLINE_DEBUG_MODE_ENABLED" ]; then
@@ -90,7 +90,7 @@ process_settings() {
 	fi
 }
 
-generate_default_config() {
+tp_generate_default_config() {
 	read -r -d '' config_contents <<EORC
 # Default configuration file for tmux-powerline.
 # Modeline {
@@ -102,7 +102,7 @@ generate_default_config() {
 	export TMUX_POWERLINE_DEBUG_MODE_ENABLED="${TMUX_POWERLINE_DEBUG_MODE_ENABLED_DEFAULT}"
 	# Create error log in tmux runtime temp dir.
 	export TMUX_POWERLINE_ERROR_LOGS_ENABLED="${TMUX_POWERLINE_ERROR_LOGS_ENABLED_DEFAULT}"
-	# Only log specific scopes. Supported scopes: weather.sh
+	# Only log specific scopes. Space separated list of scopes. Supported scopes: weather.sh lib/text_roll.sh lib/powerline.sh lib/colors.sh config/helpers.sh
 	export TMUX_POWERLINE_ERROR_LOGS_SCOPES="${TMUX_POWERLINE_ERROR_LOGS_SCOPES_DEFAULT}"
 	# Use patched font symbols.
 	export TMUX_POWERLINE_PATCHED_FONT_IN_USE="${TMUX_POWERLINE_PATCHED_FONT_IN_USE_DEFAULT}"

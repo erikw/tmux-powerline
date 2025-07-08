@@ -64,9 +64,9 @@ __process_settings() {
 __openweather() {
 	carbon_monoxide=""
 	if [ -f "$tmp_file" ]; then
-		if shell_is_macos || shell_is_bsd; then
+		if tp_shell_is_macos || tp_shell_is_bsd; then
 			last_update=$(stat -f "%m" "${tmp_file}")
-		elif shell_is_linux; then
+		elif tp_shell_is_linux; then
 			last_update=$(stat -c "%Y" "${tmp_file}")
 		fi
 		time_now=$(date +%s)

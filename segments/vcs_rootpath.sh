@@ -19,7 +19,7 @@ run_segment() {
 	{
 		read -r _unused
 		read -r root_path
-	} < <(get_vcs_type_and_root_path)
+	} < <(tp_get_vcs_type_and_root_path)
 
 	if [ -n "$root_path" ]; then
 		if [ "${TMUX_POWERLINE_SEG_VCS_ROOTPATH_MODE}" = "user_path" ]; then

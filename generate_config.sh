@@ -10,6 +10,6 @@ source "${TMUX_POWERLINE_DIR_HOME}/config/shell.sh"
 # shellcheck source=lib/config_file.sh
 source "${TMUX_POWERLINE_DIR_LIB}/config_file.sh"
 
-generate_default_config
+tp_generate_default_config
 
 exit 0

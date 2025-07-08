@@ -130,7 +130,7 @@ run_segment() {
 		return ${exitcode}
 	fi
 	if [ -n "$np" ]; then
-		if is_flag_enabled "${TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_ENABLE}"; then
+		if tp_is_flag_enabled "${TMUX_POWERLINE_SEG_NOW_PLAYING_TRACK_LOG_ENABLE}"; then
 			local last_track
 			last_track=$(
 				awk -F': ' 'END { for (i = 2; i <= NF; ++i) printf("%s%s", $i, (i < NF) ? FS : "") }' \
@@ -159,7 +159,7 @@ run_segment() {
 		fi
 		case "$TMUX_POWERLINE_SEG_NOW_PLAYING_TRIM_METHOD" in
 		"roll")
-			np=$(roll_text "${np}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SPEED_DEFAULT}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_MODE}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SEPARATOR}")
+			np=$(tp_roll_text "${np}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SPEED_DEFAULT}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_MODE}" "${TMUX_POWERLINE_SEG_NOW_PLAYING_ROLL_SEPARATOR}")
 			;;
 		"trim")
 			np=${np:0:TMUX_POWERLINE_SEG_NOW_PLAYING_MAX_LEN}
@@ -283,13 +283,13 @@ __np_cmus() {
 }
 
 __np_apple_music() {
-	! shell_is_macos && return 1
+	! tp_shell_is_macos && return 1
 	np=$("${TMUX_POWERLINE_DIR_SEGMENTS}/np_apple_music.script")
 	echo "$np"
 }
 
 __np_itunes() {
-	! shell_is_macos && return 1
+	! tp_shell_is_macos && return 1
 	np=$("${TMUX_POWERLINE_DIR_SEGMENTS}/np_itunes.script")
 	echo "$np"
 }
@@ -300,9 +300,9 @@ __np_lastfm() {
 	local ENDPOINT_FMT="http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&format=json&limit=1&user=%s&api_key=%s"
 
 	if [ -f "$TMP_FILE" ]; then
-		if shell_is_macos || shell_is_bsd; then
+		if tp_shell_is_macos || tp_shell_is_bsd; then
 			last_update=$(stat -f "%m" "${TMP_FILE}")
-		elif shell_is_linux; then
+		elif tp_shell_is_linux; then
 			last_update=$(stat -c "%Y" "${TMP_FILE}")
 		fi
 		time_now=$(date +%s)
@@ -331,9 +331,9 @@ __np_plexamp() {
 	local ENDPOINT_FMT="https://%s/api/v2?cmd=get_activity&apikey=%s"
 
 	if [ -f "$TMP_FILE" ]; then
-		if shell_is_macos || shell_is_bsd; then
+		if tp_shell_is_macos || tp_shell_is_bsd; then
 			last_update=$(stat -f "%m" "${TMP_FILE}")
-		elif shell_is_linux; then
+		elif tp_shell_is_linux; then
 			last_update=$(stat -c "%Y" "${TMP_FILE}")
 		fi
 		time_now=$(date +%s)
@@ -375,7 +375,7 @@ __np_mocp() {
 }
 
 __np_rdio() {
-	! shell_is_macos && return 1
+	! tp_shell_is_macos && return 1
 	np=$(osascript "${TMUX_POWERLINE_DIR_SEGMENTS}/np_rdio_mac.script")
 	echo "$np"
 }
@@ -401,7 +401,7 @@ __np_playerctl() {
 }
 
 __np_spotify() {
-	if shell_is_linux; then
+	if tp_shell_is_linux; then
 		if type tasklist.exe >/dev/null 2>&1; then # WSL
 			np=$(tasklist.exe /fo list /v /fi "IMAGENAME eq Spotify.exe" | grep " - " | cut -d" " -f3-)
 			np="${np//[$'\t\r\n']/}"
@@ -417,7 +417,7 @@ __np_spotify() {
 				fi
 			fi
 		fi
-	elif shell_is_macos; then
+	elif tp_shell_is_macos; then
 		np=$("${TMUX_POWERLINE_DIR_SEGMENTS}/np_spotify_mac.script")
 	fi
 	echo "$np"

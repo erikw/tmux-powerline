@@ -10,7 +10,7 @@ TMUX_POWERLINE_SEG_MACOS_NOTIFICATION_COUNT_CHAR="${TMUX_POWERLINE_SEG_MACOS_NOT
 
 generate_segmentrc() {
 	# Don't generate config entry if we're not on macOS
-	if shell_is_linux || shell_is_bsd; then
+	if tp_shell_is_linux || tp_shell_is_bsd; then
 		return 0
 	fi
 	read -r -d '' rccontents <<EORC

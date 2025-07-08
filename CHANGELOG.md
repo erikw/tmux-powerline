@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.editorconfig` for consistent coding style. [#477](https://github.com/erikw/tmux-powerline/pull/477)
 - `dropbox_status.sh` a new segment showing Dropbox operation statuses. [#478](https://github.com/erikw/tmux-powerline/pull/478)
 - Proper error logging in segments with function `tp_err_seg()`. [#486](https://github.com/erikw/tmux-powerline/pull/486) [#485](https://github.com/erikw/tmux-powerline/pull/485)
+### Changed
+- **Deprecation Warning:** functions `patched_font_in_use()`, `air_color()` and `format()` have been replaced by `tp_patched_font_in_use()`, `tp_air_color()` and `tp_format()` respectively and will be removed in future releases.
+Please update your custom themes and segments now. [#489](https://github.com/erikw/tmux-powerline/pull/489)
 ### Removed
 - `now_playing.sh`: removed Spotify though wine. Not likely this is used anymore. If someone still uses, shout at me and I'll add it back :-). [#473](https://github.com/erikw/tmux-powerline/pull/473)
 - `weather.sh`: Removed GNU Grep dependency [#468](https://github.com/erikw/tmux-powerline/pull/468)
@@ -25,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New segment `vcs_rootpath.sh` [#373](https://github.com/erikw/tmux-powerline/issues/374)
 - New segment `vpn.sh` [#383](https://github.com/erikw/tmux-powerline/issues/383)
 - Re-enable Linter [#414](https://github.com/erikw/tmux-powerline/pull/414)
-- GitHub Codespaces devcontainer config setting up all dependencies and installs tmux-powerline in the container. See [devcontainer.json](.devcontainer/devcontainer.json) and [devcontainer_postCreateCommand.sh](scripts/devcontainer_postCreateCommand.sh). 
+- GitHub Codespaces devcontainer config setting up all dependencies and installs tmux-powerline in the container. See [devcontainer.json](.devcontainer/devcontainer.json) and [devcontainer_postCreateCommand.sh](scripts/devcontainer_postCreateCommand.sh).
 - Add `semver` to devcontainer to help bumping versions.
 
 ### Changed

@@ -31,8 +31,8 @@ run_segment() {
 	{
 		read -r vcs_type
 		read -r _unused
-	} < <(get_vcs_type_and_root_path)
-	tmux_path=$(get_tmux_cwd)
+	} < <(tp_get_vcs_type_and_root_path)
+	tmux_path=$(tp_get_tmux_cwd)
 	cd "$tmux_path" || return
 
 	stats=$(__parse_"${vcs_type}"_stats)

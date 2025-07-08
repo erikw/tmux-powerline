@@ -1,6 +1,6 @@
 # shellcheck shell=bash
 
-is_flag_enabled() {
+tp_is_flag_enabled() {
 	local flag_value="$1"
 
 	case "$(awk '{print tolower($0)}' <<<"${flag_value}")" in
@@ -13,19 +13,19 @@ is_flag_enabled() {
 	esac
 }
 
-is_tmp_valid() {
+tp_is_tmp_valid() {
 	local tmp_file="$1"
 	local tmp_validity="$2"
 
 	if [ -f "$tmp_file" ]; then
-		if shell_is_macos || shell_is_bsd; then
+		if tp_shell_is_macos || tp_shell_is_bsd; then
 			stat >/dev/null 2>&1 && is_gnu_stat=false || is_gnu_stat=true
 			if [ "$is_gnu_stat" == "true" ]; then
 				last_update=$(stat -c "%Y" "${tmp_file}")
 			else
 				last_update=$(stat -f "%m" "${tmp_file}")
 			fi
-		elif shell_is_linux || [ -z "$is_gnu_stat" ]; then
+		elif tp_shell_is_linux || [ -z "$is_gnu_stat" ]; then
 			last_update=$(stat -c "%Y" "${tmp_file}")
 		fi
 
@@ -43,7 +43,7 @@ is_tmp_valid() {
 
 }
 
-command_exists() {
+tp_command_exists() {
 	command -v "$1" >/dev/null
 }
 

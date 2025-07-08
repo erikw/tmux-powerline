@@ -47,8 +47,8 @@ run_segment() {
 	{
 		read -r vcs_type
 		read -r vcs_rootpath
-	} < <(get_vcs_type_and_root_path)
-	tmux_path=$(get_tmux_cwd)
+	} < <(tp_get_vcs_type_and_root_path)
+	tmux_path=$(tp_get_tmux_cwd)
 	cd "$tmux_path" || return
 	branch=$(__parse_"${vcs_type}"_branch "$vcs_rootpath")
 
