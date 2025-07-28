@@ -15,7 +15,7 @@ if process_list contains "Spotify" then
 			if player state is playing then
 				set now_playing to "► " & artist_name & " - " & track_name
 			else
-				set now_playing to "❙❙ " & artist_name & " - " & track_name
+				set now_playing to ""
 			end if
 			if length of now_playing is less than trim_length then
 				set now_playing_trim to now_playing
