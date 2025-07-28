@@ -27,8 +27,8 @@ tmux set-option -g message-style "$TMUX_POWERLINE_STATUS_STYLE"
 tmux set-option -g status-left-length "$TMUX_POWERLINE_STATUS_LEFT_LENGTH"
 tmux set-option -g status-right-length "$TMUX_POWERLINE_STATUS_RIGHT_LENGTH"
 
-tmux set-option -g status-left "#(${TMUX_POWERLINE_DIR_HOME}/powerline.sh left)"
-tmux set-option -g status-right "#(${TMUX_POWERLINE_DIR_HOME}/powerline.sh right)"
+tmux set-option -g status-left "#(COLUMNS=#{client_width} ${TMUX_POWERLINE_DIR_HOME}/powerline.sh left)"
+tmux set-option -g status-right "#(COLUMNS=#{client_width} ${TMUX_POWERLINE_DIR_HOME}/powerline.sh right)"
 
 if [ "$TMUX_POWERLINE_STATUS_VISIBILITY" = "2" ]; then
 	# handle TMUX_POWERLINE_WINDOW_STATUS_LINE=0 and fallback for misconfiguration
