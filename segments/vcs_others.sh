@@ -1,51 +1,67 @@
-# This checks if the current branch is ahead of or behind the remote branch with which it is tracked.
+# shellcheck shell=bash
+# This checks if we have untracked/new files in vcs
 
 # Source lib to get the function get_tmux_pwd
+# shellcheck source=lib/tmux_adapter.sh
 source "${TMUX_POWERLINE_DIR_LIB}/tmux_adapter.sh"
+# shellcheck source=lib/vcs_helper.sh
+source "${TMUX_POWERLINE_DIR_LIB}/vcs_helper.sh"
 
-other_symbol="⋯ "
+TMUX_POWERLINE_SEG_VCS_OTHERS_SYMBOL="${TMUX_POWERLINE_SEG_VCS_OTHERS_SYMBOL:-⋯}"
+
+generate_segmentrc() {
+	read -r -d '' rccontents <<EORC
+# Symbol for count of untracked vcs files.
+# export TMUX_POWERLINE_SEG_VCS_OTHERS_SYMBOL="${TMUX_POWERLINE_SEG_VCS_OTHERS_SYMBOL}"
+EORC
+	echo "$rccontents"
+}
 
 run_segment() {
-	tmux_path=$(get_tmux_cwd)
-	cd "$tmux_path"
-	stats=""
-	if [ -n "${git_stats=$(__parse_git_stats)}" ]; then
-		stats="$git_stats"
-	elif [ -n "${svn_stats=$(__parse_svn_stats)}" ]; then
-		stats="$svn_stats"
-	elif [ -n "${hg_stats=$(__parse_hg_stats)}" ]; then
-		stats="$hg_stats"
-	fi
+	{
+		read -r vcs_type
+		read -r vcs_rootpath
+	} < <(tp_get_vcs_type_and_root_path)
+	tmux_path=$(tp_get_tmux_cwd)
+	cd "$tmux_path" || return
+
+	stats=$(__parse_"${vcs_type}"_stats "$vcs_rootpath")
+	# Ensure spaces are removed (e.g. from macOS 'wc' command)
+	stats=${stats//[[:space:]]/}
+
 	if [[ -n "$stats" && $stats -gt 0 ]]; then
-		echo "${other_symbol}${stats}"
+		echo "${TMUX_POWERLINE_SEG_VCS_OTHERS_SYMBOL} ${stats}"
 	fi
 	return 0
 }
 
-__parse_git_stats(){
-	type git >/dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
-		return
-	fi
+__parse_git_stats() {
+	local rootpath
+
+	rootpath=$1
 
 	# check if git
-	[[ -z $(git rev-parse --git-dir 2> /dev/null) ]] && return
+	[[ -z $(git rev-parse --git-dir 2>/dev/null) ]] && return
 
 	# return the number of untracked items
-	other=$(git ls-files --others --exclude-standard `git rev-parse --show-cdup` | wc -l)
-	echo $other
+	other=$(git ls-files --others --exclude-standard "$rootpath" | wc -l)
+	echo "$other"
 }
-__parse_hg_stats(){
-	type svn >/dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
+
+__parse_hg_stats() {
+	other=$(hg status -u | wc -l)
+	if [ -z "$other" ]; then
 		return
 	fi
-	# not yet implemented
+	echo "$other"
 }
-__parse_svn_stats(){
-	type hg >/dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
+
+__parse_svn_stats() {
+	if ! svn_stats=$(svn stat 2>/dev/null); then
 		return
 	fi
-	# not yet implemented
+	[ -z "$svn_stats" ] && return
+
+	other=$(echo "$svn_stats" | grep -E '^\?' -c)
+	echo "$other"
 }

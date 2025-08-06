@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Print the average load.
 
 run_segment() {

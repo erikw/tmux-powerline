@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # LICENSE This code is not under the same license as the rest of the project as it's "stolen". It's cloned from https://github.com/richoH/dotfiles/blob/master/bin/battery and just some modifications are done so it works for my laptop. Check that URL for more recent versions.
 
 TMUX_POWERLINE_SEG_BATTERY_TYPE_DEFAULT="percentage"
@@ -5,10 +6,15 @@ TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS_DEFAULT=5
 
 HEART_FULL="♥"
 HEART_EMPTY="♡"
+BATTERY_FULL="󱊣"
+BATTERY_MED="󱊢"
+BATTERY_EMPTY="󱊡"
+BATTERY_CHARGE="󰂄"
+ADAPTER="󰚥"
 
 generate_segmentrc() {
-	read -d '' rccontents  << EORC
-# How to display battery remaining. Can be {percentage, cute}.
+	read -r -d '' rccontents <<EORC
+# How to display battery remaining. Can be {percentage, cute, hearts}.
 export TMUX_POWERLINE_SEG_BATTERY_TYPE="${TMUX_POWERLINE_SEG_BATTERY_TYPE_DEFAULT}"
 # How may hearts to show if cute indicators are used.
 export TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS="${TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS_DEFAULT}"
@@ -18,19 +24,26 @@ EORC
 
 run_segment() {
 	__process_settings
-	if shell_is_osx; then
-		battery_status=$(__battery_osx)
+	if tp_shell_is_macos; then
+		battery_status=$(__battery_macos)
 	else
 		battery_status=$(__battery_linux)
 	fi
-	[ -z "$battery_status" ] && return
+	if [ -z "$battery_status" ]; then
+		echo "$ADAPTER "
+		return
+	fi
 
 	case "$TMUX_POWERLINE_SEG_BATTERY_TYPE" in
-		"percentage")
-			output="${HEART_FULL} ${battery_status}%"
-			;;
-		"cute")
-			output=$(__cutinate $battery_status)
+	"percentage")
+		output="${battery_status}%"
+		;;
+	"cute")
+		output=$(__cutinate "$battery_status")
+		;;
+	"hearts")
+		output=$(__generate_hearts "${battery_status/* /}")
+		;;
 	esac
 	if [ -n "$output" ]; then
 		echo "$output"
@@ -46,108 +59,122 @@ __process_settings() {
 	fi
 }
 
-__battery_osx() {
-	ioreg -c AppleSmartBattery -w0 | \
-		grep -o '"[^"]*" = [^ ]*' | \
-		sed -e 's/= //g' -e 's/"//g' | \
-		sort | \
-		while read key value; do
+__battery_macos() {
+	ioreg -c AppleSmartBattery -w0 |
+		grep -o '"[^"]*" = [^ ]*' |
+		sed -e 's/= //g' -e 's/"//g' |
+		sort |
+		while read -r key value; do
 			case $key in
-				"MaxCapacity")
-					export maxcap=$value;;
-				"CurrentCapacity")
-					export curcap=$value;;
-				"ExternalConnected")
-					export extconnect=$value;;
-        "FullyCharged")
-          export fully_charged=$value;;
+			"MaxCapacity")
+				export maxcap=$value
+				;;
+			"CurrentCapacity")
+				export curcap=$value
+				;;
+			"ExternalConnected")
+				export extconnect=$value
+				;;
+			"FullyCharged")
+				export fully_charged=$value
+				;;
 			esac
 			if [[ -n $maxcap && -n $curcap && -n $extconnect ]]; then
-				if [[ "$curcap" == "$maxcap" || "$fully_charged" == "Yes" && $extconnect == "Yes"  ]]; then
+				charge=$(pmset -g batt | grep -o "[0-9][0-9]*\%" | rev | cut -c 2- | rev)
+				if [[ ("$fully_charged" == "Yes" || $charge -eq 100) && $extconnect == "Yes" ]]; then
 					return
 				fi
-				charge=`pmset -g batt | grep -o "[0-9][0-9]*\%" | rev | cut -c 2- | rev`
 				if [[ "$extconnect" == "Yes" ]]; then
-					echo "$charge"
+					echo "$BATTERY_CHARGE $charge"
 				else
 					if [[ $charge -lt 50 ]]; then
-						echo -n "#[fg=red]"
+						echo -n "#[fg=#ff0000]"
+						echo "$BATTERY_EMPTY $charge"
+					elif [[ $charge -lt 80 ]]; then
+						echo "$BATTERY_MED $charge"
+					else
+						echo "$BATTERY_FULL $charge"
 					fi
-					echo "$charge"
 				fi
 				break
 			fi
 		done
-	}
+}
 
-	__battery_linux() {
-		case "$SHELL_PLATFORM" in
-			"linux")
-				BATPATH=/sys/class/power_supply/BAT0
-				if [ ! -d $BATPATH ]; then
-					BATPATH=/sys/class/power_supply/BAT1
-				fi
-				STATUS=$BATPATH/status
-				BAT_FULL=$BATPATH/charge_full
-				if [ ! -r $BAT_FULL ]; then
-					BAT_FULL=$BATPATH/energy_full
-				fi
-				BAT_NOW=$BATPATH/charge_now
-				if [ ! -r $BAT_NOW ]; then
-					BAT_NOW=$BATPATH/energy_now
-				fi
+__battery_linux() {
+	case "$SHELL_PLATFORM" in
+	"linux")
+		__linux_get_bat
+		;;
+	"bsd")
+		__freebsd_get_bat
+		;;
+	esac
+}
 
-				if [ "$1" = `cat $STATUS` -o "$1" = "" ]; then
-					__linux_get_bat
-				fi
-				;;
-			"bsd")
-				STATUS=`sysctl -n hw.acpi.battery.state`
-				case $1 in
-					"Discharging")
-						if [ $STATUS -eq 1 ]; then
-							__freebsd_get_bat
-						fi
-						;;
-					"Charging")
-						if [ $STATUS -eq 2 ]; then
-							__freebsd_get_bat
-						fi
-						;;
-					"")
-						__freebsd_get_bat
-						;;
-				esac
-				;;
-		esac
-	}
+__cutinate() {
+	perc=$1
+	inc=$((100 / TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS))
 
-	__cutinate() {
-		perc=$1
-		inc=$(( 100 / $TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS ))
-
-
-		for i in `seq $TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS`; do
-			if [ $perc -lt 99 ]; then
-				echo -n $HEART_EMPTY
-			else
-				echo -n $HEART_FULL
-			fi
-			echo -n " "
-			perc=$(( $perc + $inc ))
-		done
-	}
-
-	__linux_get_bat() {
-		bf=$(cat $BAT_FULL)
-		bn=$(cat $BAT_NOW)
-		if [ $bn -gt $bf ]; then
-			bn=$bf
+	for _unused in $(seq "$TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS"); do
+		if [ "$perc" -lt 99 ]; then
+			echo -n $BATTERY_EMPTY
+		else
+			echo -n $BATTERY_FULL
 		fi
-		echo $(( 100 * $bn / $bf ))
-	}
+		echo -n " "
+		perc=$((perc + inc))
+	done
+}
 
-	__freebsd_get_bat() {
-		echo "$(sysctl -n hw.acpi.battery.life)"
+__generate_hearts() {
+	perc=$1
+	num_hearts=$TMUX_POWERLINE_SEG_BATTERY_NUM_HEARTS
+	hearts_output=""
 
-	}
+	for i in $(seq 1 "$num_hearts"); do
+		if [ "$perc" -ge $((i * 100 / num_hearts)) ]; then
+			hearts_output+="$HEART_FULL "
+		else
+			hearts_output+="$HEART_EMPTY "
+		fi
+	done
+	echo "$hearts_output"
+}
+
+__linux_get_bat() {
+	local total_full=0
+	local total_now=0
+
+	while read -r bat; do
+		local full="$bat/charge_full"
+		local now="$bat/charge_now"
+
+		if [ ! -r "$full" ]; then
+			full="$bat/energy_full"
+		fi
+		if [ ! -r "$now" ]; then
+			now="$bat/energy_now"
+		fi
+
+		if [ -r "$full" ] && [ -r "$now" ]; then
+			local bf
+			local bn
+			bf=$(cat "$full")
+			bn=$(cat "$now")
+			total_full=$((total_full + bf))
+			total_now=$((total_now + bn))
+		fi
+	done <<<"$(grep -l "Battery" /sys/class/power_supply/*/type | sed -e 's,/type$,,')"
+
+	if [ "$total_full" -gt 0 ]; then
+		if [ "$total_now" -gt "$total_full" ]; then
+			total_now=$total_full
+		fi
+		echo "$BATTERY_MED $((100 * total_now / total_full))"
+	fi
+}
+
+__freebsd_get_bat() {
+	echo "$BATTERY_MED $(sysctl -n hw.acpi.battery.life)"
+}

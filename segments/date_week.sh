@@ -1,0 +1,18 @@
+# shellcheck shell=bash
+# Prints the week of the current year.
+TMUX_POWERLINE_SEG_DATE_WEEK_SYMBOL="${TMUX_POWERLINE_SEG_DATE_WEEK_SYMBOL:-󰨳}"
+TMUX_POWERLINE_SEG_DATE_WEEK_SYMBOL_COLOUR="${TMUX_POWERLINE_SEG_DATE_WEEK_SYMBOL_COLOUR:-255}"
+
+generate_segmentrc() {
+	read -r -d '' rccontents <<EORC
+# Symbol for calendar week.
+# export TMUX_POWERLINE_SEG_DATE_WEEK_SYMBOL="${TMUX_POWERLINE_SEG_DATE_WEEK_SYMBOL}"
+# export TMUX_POWERLINE_SEG_DATE_WEEK_SYMBOL_COLOUR="${TMUX_POWERLINE_SEG_DATE_WEEK_SYMBOL_COLOUR}"
+EORC
+	echo "$rccontents"
+}
+
+run_segment() {
+	echo "#[fg=colour${TMUX_POWERLINE_SEG_DATE_WEEK_SYMBOL_COLOUR}]${TMUX_POWERLINE_SEG_DATE_WEEK_SYMBOL} #[fg=${TMUX_POWERLINE_CUR_SEGMENT_FG}]$(date +"%W")"
+	return 0
+}

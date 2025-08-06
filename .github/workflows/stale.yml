@@ -1,0 +1,23 @@
+---
+name: "Close stale issues and PRs"
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 0"
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v8
+        with:
+          days-before-stale: 180
+          exempt-issue-labels: "NotStale"
+          exempt-pr-labels: "NotStale"
+          stale-issue-message: "Issue is stale; will soon close."
+          stale-pr-message: "PR is stale; will soon close."

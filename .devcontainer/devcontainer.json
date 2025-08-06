@@ -1,0 +1,18 @@
+{
+	"features": {
+		"ghcr.io/devcontainers-extra/features/apt-get-packages:1": {
+			"packages": ["shellcheck", "tmux", "ifstat"] 
+		}
+	},
+	"postCreateCommand": "bash scripts/devcontainer_postCreateCommand.sh",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"EditorConfig.EditorConfig",
+				"mads-hartmann.bash-ide-vscode",
+				"rogalmic.bash-debug",
+				"timonwong.shellcheck",
+			]
+		}
+	}
+}
