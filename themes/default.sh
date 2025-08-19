@@ -59,7 +59,7 @@ fi
 # Format: segment_name [background_color|default_bg_color] [foreground_color|default_fg_color] [non_default_separator|default_separator] [separator_background_color|no_sep_bg_color]
 #                      [separator_foreground_color|no_sep_fg_color] [spacing_disable|no_spacing_disable] [separator_disable|no_separator_disable]
 #
-# * background_color and foreground_color. Color formatting (see `man tmux` for complete list):
+# * background_color and foreground_color. Color formatting (see `man tmux` for complete list) or run the color_palette.sh in the tmux-powerline root directory:
 #   * Named colors, e.g. black, red, green, yellow, blue, magenta, cyan, white
 #   * Hexadecimal RGB string e.g. #ffffff
 #   * 'default_fg_color|default_bg_color' for the default theme bg and fg color
@@ -134,6 +134,8 @@ if [ -z "$TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS" ]; then
 		"weather 37 255"
 		#"rainbarf 0 ${TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR}"
 		#"xkb_layout 125 117"
+		"tmux_continuum_save"
+		"tmux_continuum_status 14 7"
 		"date_day 235 136"
 		"date 235 136 ${TMUX_POWERLINE_SEPARATOR_LEFT_THIN}"
 		"time 235 136 ${TMUX_POWERLINE_SEPARATOR_LEFT_THIN}"
