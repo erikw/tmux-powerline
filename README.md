@@ -113,6 +113,7 @@ Some segments have their own requirements. If you enable them in your theme, mak
    * mpd: [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
    * last.fm: `jq`, `curl`
 * **rainbarf.sh**: [rainbarf](https://github.com/creaktive/rainbarf)
+* **tmux_continuum\*.sh**: [tmux-continuum](https://github.com/tmux-plugins/tmux-continuum/)
 * **tmux_mem_cpu_load.sh**: [tmux-mem-cpu-load](https://github.com/thewtex/tmux-mem-cpu-load)
 * **wan_ip.sh**: `curl`
 * **weather.sh**:
