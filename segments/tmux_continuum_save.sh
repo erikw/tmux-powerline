@@ -1,6 +1,6 @@
 # shellcheck shell=bash
 # Adapter for tmux-continuum (https://github.com/tmux-plugins/tmux-continuum) to auto save state with tmux-resurrect.
-# If you want to see the status of tmux-continuum, please enable segmetn tmux_continuum_status.sh.
+# If you want to see the status of tmux-continuum, please enable the segment tmux_continuum_status.sh.
 
 # shellcheck source=lib/util.sh
 source "${TMUX_POWERLINE_DIR_LIB}/util.sh"
