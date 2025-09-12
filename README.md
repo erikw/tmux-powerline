@@ -39,16 +39,16 @@
 
 # Intro
 tmux-powerline is a tmux <a title="Tmux Plugin Manager" href="https://github.com/tmux-plugins/tpm">tpm</a> plugin that gives you a slick and hackable powerline status bar consisting of segments. It's easily extensible with custom segments and themes.
-The plugin itself is implemented purely in bash thus minimizing system requirements. However you can make segments in any language you want (with a shell wrapper).
+The plugin itself is implemented purely in bash, thus minimizing system requirements. However, you can make segments in any language you want (with a shell wrapper).
 
 Some examples of segments available that you can add to your tmux status bar are (full list [here](https://github.com/erikw/tmux-powerline/tree/main/segments)):
 * LAN & WAN IP addresses
 * Now Playing for MPD, Spotify (GNU/Linux native or wine, macOS), iTunes (macOS), Rhythmbox, Banshee, MOC, Audacious, Rdio (macOS), cmus, Pithos and Last.fm (last scrobbled track).
 * New mail count for GMail, Maildir, mbox, mailcheck, and Apple Mail
 * GNU/Linux and macOS battery status (uses [richo/dotfiles/bin/battery](https://github.com/richoH/dotfiles/blob/master/bin/battery))
-* Weather in Celsius, Fahrenheit and Kelvin using Yahoo Weather
-* System load, cpu usage and uptime
-* Git, SVN and Mercurial branch in CWD
+* Weather in Celsius, Fahrenheit, and Kelvin using Yahoo Weather
+* System load, CPU usage, and uptime
+* Git, SVN, and Mercurial branch in CWD
 * Date and time
 * Hostname
 * tmux info
@@ -65,21 +65,21 @@ Some examples of segments available that you can add to your tmux status bar are
 
 **left-status**
 
-Current tmux session, window and pane, hostname and LAN & WAN IP address.
+Current tmux session, window, pane, hostname, and LAN & WAN IP address.
 
 ![left-status](img/left-status.png)
 
 **right-status**
 
-New mails, now playing, average load, weather, date and time.
+New mails, now playing, average load, weather, date, and time.
 
 ![right-status](img/right-status.png)
 
-Now I've read my inbox so the mail segment disappears!
+Now I've read my inbox, thus the mail segment disappears!
 
 ![right-status, no mail](img/right-status_no_mail.png)
 
-After pausing the music there's no need for showing the Now Playing segment anymore. Also the weather has become much nicer!
+After pausing the music, there's no need to show the Now Playing segment anymore. Also, the weather has become much nicer!
 
 ![right-status, no mpd](img/right-status_no_mpd.png)
 
@@ -92,13 +92,13 @@ Laptop mode: a battery segment.
 ![dual-line status bar](img/dual-line-status-bar.png)
 
 # Co-Maintainer
-[@xx4h](https://github.com/xx4h) is helping out developing, maintaining and managing this project!
+[@xx4h](https://github.com/xx4h) is helping out with developing, maintaining, and managing this project!
 
 # Requirements
 Requirements for the lib to work are:
 * `tmux -V` >= 2.9
 * `bash --version` >= 3.2 (Does not have to be your default shell.)
-* Nerd Font. Follow instructions at [Font Installation](https://github.com/ryanoasis/nerd-fonts?tab=readme-ov-file#font-installation). However you can use other substitute symbols as well; see `config.sh`.
+* Nerd Font. Follow instructions at [Font Installation](https://github.com/ryanoasis/nerd-fonts?tab=readme-ov-file#font-installation). However, you can use other substitute symbols as well; see `config.sh`.
 
 ## Segment Requirements
 Some segments have their own requirements. If you enable them in your theme, make sure all requirements are met for those.
@@ -131,18 +131,18 @@ Some segments have their own requirements. If you enable them in your theme, mak
 4. Continue to the [Configuration](#configuration) section below.
 
 > [!NOTE]
-> Note that tpm plugins should be at the bottom of you `tmux.conf`. This plugin will then override some tmux settings like `status-left`, `status-right` etc. If you had already set those in your tmux config, it is a good opportunity to remove or comment those out.
+> Note that tpm plugins should be at the bottom of your `tmux.conf`. This plugin will then override some tmux settings like `status-left`, `status-right`, etc. If you had already set those in your tmux config, it is a good opportunity to remove or comment them out.
 > Take a look at [main.tmux](https://github.com/erikw/tmux-powerline/blob/main/main.tmux) for exactly which settings are overridden.
 
 
 # Configuration
-tmux-powerline stores the custom config, themes and segments at `$XDG_CONFIG_HOME/tmux-powerline/`.
+tmux-powerline stores the custom config, themes, and segments at `$XDG_CONFIG_HOME/tmux-powerline/`.
 
 To make the following example easier, let's assume the following:
 * `$XDG_CONFIG_HOME` has the default value of `~/.config`
 * tmux-powerline was installed to the XDG path `~/.config/tmux/plugins/tmux-powerline`
 
-Adapt the commands below if your paths differs from this.
+Adapt the commands below if your paths differ from this.
 
 ## Configuration File
 Start by generating your own configuration file:
@@ -152,10 +152,10 @@ mv ~/.config/tmux-powerline/config.sh.default ~/.config/tmux-powerline/config.sh
 $EDITOR ~/.config/tmux-powerline/config.sh
 ```
 
-Go through the default config and adjust to your needs!
+Go through the default config and adjust it to your needs!
 
 ## Custom Theme
-The theme is specified by setting the environment variable `$TMUX_POWERLINE_THEME` in the config file above. It will use a default theme and you probably want to use your own. The default config have set the custom theme path to be `~/.config/tmux-powerline/themes/`.
+The theme is specified by setting the environment variable `$TMUX_POWERLINE_THEME` in the config file above. It will use a default theme, and you probably want to use your own. The default config has set the custom theme path to be `~/.config/tmux-powerline/themes/`.
 
 Make a copy of the default theme and make your own, say `my-theme`:
 ```shell
@@ -183,17 +183,17 @@ Also see [How to make a segment](#how-to-make-a-segment) below for more details.
 
 
 # Debugging
-Some segments might not work on your system for various reasons such as missing programs or different versions not having the same options. To find out which segment is not working it may help to enable the debug setting in `~/.config/tmux-powerline/config.sh`.
+Some segments might not work on your system for various reasons, such as missing programs or different versions not having the same options. To find out which segment is not working, it may help to enable the debug setting in `~/.config/tmux-powerline/config.sh`.
 
 Next step would be to enable the error logging in general or even with a scope, see `TMUX_POWERLINE_ERROR_LOGS_ENABLED` and `TMUX_POWERLINE_ERROR_LOGS_SCOPES` in your config.
 
-However this may not be enough to determine the error so you can inspect all executed bash commands (will be a long output) by doing
+However, this may not be enough to determine the error, so you can inspect all executed bash commands (will be a long output) by doing
 
 ```shell
 bash -x powerline.sh (left|right)
 ```
 
-To debug smaller portions of code, say if you think the problem lies in a specific segment, insert these lines at the top and bottom of the relevant code portions e.g. inside a function:
+To debug smaller portions of code, say if you think the problem lies in a specific segment, insert these lines at the top and bottom of the relevant code portions e.g., inside a function:
 
 ```bash
 set -x
@@ -212,21 +212,21 @@ tail -f /tmp/tmux-powerline.log # or follow output like this.
 
 You can also enable the debug mode in your config file. Look for the `TMUX_POWERLINE_DEBUG_MODE_ENABLED` environment variable and set it to `true`.
 
-If you can not solve the problems you can post an [issue](https://github.com/erikw/tmux-powerline/issues?state=open) and be sure to include relevant information about your system and script output (from bash -x) and/or screenshots if needed.
+If you can not solve the problems, you can post an [issue](https://github.com/erikw/tmux-powerline/issues?state=open) and be sure to include relevant information about your system and script output (from bash -x) and/or screenshots if needed.
 Be sure to search in the [resolved issues](https://github.com/erikw/tmux-powerline/issues?page=1&state=closed) section for similar problems you're experiencing before posting.
 
 
 
 ## Common Problems
 ### Nothing is Displayed
-You have edited `~/.tmux.conf` but no powerline is displayed. This might be because tmux is not aware of the changes so you have to restart your tmux session or reloaded that file by typing this on the command-line (or in tmux command mode with `prefix :`)
+You have edited `~/.tmux.conf`, but no powerline is displayed. This might be because tmux is not aware of the changes, so you have to restart your tmux session or reload that file by typing this on the command line (or in tmux command mode with `prefix :`)
 
 ```shell
 tmux source-file ~/.tmux.conf
 ```
 
 ### Multiple lines in bash or no powerline in Zsh using iTerm (macOS)
-If your tmux looks like [this](https://github.com/erikw/tmux-powerline/issues/125) then you may have to in iTerm uncheck [Unicode East Asian Ambiguous characters are wide] in Preferences -> Settings -> Advanced.
+If your tmux looks like [this](https://github.com/erikw/tmux-powerline/issues/125), then you may have to, in iTerm, uncheck [Unicode East Asian Ambiguous characters are wide] in Preferences -> Settings -> Advanced.
 
 
 # Hacking (Development)
@@ -236,10 +236,10 @@ If your tmux looks like [this](https://github.com/erikw/tmux-powerline/issues/12
 This project can only gain positively from contributions. Fork today and make your own enhancements and segments to share back!
 
 ## Codespaces Devcontainer
-You can fork this project and then start coding right away with GitHub Codespaces as this project is set up to install all development dependencies and install tmux-powerline on the devcontainer. See [devcontainer.json](.devcontainer/devcontainer.json) and [devcontainer_postCreateCommand.sh](scripts/devcontainer_postCreateCommand.sh). After starting the devcontainer, just type `tmux` in the terminal and you should see a working tmux-powerline already to start playing with.
+You can fork this project and then start coding right away with GitHub Codespaces, as this project is set up to install all development dependencies and install tmux-powerline on the devcontainer. See [devcontainer.json](.devcontainer/devcontainer.json) and [devcontainer_postCreateCommand.sh](scripts/devcontainer_postCreateCommand.sh). After starting the devcontainer, just type `tmux` in the terminal, and you should see a working tmux-powerline already to start playing with.
 
 > [!IMPORTANT]
-> If you have set up your own dotfiles to be installed with GitHub Codespaces, and there was some tmux config files installed from your dotfiles to the devcontainer, then you might have to run this script to wipe your config in favour of the setup provided by this repo's initialization:
+> If you have set up your own dotfiles to be installed with GitHub Codespaces, and there were some tmux config files installed from your dotfiles to the devcontainer, then you might have to run this script to wipe your config in favour of the setup provided by this repo's initialization:
 >
 > ```shell
 > ./scripts/devcontainer_postCreateCommand.sh
@@ -262,4 +262,4 @@ git commit -am "Bump version to $ver" && git tag $ver && git push --atomic origi
 
 # More Tmux Plugins
 I have another tmux plugin that might interest you:
-* [tmux-dark-notify](https://github.com/erikw/tmux-dark-notify) - A plugin that make tmux's theme follow macOS dark/light mode.
+* [tmux-dark-notify](https://github.com/erikw/tmux-dark-notify) - A plugin that makes tmux's theme follow macOS dark/light mode.
