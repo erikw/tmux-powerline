@@ -260,6 +260,6 @@ ver=$(semver get release)
 git commit -am "Bump version to $ver" && git tag $ver && git push --atomic origin main $ver
 ```
 
-# More tmux Plugins
+# More Tmux Plugins
 I have another tmux plugin that might interest you:
 * [tmux-dark-notify](https://github.com/erikw/tmux-dark-notify) - A plugin that make tmux's theme follow macOS dark/light mode.
