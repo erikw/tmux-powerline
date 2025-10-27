@@ -4,8 +4,6 @@
 #   lm_sensors (Linux only)
 #   smctemp (Macos only)
 
-source "$TMUX_POWERLINE_DIR_LIB/cpu_temp_helper.sh"
-
 TMUX_POWERLINE_SEG_CPU_TEMP_HIGH=${TMUX_POWERLINE_SEG_CPU_TEMP_HIGH:-60}
 TMUX_POWERLINE_SEG_CPU_TEMP_ICON="${TMUX_POWERLINE_SEG_CPU_TEMP_ICON:- }"
 TMUX_POWERLINE_SEG_CPU_TEMP_SENSORS_LINE_MARKER="${TMUX_POWERLINE_SEG_CPU_TEMP_SENSORS_LINE_MARKER:-Package id 0\|Physical id 0\|temp1}"
@@ -23,7 +21,8 @@ EORC
 }
 
 run_segment() {
-	local temp=$(tp_cpu_temp_value)
+	local temp
+	temp=$(tp_cpu_temp_value)
 
 	if [ -n "$temp" ]; then
 		echo "${TMUX_POWERLINE_SEG_CPU_TEMP_ICON}${temp}°"
