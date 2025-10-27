@@ -1,4 +1,4 @@
-# spellcheck shell=bash
+# shellcheck shell=bash
 # Prints CPU temperature
 # Requirements:
 #   lm_sensors (Linux only)
