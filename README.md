@@ -103,6 +103,7 @@ Requirements for the lib to work are:
 ## Segment Requirements
 Some segments have their own requirements. If you enable them in your theme, make sure all requirements are met for those.
 
+* **cpu_temp.sh**: `lm_sensors` for Linux, [smctemp](https://github.com/narugit/smctemp) for Macos
 * **dropbox_status.sh**: `dropbox-cli`
 * **github_notifications.sh**: `jq`, `curl`
 * **ifstat.sh**: `ifstat` (there is a simpler segment `ifstat_sys.sh` not using ifstat)

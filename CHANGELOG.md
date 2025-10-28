@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [`dropbox_status.sh`](segments/dropbox_status.sh) a new segment showing Dropbox operation statuses. [#478](https://github.com/erikw/tmux-powerline/pull/478)
 - Proper error logging in segments with function `tp_err_seg()`. [#486](https://github.com/erikw/tmux-powerline/pull/486) [#485](https://github.com/erikw/tmux-powerline/pull/485)
 - Adapter segments for [tmux-continuum](https://github.com/tmux-plugins/tmux-continuum/): [`tmux_continuum_save.sh`](segments/tmux_continuum_save.sh) and [`tmux_continuum_status.sh`](segments/tmux_continuum_status.sh) [#493](https://github.com/erikw/tmux-powerline/pull/493)
+- [`cpu_temp.sh`](segments/cpu_temp.sh): CPU temperature. [#495](https://github.com/erikw/tmux-powerline/pull/495)
 ### Changed
 - **Deprecation Warning:** functions `patched_font_in_use()`, `air_color()` and `format()` have been replaced by `tp_patched_font_in_use()`, `tp_air_color()` and `tp_format()` respectively and will be removed in future releases.
 Please update your custom themes and segments now. [#489](https://github.com/erikw/tmux-powerline/pull/489)
