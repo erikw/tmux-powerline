@@ -10,7 +10,7 @@ tp_cpu_temp_value() {
 	fi
 }
 
-tp_cpu_temp_is_high() {
-	echo "$(tp_cpu_temp_value) >= $TMUX_POWERLINE_SEG_CPU_TEMP_HIGH" | bc -l
+tp_cpu_temp_at_least() {
+	echo "$(tp_cpu_temp_value) >= $1" | bc -l
 }
 

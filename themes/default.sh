@@ -134,7 +134,7 @@ if [ -z "$TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS" ]; then
 		"weather 37 255"
 		#"rainbarf 0 ${TMUX_POWERLINE_DEFAULT_FOREGROUND_COLOR}"
 		# "$(
-		# 	if (($(tp_cpu_temp_is_high))); then
+		# 	if (($(tp_cpu_temp_at_least 60))); then
 		# 		echo "cpu_temp #ff2020 235"
 		# 	else
 		# 		echo "cpu_temp #303080 136"
