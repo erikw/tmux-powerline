@@ -139,7 +139,16 @@ if [ -z "$TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS" ]; then
 		# 	else
 		# 		echo "cpu_temp #303080 136"
 		# 	fi
-		# )" \
+		# )"
+	    # "$(
+	    #   if (($(tp_mem_used_percentage_at_least 90))); then
+	    #     echo "mem_used #ff2020 235"
+	    #   elif (($(tp_mem_used_percentage_at_least 75))); then
+	    #   	echo "mem_used 136 235"
+	    #   else
+		#		echo "mem_used 235 136"
+	    #   fi
+	    # )"
 		#"xkb_layout 125 117"
 		#"tmux_continuum_save"
 		#"tmux_continuum_status 14 7"
