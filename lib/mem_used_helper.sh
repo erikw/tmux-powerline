@@ -1,6 +1,7 @@
 # shellcheck shell=bash
 
 # based on https://github.com/thewtex/tmux-mem-cpu-load
+# shellcheck disable=SC2001
 __tp_mem_used_info() {
 	if tp_shell_is_macos; then
 		local stats
