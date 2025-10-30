@@ -21,9 +21,9 @@ run_segment() {
 	local mem_used
 
 	if [ "$TMUX_POWERLINE_SEG_MEM_USED_UNIT" = "GB" ]; then
-		mem_used=$(echo "$(__round "$(tp_mem_used_gigabytes)" 2)" GB)
+		mem_used="$(__round "$(tp_mem_used_gigabytes)" 2) GB"
 	else
-		mem_used=$(echo "$(__round "$(tp_mem_used_megabytes)" 0)" MB)
+		mem_used="$(__round "$(tp_mem_used_megabytes)" 0) MB"
 	fi
 
 	if [ -n "$mem_used" ]; then
