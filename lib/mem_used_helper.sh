@@ -31,7 +31,7 @@ __tp_mem_used_info() {
 		local s_reclaimable
 		local mem_used_bytes
 
-		meminfo=$(cat /proc/meminfo | tr '\n' ' ')
+		meminfo=$(tr '\n' ' ' < /proc/meminfo)
 		mem_total=$(echo "$meminfo" | sed -e 's/^MemTotal: *\([0-9]*\).*/\1/')
 		mem_total_bytes=$(echo "$mem_total * 1024" | bc -l)
 		mem_free=$(echo "$meminfo" | sed -e 's/.* MemFree: *\([0-9]*\).*/\1/')
