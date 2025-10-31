@@ -11,11 +11,11 @@ __tp_mem_used_info() {
 		local mem_total_bytes
 		local mem_used_bytes
 
-		stats=$(vm_stat)
+		stats=$(vm_stat | tr '\n' ' ')
 		bytes_per_page=$(echo "$stats" | sed -e 's/.*page size of \([0-9]*\).*/\1/')
 		mem_total_bytes=$(sysctl hw.memsize | sed -e 's/^hw.memsize: \([0-9*]\)/\1/')
-		free_pages=$(echo "$stats" | sed -e 's/.*Pages free: \([0-9]*\).*/\1/')
-		external_pages=$(echo "$stats" | sed -e 's/.*File-backed pages: \([0-9]*\).*/\1/')
+		free_pages=$(echo "$stats" | sed -e 's/.*Pages free: *\([0-9]*\).*/\1/')
+		external_pages=$(echo "$stats" | sed -e 's/.*File-backed pages: *\([0-9]*\).*/\1/')
 		mem_used_bytes=$(echo "$mem_total_bytes - ($free_pages + $external_pages) * $bytes_per_page" | bc -l)
 
 		echo "$mem_used_bytes" "$mem_total_bytes"
@@ -31,14 +31,14 @@ __tp_mem_used_info() {
 		local s_reclaimable
 		local mem_used_bytes
 
-		meminfo=$(cat /proc/meminfo)
-		mem_total=$(echo "$meminfo" | sed -e 's/^MemTotal: \([0-9]*\).*/\1/')
+		meminfo=$(cat /proc/meminfo | tr '\n' ' ')
+		mem_total=$(echo "$meminfo" | sed -e 's/^MemTotal: *\([0-9]*\).*/\1/')
 		mem_total_bytes=$(echo "$mem_total * 1024" | bc -l)
-		mem_free=$(echo "$meminfo" | sed -e 's/.* MemFree: \([0-9]*\).*/\1/')
-		shmem=$(echo "$meminfo" | sed -e 's/.* Shmem: \([0-9]*\).*/\1/')
-		buffers=$(echo "$meminfo" | sed -e 's/.* Buffers: \([0-9]*\).*/\1/')
-		cached=$(echo "$meminfo" | sed -e 's/.* Cached: \([0-9]*\).*/\1/')
-		s_reclaimable=$(echo "$meminfo" | sed -e 's/.* SReclaimable: \([0-9]*\).*/\1/')
+		mem_free=$(echo "$meminfo" | sed -e 's/.* MemFree: *\([0-9]*\).*/\1/')
+		shmem=$(echo "$meminfo" | sed -e 's/.* Shmem: *\([0-9]*\).*/\1/')
+		buffers=$(echo "$meminfo" | sed -e 's/.* Buffers: *\([0-9]*\).*/\1/')
+		cached=$(echo "$meminfo" | sed -e 's/.* Cached: *\([0-9]*\).*/\1/')
+		s_reclaimable=$(echo "$meminfo" | sed -e 's/.* SReclaimable: *\([0-9]*\).*/\1/')
 		mem_used_bytes=$(echo "($mem_total - $mem_free + $shmem - $buffers - $cached - $s_reclaimable) * 1024" | bc -l)
 
 		echo "$mem_used_bytes" "$mem_total_bytes"
@@ -47,16 +47,27 @@ __tp_mem_used_info() {
 
 tp_mem_used_gigabytes() {
 	read -r mem_used_bytes mem_total_bytes < <(__tp_mem_used_info)
-	echo "$mem_used_bytes / 1073741824" | bc -l
+	__round "$(echo "$mem_used_bytes / 1073741824" | bc -l)" 2
 }
 
 tp_mem_used_megabytes() {
 	read -r mem_used_bytes mem_total_bytes < <(__tp_mem_used_info)
-	echo "$mem_used_bytes / 1048576" | bc -l
+	__round "$(echo "$mem_used_bytes / 1048576" | bc -l)" 0
 }
 
 tp_mem_used_percentage_at_least() {
+	local threshold_percentage="$1"
 	read -r mem_used_bytes mem_total_bytes < <(__tp_mem_used_info)
-	echo "($mem_used_bytes / $mem_total_bytes) * 100 >= $1" | bc -l
+	echo "($mem_used_bytes / $mem_total_bytes) * 100 >= $threshold_percentage" | bc -l
 }
+
+# source https://askubuntu.com/a/179949
+# Rounds positive numbers up to the number of digits to the right of the decimal point.
+# Example: "__round 1.2345 3" -> "((1000 * 1.2345) + 0.5) / 1000" -> "1.235"
+__round() {
+	local number="$1"
+	local digits="$2"
+
+	env printf "%.${digits}f" "$(echo "scale=${digits};(((10^${digits})*${number})+0.5)/(10^${digits})" | bc)"
+};
 

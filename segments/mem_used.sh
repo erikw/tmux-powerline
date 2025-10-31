@@ -21,15 +21,19 @@ run_segment() {
 	local mem_used
 
 	if [ "$TMUX_POWERLINE_SEG_MEM_USED_UNIT" = "GB" ]; then
-		mem_used="$(__round "$(tp_mem_used_gigabytes)" 2) GB"
+		mem_used="$(tp_mem_used_gigabytes) GB"
+	elif [ "$TMUX_POWERLINE_SEG_MEM_USED_UNIT" = "MB" ]; then
+		mem_used="$(tp_mem_used_megabytes) MB"
 	else
-		mem_used="$(__round "$(tp_mem_used_megabytes)" 0) MB"
+		tp_err_seg "Err: Invalid TMUX_POWERLINE_SEG_MEM_USED_UNIT value - $TMUX_POWERLINE_SEG_MEM_USED_UNIT"
+		return 1
 	fi
 
 	if [ -n "$mem_used" ]; then
 		echo "${TMUX_POWERLINE_SEG_MEM_USED_ICON}${mem_used}"
 		return 0
 	else
+		tp_err_seg "Err: Failed to obtain memory usage"
 		return 1
 	fi
 }
@@ -41,10 +45,5 @@ __process_settings() {
 	if [ -z "$TMUX_POWERLINE_SEG_MEM_USED_UNIT" ]; then
 		export TMUX_POWERLINE_SEG_MEM_USED_UNIT="${TMUX_POWERLINE_SEG_MEM_USED_UNIT_DEFAULT}"
 	fi
-};
-
-# source https://askubuntu.com/a/179949
-__round() {
-	printf "%.$2f" "$(echo "scale=$2;(((10^$2)*$1)+0.5)/(10^$2)" | bc)"
 };
 
