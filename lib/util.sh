@@ -66,3 +66,14 @@ tp_err_seg() {
 	# TMUX_POWERLINE_CUR_SEGMENT_NAME is being set before each segment run
 	tp_err "${TMUX_POWERLINE_CUR_SEGMENT_NAME:-unknown_segment}" "$*"
 }
+
+# source https://askubuntu.com/a/179949
+# Rounds positive numbers up to the number of digits to the right of the decimal point.
+# Example: "tp_round 1.2345 3" -> "((1000 * 1.2345) + 0.5) / 1000" -> "1.235"
+tp_round() {
+	local number="$1"
+	local digits="$2"
+
+	env printf "%.${digits}f" "$(echo "scale=${digits};(((10^${digits})*${number})+0.5)/(10^${digits})" | bc)"
+};
+
