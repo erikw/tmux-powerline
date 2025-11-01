@@ -47,12 +47,12 @@ __tp_mem_used_info() {
 
 tp_mem_used_gigabytes() {
 	read -r mem_used_bytes mem_total_bytes < <(__tp_mem_used_info)
-	__round "$(echo "$mem_used_bytes / 1073741824" | bc -l)" 2
+	tp_round "$(echo "$mem_used_bytes / 1073741824" | bc -l)" 2
 }
 
 tp_mem_used_megabytes() {
 	read -r mem_used_bytes mem_total_bytes < <(__tp_mem_used_info)
-	__round "$(echo "$mem_used_bytes / 1048576" | bc -l)" 0
+	tp_round "$(echo "$mem_used_bytes / 1048576" | bc -l)" 0
 }
 
 tp_mem_used_percentage_at_least() {
@@ -60,14 +60,4 @@ tp_mem_used_percentage_at_least() {
 	read -r mem_used_bytes mem_total_bytes < <(__tp_mem_used_info)
 	echo "($mem_used_bytes / $mem_total_bytes) * 100 >= $threshold_percentage" | bc -l
 }
-
-# source https://askubuntu.com/a/179949
-# Rounds positive numbers up to the number of digits to the right of the decimal point.
-# Example: "__round 1.2345 3" -> "((1000 * 1.2345) + 0.5) / 1000" -> "1.235"
-__round() {
-	local number="$1"
-	local digits="$2"
-
-	env printf "%.${digits}f" "$(echo "scale=${digits};(((10^${digits})*${number})+0.5)/(10^${digits})" | bc)"
-};
 
