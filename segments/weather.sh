@@ -102,7 +102,8 @@ __yrno() {
 	fi
 
 	# Ref: https://api.met.no/doc/TermsOfService
-	local user_agent="tmux-powerline/$(tp_version) (https://github.com/erikw/tmux-powerline)"
+	local user_agent
+	user_agent="tmux-powerline/$(tp_version) (https://github.com/erikw/tmux-powerline)"
 
 	if weather_data=$(curl --max-time 4 -A "$user_agent" -s "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}"); then
 		error=$(echo "$weather_data" | grep -i "error")
