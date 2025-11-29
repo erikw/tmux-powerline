@@ -101,7 +101,11 @@ __yrno() {
 		return 1
 	fi
 
-	if weather_data=$(curl --max-time 4 -s "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}"); then
+	# Ref: https://api.met.no/doc/TermsOfService
+	local user_agent
+	user_agent="tmux-powerline/$(tp_version) (https://github.com/erikw/tmux-powerline)"
+
+	if weather_data=$(curl --max-time 4 -A "$user_agent" -s "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}"); then
 		error=$(echo "$weather_data" | grep -i "error")
 		if [ -n "$error" ]; then
 			tp_err_seg "Err: yr.no err: error in api return"

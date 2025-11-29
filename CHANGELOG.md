@@ -21,6 +21,8 @@ Please update your custom themes and segments now. [#489](https://github.com/eri
 - `now_playing.sh`: removed Spotify though wine. Not likely this is used anymore. If someone still uses, shout at me and I'll add it back :-). [#473](https://github.com/erikw/tmux-powerline/pull/473)
 - `weather.sh`: Removed GNU Grep dependency [#468](https://github.com/erikw/tmux-powerline/pull/468)
 - `cpu.sh`:  Removed GNU Grep dependency [#472](https://github.com/erikw/tmux-powerline/pull/472)
+### Fixed
+- Set custom User Agent for weather segment's met.no API call. [#500](https://github.com/erikw/tmux-powerline/pull/500)
 
 
 ## [3.1.0] - 2025-03-03
