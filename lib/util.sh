@@ -77,3 +77,8 @@ tp_round() {
 	env printf "%.${digits}f" "$(echo "scale=${digits};(((10^${digits})*${number})+0.5)/(10^${digits})" | bc)"
 };
 
+
+# Get tmux-powerline version.
+tp_version() {
+	grep release: "$TMUX_POWERLINE_DIR_HOME/.semver.yaml" | cut -d' ' -f2
+}
