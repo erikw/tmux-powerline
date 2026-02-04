@@ -14,6 +14,8 @@ TMUX_POWERLINE_SEG_WEATHER_LON_DEFAULT="auto"
 
 # Global cache file for weather data
 TMUX_POWERLINE_SEG_WEATHER_CACHE_WEATHER_FILE="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data.txt"
+# Add: global cache file for auto-detected location (lat/lon)
+TMUX_POWERLINE_SEG_WEATHER_CACHE_LOCATION_FILE="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_location.txt"
 
 
 
@@ -280,14 +282,13 @@ __weather_cache_write() {
 
 # Try setting TMUX_POWERLINE_SEG_WEATHER_LAT & TMUX_POWERLINE_SEG_WEATHER_LON automatically with GeoIP services.
 __get_auto_location() {
-	local cache_location_file="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_location.txt"
     local max_cache_age=$TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD
     local -a lat_lon_arr
 
-    if [[ -f "$cache_location_file" ]]; then
-        local cache_age=$(($(date +%s) - $(__read_file_last_update "$cache_location_file")))
+    if [[ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_LOCATION_FILE" ]]; then
+        local cache_age=$(($(date +%s) - $(__read_file_last_update "$TMUX_POWERLINE_SEG_WEATHER_CACHE_LOCATION_FILE")))
         if (( cache_age < max_cache_age )); then
-            IFS=' ' read -ra lat_lon_arr <<< "$(__read_file_content "$cache_location_file")"
+            IFS=' ' read -ra lat_lon_arr <<< "$(__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_LOCATION_FILE")"
             TMUX_POWERLINE_SEG_WEATHER_LAT=${lat_lon_arr[0]}
             TMUX_POWERLINE_SEG_WEATHER_LON=${lat_lon_arr[1]}
             if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
@@ -320,14 +321,14 @@ __get_auto_location() {
                 continue
             fi
 
-            echo "$TMUX_POWERLINE_SEG_WEATHER_LAT $TMUX_POWERLINE_SEG_WEATHER_LON@$(date +%s)" > "$cache_location_file"
+            echo "$TMUX_POWERLINE_SEG_WEATHER_LAT $TMUX_POWERLINE_SEG_WEATHER_LON@$(date +%s)" > "$TMUX_POWERLINE_SEG_WEATHER_CACHE_LOCATION_FILE"
             return 0
         fi
     done
 
-    if [[ -f "$cache_location_file" ]]; then
+    if [[ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_LOCATION_FILE" ]]; then
         tp_err_seg "Warn: Using stale location data (failed to refresh)"
-        IFS=' ' read -ra lat_lon_arr <<< "$(__read_file_content "$cache_location_file")"
+        IFS=' ' read -ra lat_lon_arr <<< "$(__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_LOCATION_FILE")"
         TMUX_POWERLINE_SEG_WEATHER_LAT=${lat_lon_arr[0]}
         TMUX_POWERLINE_SEG_WEATHER_LON=${lat_lon_arr[1]}
         if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
