@@ -1,5 +1,5 @@
 {
-	"image": "mcr.microsoft.com/devcontainers/universal:5",
+	"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
 	"features": {
 		"ghcr.io/devcontainers-extra/features/apt-get-packages:1": {
 			"packages": ["ifstat", "golang-go", "shellcheck", "tmux"]
