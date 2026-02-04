@@ -16,17 +16,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adapter segments for [tmux-continuum](https://github.com/tmux-plugins/tmux-continuum/): [`tmux_continuum_save.sh`](segments/tmux_continuum_save.sh) and [`tmux_continuum_status.sh`](segments/tmux_continuum_status.sh) [#493](https://github.com/erikw/tmux-powerline/pull/493)
 - [`cpu_temp.sh`](segments/cpu_temp.sh): CPU temperature. [#495](https://github.com/erikw/tmux-powerline/pull/495)
 - [`mem_used.sh`](segments/mem_used.sh): Memory used. [#496](https://github.com/erikw/tmux-powerline/pull/496)
-- [now_playing.sh](segments/now_playing.sh): Added configuration to optionally display text when nothing is playing. [#503](https://github.com/erikw/tmux-powerline/pull/503)
+- [`now_playing.sh`](segments/now_playing.sh): Added configuration to optionally display text when nothing is playing. [#503](https://github.com/erikw/tmux-powerline/pull/503)
 ### Changed
 - **Deprecation Warning:** functions `patched_font_in_use()`, `air_color()` and `format()` have been replaced by `tp_patched_font_in_use()`, `tp_air_color()` and `tp_format()` respectively and will be removed in future releases.
 Please update your custom themes and segments now. [#489](https://github.com/erikw/tmux-powerline/pull/489)
 ### Removed
-- `now_playing.sh`: removed Spotify though wine. Not likely this is used anymore. If someone still uses, shout at me and I'll add it back :-). [#473](https://github.com/erikw/tmux-powerline/pull/473)
-- `weather.sh`: Removed GNU Grep dependency [#468](https://github.com/erikw/tmux-powerline/pull/468)
-- `cpu.sh`:  Removed GNU Grep dependency [#472](https://github.com/erikw/tmux-powerline/pull/472)
+- [`now_playing.sh`](segments/now_playing.sh): removed Spotify though wine. Not likely this is used anymore. If someone still uses, shout at me and I'll add it back :-). [#473](https://github.com/erikw/tmux-powerline/pull/473)
+- [`weather.sh`](segments/weather.sh): Removed GNU Grep dependency [#468](https://github.com/erikw/tmux-powerline/pull/468)
+- [`cpu.sh`](segments/cpu.sh):  Removed GNU Grep dependency [#472](https://github.com/erikw/tmux-powerline/pull/472)
 ### Fixed
 - Set custom User Agent for weather segment's met.no API call. [#500](https://github.com/erikw/tmux-powerline/pull/500)
-- `weather.sh`: Fix caching issue causing DOSing met.no. [#505](https://github.com/erikw/tmux-powerline/pull/505)
+- [`weather.sh`](segments/weather.sh): Fix caching issue causing DOSing met.no. [#505](https://github.com/erikw/tmux-powerline/pull/505)
 
 
 ## [3.1.0] - 2025-03-03
