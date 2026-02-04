@@ -2,7 +2,7 @@
 	"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
 	"features": {
 		"ghcr.io/devcontainers-extra/features/apt-get-packages:1": {
-			"packages": ["shellcheck", "tmux", "ifstat"]
+			"packages": ["ifstat", "golang-go", "shellcheck", "tmux"]
 		}
 	},
 	"postCreateCommand": "bash scripts/devcontainer_postCreateCommand.sh",
