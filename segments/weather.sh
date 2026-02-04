@@ -276,7 +276,7 @@ __weather_cache_write() {
 	if [ -n "$content" ]; then
 		__write_to_file_with_last_updated "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER" "$content"
 	else
-		# Still write the cache file with an error message, so we won't keep trying to fetch from the provider every time and just read the stale cache until the next successful fetch, which will update the cache timestamp and content
+		# Overwrite the cache file with an error message and updated timestamp to avoid repeated fetch attempts while the provider is unavailable
 		tp_err_seg "Err: Failed to fetch weather data, caching error message to avoid repeated fetch attempts"
 		__write_to_file_with_last_updated "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER" "failed to fetch weather data"
 	fi
