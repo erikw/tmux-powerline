@@ -54,9 +54,8 @@ run_segment() {
 			weather=$(__yrno)
 			;;
 		*)
-			# Just read the stale cache, default to empty/blank.
-			# Better not overwriting the previous healthy content.
-			weather=$(__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER")
+			tp_err_seg "Err: Invalid weather data provider: ${TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER}"
+			return 1
 			;;
 		esac
 
@@ -267,7 +266,7 @@ __write_to_file_with_last_updated() {
 	if [ -z "$content" ]; then
 		return
 	fi
-	echo "${content}@$(date +%s)" > "$file_to_write"
+	printf '%s@%s\n' "$content" "$(date +%s)" > "$file_to_write"
 }
 
 
@@ -276,6 +275,10 @@ __weather_cache_write() {
 	local content="$1"
 	if [ -n "$content" ]; then
 		__write_to_file_with_last_updated "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER" "$content"
+	else
+		# Overwrite the cache file with an error message and updated timestamp to avoid repeated fetch attempts while the provider is unavailable
+		tp_err_seg "Err: Failed to fetch weather data, caching error message to avoid repeated fetch attempts"
+		__write_to_file_with_last_updated "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER" "failed to fetch weather data"
 	fi
 }
 
