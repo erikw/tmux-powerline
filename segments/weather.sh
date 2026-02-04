@@ -12,6 +12,10 @@ TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD_DEFAULT="86400" # 24 hours
 TMUX_POWERLINE_SEG_WEATHER_LAT_DEFAULT="auto"
 TMUX_POWERLINE_SEG_WEATHER_LON_DEFAULT="auto"
 
+# Global cache file for weather data
+TMUX_POWERLINE_SEG_WEATHER_CACHE_WEATHER_FILE="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data.txt"
+
+
 
 generate_segmentrc() {
 	read -r -d '' rccontents <<EORC
@@ -34,19 +38,10 @@ EORC
 
 
 run_segment() {
-	local cache_weather_file="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data.txt"
-	local cache_location_file="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_location.txt"
 	local weather=""
 
-	# Check if the weather data is still a valid cache hit
-	if [ -f "$cache_weather_file" ]; then
-		last_update=$(__read_file_last_update "$cache_weather_file")
-		time_now=$(date +%s)
-		up_to_date=$(echo "(${time_now}-${last_update}) < ${TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD}" | bc)
-		if [ "$up_to_date" -eq 1 ]; then
-			weather=$(__read_file_content "$cache_weather_file")
-		fi
-	fi
+	# Check cache freshness and read if up-to-date
+	weather=$(__weather_cache_read)
 
 	# Fetch from provider if empty
 	# If a new provider is implemented, please set the $weather variable!
@@ -57,12 +52,14 @@ run_segment() {
 			weather=$(__yrno)
 			;;
 		*)
-			# Just read the stale cache, default to empty/blank
-			# Better not overwriting the previous healthy content
-			weather=$(__read_file_content "$cache_weather_file")
+			# Just read the stale cache, default to empty/blank.
+			# Better not overwriting the previous healthy content.
+			weather=$(__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_WEATHER_FILE")
 			;;
 		esac
-		echo "$weather" > "$cache_weather_file"
+
+		# Cache weather data if we got something.
+		__weather_cache_write "$weather"
 	fi
 
 	echo "$weather"
@@ -83,7 +80,7 @@ __process_settings() {
 		export TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD_DEFAULT}"
 	fi
 	if [ "$TMUX_POWERLINE_SEG_WEATHER_LAT" = "auto" ] || [ "$TMUX_POWERLINE_SEG_WEATHER_LON" = "auto" ] || [ -z "$TMUX_POWERLINE_SEG_WEATHER_LON" ] || [ -z "$TMUX_POWERLINE_SEG_WEATHER_LAT" ]; then
-		if ! get_auto_location; then
+		if ! __get_auto_location; then
 			exit 8
 		fi
 	fi
@@ -92,6 +89,16 @@ __process_settings() {
 
 # An implementation of a weather provider, just need to echo the result, run_segment() will take care of the rest
 __yrno() {
+	# Ensure required tools exist
+	if ! command -v curl >/dev/null 2>&1; then
+		tp_err_seg "Err: curl not installed"
+		return 1
+	fi
+	if ! command -v jq >/dev/null 2>&1; then
+		tp_err_seg "Err: jq not installed"
+		return 1
+	fi
+
 	local degree=""
 
 	# There's a chance that you will get rate limited or both location APIs are not working
@@ -129,7 +136,7 @@ __yrno() {
 	# condition_symbol=$(__get_yrno_condition_symbol "$condition" "$sunrise" "$sunset")
 	condition_symbol=$(__get_yrno_condition_symbol "$condition")
 	# Write the <content@date>, separated by a @ character, so we can fetch it later on without having to call 'stat'
-	echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')@$(date +%s)"
+	echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')"
 }
 
 
@@ -233,7 +240,57 @@ __read_file_last_update() {
 }
 
 
-get_auto_location() {
+# Read cached content if still fresh; otherwise output empty
+__weather_cache_read() {
+	local last_update time_now up_to_date
+	if [ ! -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_WEATHER_FILE" ]; then
+		echo ""
+		return
+	fi
+	last_update=$(__read_file_last_update "$TMUX_POWERLINE_SEG_WEATHER_CACHE_WEATHER_FILE")
+	time_now=$(date +%s)
+	up_to_date=$(echo "(${time_now}-${last_update}) < ${TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD}" | bc)
+	if [ "$up_to_date" -eq 1 ]; then
+		__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_WEATHER_FILE"
+	else
+		echo ""
+	fi
+}
+
+
+# Read cached content from global cache file without TTL check
+__weather_cache_read_content() {
+	if [ ! -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_WEATHER_FILE" ]; then
+		echo ""
+		return
+	fi
+	__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_WEATHER_FILE"
+}
+
+
+# Write <content@timestamp> to a file, overwriting existing content
+__write_to_file_with_last_updated() {
+	local file_to_write="$1"
+	local content="$2"
+	if [ -z "$content" ]; then
+		return
+	fi
+	echo "${content}@$(date +%s)" > "$file_to_write"
+}
+
+
+# Weather-specific cache write: only write when content is non-empty
+__weather_cache_write() {
+	local content="$1"
+	if [ -n "$content" ]; then
+		__write_to_file_with_last_updated "$TMUX_POWERLINE_SEG_WEATHER_CACHE_WEATHER_FILE" "$content"
+	fi
+}
+
+
+# Try setting TMUX_POWERLINE_SEG_WEATHER_LAT & TMUX_POWERLINE_SEG_WEATHER_LON automatically with GeoIP services.
+__get_auto_location() {
+	local cache_location_file="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_location.txt"
     local max_cache_age=$TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD
     local -a lat_lon_arr
 
