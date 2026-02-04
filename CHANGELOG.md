@@ -24,6 +24,7 @@ Please update your custom themes and segments now. [#489](https://github.com/eri
 - `cpu.sh`:  Removed GNU Grep dependency [#472](https://github.com/erikw/tmux-powerline/pull/472)
 ### Fixed
 - Set custom User Agent for weather segment's met.no API call. [#500](https://github.com/erikw/tmux-powerline/pull/500)
+- `weather.sh`: Fix caching issue causing DOSing met.no. [#505](https://github.com/erikw/tmux-powerline/pull/505)
 
 
 ## [3.1.0] - 2025-03-03
