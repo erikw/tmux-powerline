@@ -54,7 +54,7 @@ run_segment() {
 			weather=$(__yrno)
 			;;
 		*)
-			tp_err_seg "Invalid weather data provider: ${TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER}"
+			tp_err_seg "Err: Invalid weather data provider: ${TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER}"
 			return 1
 			;;
 		esac
