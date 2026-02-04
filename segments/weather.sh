@@ -258,16 +258,6 @@ __weather_cache_read() {
 }
 
 
-# Read cached content from global cache file without TTL check
-__weather_cache_read_content() {
-	if [ ! -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_WEATHER_FILE" ]; then
-		echo ""
-		return
-	fi
-	__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_WEATHER_FILE"
-}
-
-
 # Write <content@timestamp> to a file, overwriting existing content
 __write_to_file_with_last_updated() {
 	local file_to_write="$1"
