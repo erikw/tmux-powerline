@@ -321,7 +321,8 @@ __get_auto_location() {
                 continue
             fi
 
-            echo "$TMUX_POWERLINE_SEG_WEATHER_LAT $TMUX_POWERLINE_SEG_WEATHER_LON@$(date +%s)" > "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION"
+            # Write location using helper to append timestamp
+            __write_to_file_with_last_updated "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION" "$TMUX_POWERLINE_SEG_WEATHER_LAT $TMUX_POWERLINE_SEG_WEATHER_LON"
             return 0
         fi
     done
