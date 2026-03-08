@@ -241,6 +241,18 @@ __read_file_last_update() {
 }
 
 
+__is_non_negative_integer() {
+	case "$1" in
+	"" | *[!0-9]*)
+		return 1
+		;;
+	*)
+		return 0
+		;;
+	esac
+}
+
+
 # Read cached content if still fresh; otherwise output empty
 __weather_cache_read() {
 	local last_update time_now up_to_date
@@ -250,7 +262,15 @@ __weather_cache_read() {
 	fi
 	last_update=$(__read_file_last_update "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER")
 	time_now=$(date +%s)
-	up_to_date=$(echo "(${time_now}-${last_update}) < ${TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD}" | bc)
+	if ! __is_non_negative_integer "$last_update" || ! __is_non_negative_integer "$TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD"; then
+		echo ""
+		return
+	fi
+	if (( (time_now - last_update) < TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD )); then
+		up_to_date=1
+	else
+		up_to_date=0
+	fi
 	if [ "$up_to_date" -eq 1 ]; then
 		__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER"
 	else
@@ -285,61 +305,65 @@ __weather_cache_write() {
 
 # Try setting TMUX_POWERLINE_SEG_WEATHER_LAT & TMUX_POWERLINE_SEG_WEATHER_LON automatically with GeoIP services.
 __get_auto_location() {
-    local max_cache_age=$TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD
-    local -a lat_lon_arr
+	local max_cache_age=$TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD
+	local -a lat_lon_arr
 
-    if [[ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION" ]]; then
-        local cache_age=$(($(date +%s) - $(__read_file_last_update "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION")))
-        if (( cache_age < max_cache_age )); then
-            IFS=' ' read -ra lat_lon_arr <<< "$(__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION")"
-            TMUX_POWERLINE_SEG_WEATHER_LAT=${lat_lon_arr[0]}
-            TMUX_POWERLINE_SEG_WEATHER_LON=${lat_lon_arr[1]}
-            if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
-                return 0
-            fi
-        fi
-    fi
+	if [[ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION" ]]; then
+		local last_update
+		last_update=$(__read_file_last_update "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION")
+		if __is_non_negative_integer "$last_update" && __is_non_negative_integer "$max_cache_age"; then
+			local cache_age=$(( $(date +%s) - last_update ))
+			if (( cache_age < max_cache_age )); then
+				IFS=' ' read -ra lat_lon_arr <<< "$(__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION")"
+				TMUX_POWERLINE_SEG_WEATHER_LAT=${lat_lon_arr[0]}
+				TMUX_POWERLINE_SEG_WEATHER_LON=${lat_lon_arr[1]}
+				if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
+					return 0
+				fi
+			fi
+		fi
+	fi
 
-    local location_data
-    for api in "https://ipapi.co/json" "https://ipinfo.io/json"; do
-        if location_data=$(curl --max-time 4 -s "$api"); then
-            case "$api" in
-                *ipapi.co*)
-                    TMUX_POWERLINE_SEG_WEATHER_LAT=$(echo "$location_data" | jq -r '.latitude')
-                    TMUX_POWERLINE_SEG_WEATHER_LON=$(echo "$location_data" | jq -r '.longitude')
-                    ;;
-                *ipinfo.io*)
-                    IFS=',' read -ra loc <<< "$(echo "$location_data" | jq -r '.loc')"
-                    TMUX_POWERLINE_SEG_WEATHER_LAT="${loc[0]}"
-                    TMUX_POWERLINE_SEG_WEATHER_LON="${loc[1]}"
-                    ;;
-            esac
+	local location_data
+	for api in "https://ipapi.co/json" "https://ipinfo.io/json"; do
+		if location_data=$(curl --max-time 4 -s "$api"); then
+			case "$api" in
+			*ipapi.co*)
+				TMUX_POWERLINE_SEG_WEATHER_LAT=$(echo "$location_data" | jq -r '.latitude')
+				TMUX_POWERLINE_SEG_WEATHER_LON=$(echo "$location_data" | jq -r '.longitude')
+				;;
+			*ipinfo.io*)
+				IFS=',' read -ra loc <<< "$(echo "$location_data" | jq -r '.loc')"
+				TMUX_POWERLINE_SEG_WEATHER_LAT="${loc[0]}"
+				TMUX_POWERLINE_SEG_WEATHER_LON="${loc[1]}"
+				;;
+			esac
 
-            # There's no data, move on to the next API, just don't overwrite the previous location
-            # Also, there's a case where lat/lon was set to "null" as a string, gotta handle it
-            if [[ -z "$TMUX_POWERLINE_SEG_WEATHER_LAT" ||
-                  -z "$TMUX_POWERLINE_SEG_WEATHER_LON" ||
-                  "$TMUX_POWERLINE_SEG_WEATHER_LAT" == "null" ||
-                  "$TMUX_POWERLINE_SEG_WEATHER_LON" == "null" ]]; then
-                continue
-            fi
+			# There's no data, move on to the next API, just don't overwrite the previous location
+			# Also, there's a case where lat/lon was set to "null" as a string, gotta handle it
+			if [[ -z "$TMUX_POWERLINE_SEG_WEATHER_LAT" ||
+				-z "$TMUX_POWERLINE_SEG_WEATHER_LON" ||
+				"$TMUX_POWERLINE_SEG_WEATHER_LAT" == "null" ||
+				"$TMUX_POWERLINE_SEG_WEATHER_LON" == "null" ]]; then
+				continue
+			fi
 
-            # Write location using helper to append timestamp
-            __write_to_file_with_last_updated "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION" "$TMUX_POWERLINE_SEG_WEATHER_LAT $TMUX_POWERLINE_SEG_WEATHER_LON"
-            return 0
-        fi
-    done
+			# Write location using helper to append timestamp
+			__write_to_file_with_last_updated "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION" "$TMUX_POWERLINE_SEG_WEATHER_LAT $TMUX_POWERLINE_SEG_WEATHER_LON"
+			return 0
+		fi
+	done
 
-    if [[ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION" ]]; then
-        tp_err_seg "Warn: Using stale location data (failed to refresh)"
-        IFS=' ' read -ra lat_lon_arr <<< "$(__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION")"
-        TMUX_POWERLINE_SEG_WEATHER_LAT=${lat_lon_arr[0]}
-        TMUX_POWERLINE_SEG_WEATHER_LON=${lat_lon_arr[1]}
-        if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
-            return 0
-        fi
-    fi
+	if [[ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION" ]]; then
+		tp_err_seg "Warn: Using stale location data (failed to refresh)"
+		IFS=' ' read -ra lat_lon_arr <<< "$(__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION")"
+		TMUX_POWERLINE_SEG_WEATHER_LAT=${lat_lon_arr[0]}
+		TMUX_POWERLINE_SEG_WEATHER_LON=${lat_lon_arr[1]}
+		if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
+			return 0
+		fi
+	fi
 
-    tp_err_seg "Err: Could not detect location automatically"
-    return 1
+	tp_err_seg "Err: Could not detect location automatically"
+	return 1
 }
