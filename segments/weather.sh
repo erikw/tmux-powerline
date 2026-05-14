@@ -11,10 +11,9 @@ TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT="600"
 TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD_DEFAULT="86400" # 24 hours
 TMUX_POWERLINE_SEG_WEATHER_LAT_DEFAULT="auto"
 TMUX_POWERLINE_SEG_WEATHER_LON_DEFAULT="auto"
+TMUX_POWERLINE_SEG_WEATHER_ICON_SET_DEFAULT="emoji"
 
-# Global cache file for weather data
-TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data.txt"
-# Add: global cache file for auto-detected location (lat/lon)
+# Global cache file for auto-detected location (lat/lon)
 TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_location.txt"
 
 
@@ -34,6 +33,11 @@ export TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_W
 # Set both to "auto" to detect automatically based on your IP address, or set them manually
 export TMUX_POWERLINE_SEG_WEATHER_LAT="${TMUX_POWERLINE_SEG_WEATHER_LAT_DEFAULT}"
 export TMUX_POWERLINE_SEG_WEATHER_LON="${TMUX_POWERLINE_SEG_WEATHER_LON_DEFAULT}"
+# Icon set to use for weather conditions. Can be any of {emoji, nerd-font}.
+# "emoji" uses standard Unicode emoji (colorful, works well on most setups).
+# "nerd-font" uses Nerd Font icons (monochrome, requires a Nerd Font,
+#   recommended if you experience status bar alignment issues with emoji).
+export TMUX_POWERLINE_SEG_WEATHER_ICON_SET="${TMUX_POWERLINE_SEG_WEATHER_ICON_SET_DEFAULT}"
 EORC
 	echo "$rccontents"
 }
@@ -41,6 +45,12 @@ EORC
 
 run_segment() {
 	local weather=""
+
+	# Resolve icon set early so the cache key includes it (avoids showing stale icons after switching)
+	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_ICON_SET" ]; then
+		TMUX_POWERLINE_SEG_WEATHER_ICON_SET="${TMUX_POWERLINE_SEG_WEATHER_ICON_SET_DEFAULT}"
+	fi
+	TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data_${TMUX_POWERLINE_SEG_WEATHER_ICON_SET}.txt"
 
 	# Check cache freshness and read if up-to-date
 	weather=$(__weather_cache_read)
@@ -157,52 +167,211 @@ __degree_c2f() {
 
 # Get symbol for condition. Available symbol names: https://api.met.no/weatherapi/weathericon/2.0/documentation#List_of_symbols
 __get_yrno_condition_symbol() {
-	# local condition=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-	# local sunrise="$2"
-	# local sunset="$3"
+	local condition=$1
+	if [ "$TMUX_POWERLINE_SEG_WEATHER_ICON_SET" = "nerd-font" ]; then
+		__get_yrno_condition_symbol_nerd "$condition"
+	else
+		__get_yrno_condition_symbol_emoji "$condition"
+	fi
+}
+
+__get_yrno_condition_symbol_emoji() {
 	local condition=$1
 	case "$condition" in
+	# Clear sky
 	"clearsky_day")
-		echo "☀️ "
+		echo "🌞"
 		;;
 	"clearsky_night")
 		echo "🌙"
 		;;
+	# Fair (cloud coverage < 25%)
 	"fair_day")
-		echo "🌤 "
+		echo "🌤️ "
 		;;
 	"fair_night")
 		echo "🌜"
 		;;
-	"fog")
-		echo "🌫 "
-		;;
-	"cloudy")
-		echo "☁️ "
-		;;
-	"rain" | "lightrain" | "heavyrain" | "sleet" | "lightsleet" | "heavysleet")
-		echo "🌧 "
-		;;
-	"heavyrainandthunder" | "heavyrainshowersandthunder_day" | "heavyrainshowersandthunder_night" | "heavysleetandthunder" | "heavysleetshowersandthunder_day" | "heavysnowandthunder" | "heavysnowshowersandthunder_day" | "heavysnowshowersandthunder_night" | "lightrainandthunder" | "lightrainshowersandthunder_day" | "lightrainshowersandthunder_night" | "lightsleetandthunder" | "lightsnowandthunder" | "lightssleetshowersandthunder_day" | "lightssleetshowersandthunder_night" | "lightssnowshowersandthunder_day" | "lightssnowshowersandthunder_night" | "rainandthunder" | "rainshowersandthunder_day" | "rainshowersandthunder_night" | "sleetandthunder" | "sleetshowersandthunder_day" | "sleetshowersandthunder_night" | "snowandthunder" | "snowshowersandthunder_day" | "snowshowersandthunder_night")
-		echo "⛈️ "
-		;;
-	"heavyrainshowers_day" | "heavysleetshowers_day" | "heavysleetshowersandthunder_night" | "lightrainshowers_day" | "lightsleetshowers_day" | "rainshowers_day" | "sleetshowers_day")
-		echo "🌦️ "
-		;;
-	"heavyrainshowers_night" | "heavysleetshowers_night" | "lightrainshowers_night" | "lightsleetshowers_night" | "rainshowers_night" | "sleetshowers_night")
-		echo "☔"
-		;;
-	"snow" | "lightsnow" | "heavysnow")
-		echo "❄️ "
-		;;
-	"lightsnowshowers_day" | "lightsnowshowers_night" | "heavysnowshowers_day" | "heavysnowshowers_night" | "snowshowers_day" | "snowshowers_night")
-		echo "🌨 "
-		;;
+	# Partly cloudy (cloud coverage 25-75%)
 	"partlycloudy_day")
 		echo "⛅"
 		;;
 	"partlycloudy_night")
 		echo "🌗"
+		;;
+	# Cloudy (cloud coverage > 75%)
+	"cloudy")
+		echo "☁️ "
+		;;
+	# Fog
+	"fog")
+		echo "🌫️ "
+		;;
+	# Rain
+	"lightrain")
+		echo "🌦️ "
+		;;
+	"rain")
+		echo "🌧️ "
+		;;
+	"heavyrain")
+		echo "☔"
+		;;
+	# Sleet
+	"lightsleet" | "sleet" | "heavysleet")
+		echo "🌨️ "
+		;;
+	# Snow
+	"lightsnow")
+		echo "🌨️ "
+		;;
+	"snow" | "heavysnow")
+		echo "❄️ "
+		;;
+	# Rain showers (day)
+	"lightrainshowers_day" | "rainshowers_day" | "heavyrainshowers_day")
+		echo "🌦️ "
+		;;
+	# Rain showers (night)
+	"lightrainshowers_night" | "rainshowers_night")
+		echo "🌧️ "
+		;;
+	"heavyrainshowers_night")
+		echo "☔"
+		;;
+	# Sleet showers (day)
+	"lightsleetshowers_day" | "sleetshowers_day" | "heavysleetshowers_day")
+		echo "🌦️ "
+		;;
+	# Sleet showers (night)
+	"lightsleetshowers_night" | "sleetshowers_night" | "heavysleetshowers_night")
+		echo "🌨️ "
+		;;
+	# Snow showers
+	"lightsnowshowers_day" | "snowshowers_day" | "lightsnowshowers_night" | "snowshowers_night")
+		echo "🌨️ "
+		;;
+	"heavysnowshowers_day" | "heavysnowshowers_night")
+		echo "❄️ "
+		;;
+	# All thunder conditions
+	"lightrainandthunder" | "rainandthunder" | "heavyrainandthunder" | \
+	"lightrainshowersandthunder_day" | "rainshowersandthunder_day" | "heavyrainshowersandthunder_day" | \
+	"lightrainshowersandthunder_night" | "rainshowersandthunder_night" | "heavyrainshowersandthunder_night" | \
+	"lightsleetandthunder" | "sleetandthunder" | "heavysleetandthunder" | \
+	"lightssleetshowersandthunder_day" | "sleetshowersandthunder_day" | "heavysleetshowersandthunder_day" | \
+	"lightssleetshowersandthunder_night" | "sleetshowersandthunder_night" | "heavysleetshowersandthunder_night" | \
+	"lightsnowandthunder" | "snowandthunder" | "heavysnowandthunder" | \
+	"lightssnowshowersandthunder_day" | "snowshowersandthunder_day" | "heavysnowshowersandthunder_day" | \
+	"lightssnowshowersandthunder_night" | "snowshowersandthunder_night" | "heavysnowshowersandthunder_night")
+		echo "⛈️ "
+		;;
+	*)
+		echo "?"
+		;;
+	esac
+}
+
+__get_yrno_condition_symbol_nerd() {
+	local condition=$1
+	case "$condition" in
+	# Clear sky
+	"clearsky_day")
+		echo "󰖙"
+		;;
+	"clearsky_night")
+		echo "󰖔"
+		;;
+	# Fair (cloud coverage < 25%)
+	"fair_day")
+		echo "󰖕"
+		;;
+	"fair_night")
+		echo "󰼱"
+		;;
+	# Partly cloudy (cloud coverage 25-75%)
+	"partlycloudy_day")
+		echo "󰖕"
+		;;
+	"partlycloudy_night")
+		echo "󰼱"
+		;;
+	# Cloudy (cloud coverage > 75%)
+	"cloudy")
+		echo "󰖐"
+		;;
+	# Fog
+	"fog")
+		echo "󰖑"
+		;;
+	# Rain
+	"lightrain")
+		echo "󰖗"
+		;;
+	"rain")
+		echo "󰖗"
+		;;
+	"heavyrain")
+		echo "󰖖"
+		;;
+	# Sleet
+	"lightsleet" | "sleet" | "heavysleet")
+		echo "󰙿"
+		;;
+	# Snow
+	"lightsnow")
+		echo "󰖘"
+		;;
+	"snow")
+		echo "󰖘"
+		;;
+	"heavysnow")
+		echo "󰼶"
+		;;
+	# Rain showers (day)
+	"lightrainshowers_day" | "rainshowers_day" | "heavyrainshowers_day")
+		echo "󰼸"
+		;;
+	# Rain showers (night)
+	"lightrainshowers_night" | "rainshowers_night")
+		echo "󰖗"
+		;;
+	"heavyrainshowers_night")
+		echo "󰖖"
+		;;
+	# Sleet showers (day)
+	"lightsleetshowers_day" | "sleetshowers_day" | "heavysleetshowers_day")
+		echo "󰼷"
+		;;
+	# Sleet showers (night)
+	"lightsleetshowers_night" | "sleetshowers_night" | "heavysleetshowers_night")
+		echo "󰙿"
+		;;
+	# Snow showers (day)
+	"lightsnowshowers_day" | "snowshowers_day")
+		echo "󰼴"
+		;;
+	"heavysnowshowers_day")
+		echo "󰼶"
+		;;
+	# Snow showers (night)
+	"lightsnowshowers_night" | "snowshowers_night")
+		echo "󰼳"
+		;;
+	"heavysnowshowers_night")
+		echo "󰼶"
+		;;
+	# All thunder conditions
+	"lightrainandthunder" | "rainandthunder" | "heavyrainandthunder" | \
+	"lightrainshowersandthunder_day" | "rainshowersandthunder_day" | "heavyrainshowersandthunder_day" | \
+	"lightrainshowersandthunder_night" | "rainshowersandthunder_night" | "heavyrainshowersandthunder_night" | \
+	"lightsleetandthunder" | "sleetandthunder" | "heavysleetandthunder" | \
+	"lightssleetshowersandthunder_day" | "sleetshowersandthunder_day" | "heavysleetshowersandthunder_day" | \
+	"lightssleetshowersandthunder_night" | "sleetshowersandthunder_night" | "heavysleetshowersandthunder_night" | \
+	"lightsnowandthunder" | "snowandthunder" | "heavysnowandthunder" | \
+	"lightssnowshowersandthunder_day" | "snowshowersandthunder_day" | "heavysnowshowersandthunder_day" | \
+	"lightssnowshowersandthunder_night" | "snowshowersandthunder_night" | "heavysnowshowersandthunder_night")
+		echo "󰙾"
 		;;
 	*)
 		echo "?"
