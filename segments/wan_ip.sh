@@ -38,7 +38,7 @@ run_segment() {
 			fi
 		fi
 		# Atomically acquire the lock; bail out if another invocation beat us to it
-		if ( set -o noclobber; > "$lock_file" ) 2>/dev/null; then
+		if ( set -o noclobber; : > "$lock_file" ) 2>/dev/null; then
 			(
 				exec >/dev/null 2>&1
 				trap 'rm -f "$lock_file"' EXIT

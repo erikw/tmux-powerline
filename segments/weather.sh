@@ -88,7 +88,7 @@ __weather_refresh_in_background() {
 	fi
 
 	# Atomically acquire the lock; bail out if another invocation beat us to it
-	( set -o noclobber; > "$lock_file" ) 2>/dev/null || return
+	( set -o noclobber; : > "$lock_file" ) 2>/dev/null || return
 
 	(
 		exec >/dev/null 2>&1
