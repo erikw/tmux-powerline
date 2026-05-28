@@ -102,6 +102,7 @@ __weather_refresh_in_background() {
 			weather=$(__yrno)
 			;;
 		*)
+			tp_err_seg "Err: Invalid weather data provider: ${TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER}"
 			exit 1
 			;;
 		esac
