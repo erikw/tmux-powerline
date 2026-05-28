@@ -50,6 +50,14 @@ EORC
 
 run_segment() {
 	local weather=""
+	# Resolve icon style before the cache read so the cache file path is
+	# style-specific; changing ICON_STYLE takes effect without waiting for expiry.
+	local icon_style="${TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE:-$TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE_DEFAULT}"
+	if [ "$icon_style" = "auto" ]; then
+		tp_patched_font_in_use && icon_style="nerdfonts" || icon_style="emoji"
+	fi
+	export TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE="$icon_style"
+	TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data_${icon_style}.txt"
 
 	# Apply non-location defaults following the __process_settings() pattern
 	__process_basic_settings
@@ -196,13 +204,9 @@ __yrno() {
 	if [ "$TMUX_POWERLINE_SEG_WEATHER_UNIT" == "f" ]; then
 		degree=$(__degree_c2f "$degree")
 	fi
-	local icon_style="${TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE:-$TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE_DEFAULT}"
-	if [ "$icon_style" = "auto" ]; then
-		tp_patched_font_in_use && icon_style="nerdfonts" || icon_style="emoji"
-	fi
 	# condition_symbol=$(__get_yrno_condition_symbol "$condition" "$sunrise" "$sunset")
 	local condition_symbol
-	condition_symbol=$(__get_yrno_condition_symbol "$condition" "$icon_style")
+	condition_symbol=$(__get_yrno_condition_symbol "$condition" "${TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE:-emoji}")
 	# Write the <content@date>, separated by a @ character, so we can fetch it later on without having to call 'stat'
 	echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')"
 }
@@ -230,65 +234,87 @@ __get_yrno_condition_symbol() {
 	local condition=$1
 	local style="${2:-emoji}"
 
-	if [ "$style" = "nerdfonts" ]; then
-		# All Nerd Font icons are PUA (1 cell), no width ambiguity
+	case "$style" in
+	"nerdfonts")
+		# Literal UTF-8 glyphs (MDI PUA, 1 cell, no width ambiguity). Bash 3.2-safe.
 		case "$condition" in
-		"clearsky_day")           printf "\UF0599" ;;  # 󰖙 mdi-weather-sunny
-		"clearsky_night")         printf "\UF0594" ;;  # 󰖔 mdi-weather-night
-		"fair_day")               printf "\UF0595" ;;  # 󰖕 mdi-weather-partly-cloudy
-		"fair_night")             printf "\UF0F31" ;;  # 󰼱 mdi-weather-night-partly-cloudy
-		"fog")                    printf "\UF0591" ;;  # 󰖑 mdi-weather-fog
-		"cloudy")                 printf "\UF0590" ;;  # 󰖐 mdi-weather-cloudy
+		"clearsky_day")           echo "󰖙" ;;
+		"clearsky_night")         echo "󰖔" ;;
+		"fair_day")               echo "󰖕" ;;
+		"fair_night")             echo "󰼱" ;;
+		"fog")                    echo "󰖑" ;;
+		"cloudy")                 echo "󰖐" ;;
 		"rain" | "lightrain" | "heavyrain" | "sleet" | "lightsleet" | "heavysleet")
-			printf "\UF0597" ;;  # 󰖗 mdi-weather-rainy
-		"heavyrainandthunder" | "heavyrainshowersandthunder_day" | "heavyrainshowersandthunder_night" | "heavysleetandthunder" | "heavysleetshowersandthunder_day" | "heavysnowandthunder" | "heavysnowshowersandthunder_day" | "heavysnowshowersandthunder_night" | "lightrainandthunder" | "lightrainshowersandthunder_day" | "lightrainshowersandthunder_night" | "lightsleetandthunder" | "lightsnowandthunder" | "lightssleetshowersandthunder_day" | "lightssleetshowersandthunder_night" | "lightssnowshowersandthunder_day" | "lightssnowshowersandthunder_night" | "rainandthunder" | "rainshowersandthunder_day" | "rainshowersandthunder_night" | "sleetandthunder" | "sleetshowersandthunder_day" | "sleetshowersandthunder_night" | "snowandthunder" | "snowshowersandthunder_day" | "snowshowersandthunder_night")
-			printf "\UF067E" ;;  # 󰙾 mdi-weather-lightning-rainy
-		"heavyrainshowers_day" | "heavysleetshowers_day" | "heavysleetshowersandthunder_night" | "lightrainshowers_day" | "lightsleetshowers_day" | "rainshowers_day" | "sleetshowers_day")
-			printf "\UF0F33" ;;  # 󰼳 mdi-weather-partly-rainy
+			echo "󰖗" ;;
+		"heavyrainandthunder" | "heavyrainshowersandthunder_day" | "heavyrainshowersandthunder_night" | "heavysleetandthunder" | "heavysleetshowersandthunder_day" | "heavysleetshowersandthunder_night" | "heavysnowandthunder" | "heavysnowshowersandthunder_day" | "heavysnowshowersandthunder_night" | "lightrainandthunder" | "lightrainshowersandthunder_day" | "lightrainshowersandthunder_night" | "lightsleetandthunder" | "lightsnowandthunder" | "lightssleetshowersandthunder_day" | "lightssleetshowersandthunder_night" | "lightssnowshowersandthunder_day" | "lightssnowshowersandthunder_night" | "rainandthunder" | "rainshowersandthunder_day" | "rainshowersandthunder_night" | "sleetandthunder" | "sleetshowersandthunder_day" | "sleetshowersandthunder_night" | "snowandthunder" | "snowshowersandthunder_day" | "snowshowersandthunder_night")
+			echo "󰙾" ;;
+		"heavyrainshowers_day" | "heavysleetshowers_day" | "lightrainshowers_day" | "lightsleetshowers_day" | "rainshowers_day" | "sleetshowers_day")
+			echo "󰼳" ;;
 		"heavyrainshowers_night" | "heavysleetshowers_night" | "lightrainshowers_night" | "lightsleetshowers_night" | "rainshowers_night" | "sleetshowers_night")
-			printf "\UF0597" ;;  # 󰖗 mdi-weather-rainy
+			echo "󰖗" ;;
 		"snow" | "lightsnow" | "heavysnow")
-			printf "\UF0598" ;;  # 󰖘 mdi-weather-snowy
+			echo "󰖘" ;;
 		"lightsnowshowers_day" | "lightsnowshowers_night" | "heavysnowshowers_day" | "heavysnowshowers_night" | "snowshowers_day" | "snowshowers_night")
-			printf "\UF0F34" ;;  # 󰼴 mdi-weather-partly-snowy
-		"partlycloudy_day")       printf "\UF0595" ;;  # 󰖕 mdi-weather-partly-cloudy
-		"partlycloudy_night")     printf "\UF0F31" ;;  # 󰼱 mdi-weather-night-partly-cloudy
+			echo "󰼴" ;;
+		"partlycloudy_day")       echo "󰖕" ;;
+		"partlycloudy_night")     echo "󰼱" ;;
 		*)                        echo "?" ;;
 		esac
-	else
-		# emoji / emoji_fixed: original symbols with VS16 variation selectors.
-		# "emoji_fixed" strips VS16 (U+FE0F) for terminals where Neutral-width base
-		# chars like ☀ (U+2600) + VS16 cause tmux to miscalculate status-bar width.
-		local symbol
+		;;
+	"emoji_fixed")
+		# VS16 (U+FE0F) omitted from Neutral-width base characters (☀ ☁ ⛈ 🌦 ❄) so
+		# tmux cell-width counting matches what the terminal renders. No sed needed.
 		case "$condition" in
-		"clearsky_day")           symbol="☀️ " ;;
-		"clearsky_night")         symbol="🌙" ;;
-		"fair_day")               symbol="🌤 " ;;
-		"fair_night")             symbol="🌜" ;;
-		"fog")                    symbol="🌫 " ;;
-		"cloudy")                 symbol="☁️ " ;;
+		"clearsky_day")           echo "☀ " ;;
+		"clearsky_night")         echo "🌙" ;;
+		"fair_day")               echo "🌤 " ;;
+		"fair_night")             echo "🌜" ;;
+		"fog")                    echo "🌫 " ;;
+		"cloudy")                 echo "☁ " ;;
 		"rain" | "lightrain" | "heavyrain" | "sleet" | "lightsleet" | "heavysleet")
-			symbol="🌧 " ;;
-		"heavyrainandthunder" | "heavyrainshowersandthunder_day" | "heavyrainshowersandthunder_night" | "heavysleetandthunder" | "heavysleetshowersandthunder_day" | "heavysnowandthunder" | "heavysnowshowersandthunder_day" | "heavysnowshowersandthunder_night" | "lightrainandthunder" | "lightrainshowersandthunder_day" | "lightrainshowersandthunder_night" | "lightsleetandthunder" | "lightsnowandthunder" | "lightssleetshowersandthunder_day" | "lightssleetshowersandthunder_night" | "lightssnowshowersandthunder_day" | "lightssnowshowersandthunder_night" | "rainandthunder" | "rainshowersandthunder_day" | "rainshowersandthunder_night" | "sleetandthunder" | "sleetshowersandthunder_day" | "sleetshowersandthunder_night" | "snowandthunder" | "snowshowersandthunder_day" | "snowshowersandthunder_night")
-			symbol="⛈️ " ;;
-		"heavyrainshowers_day" | "heavysleetshowers_day" | "heavysleetshowersandthunder_night" | "lightrainshowers_day" | "lightsleetshowers_day" | "rainshowers_day" | "sleetshowers_day")
-			symbol="🌦️ " ;;
+			echo "🌧 " ;;
+		"heavyrainandthunder" | "heavyrainshowersandthunder_day" | "heavyrainshowersandthunder_night" | "heavysleetandthunder" | "heavysleetshowersandthunder_day" | "heavysleetshowersandthunder_night" | "heavysnowandthunder" | "heavysnowshowersandthunder_day" | "heavysnowshowersandthunder_night" | "lightrainandthunder" | "lightrainshowersandthunder_day" | "lightrainshowersandthunder_night" | "lightsleetandthunder" | "lightsnowandthunder" | "lightssleetshowersandthunder_day" | "lightssleetshowersandthunder_night" | "lightssnowshowersandthunder_day" | "lightssnowshowersandthunder_night" | "rainandthunder" | "rainshowersandthunder_day" | "rainshowersandthunder_night" | "sleetandthunder" | "sleetshowersandthunder_day" | "sleetshowersandthunder_night" | "snowandthunder" | "snowshowersandthunder_day" | "snowshowersandthunder_night")
+			echo "⛈ " ;;
+		"heavyrainshowers_day" | "heavysleetshowers_day" | "lightrainshowers_day" | "lightsleetshowers_day" | "rainshowers_day" | "sleetshowers_day")
+			echo "🌦 " ;;
 		"heavyrainshowers_night" | "heavysleetshowers_night" | "lightrainshowers_night" | "lightsleetshowers_night" | "rainshowers_night" | "sleetshowers_night")
-			symbol="☔" ;;
+			echo "☔" ;;
 		"snow" | "lightsnow" | "heavysnow")
-			symbol="❄️ " ;;
+			echo "❄ " ;;
 		"lightsnowshowers_day" | "lightsnowshowers_night" | "heavysnowshowers_day" | "heavysnowshowers_night" | "snowshowers_day" | "snowshowers_night")
-			symbol="🌨 " ;;
-		"partlycloudy_day")       symbol="⛅" ;;
-		"partlycloudy_night")     symbol="🌗" ;;
-		*)                        symbol="?" ;;
+			echo "🌨 " ;;
+		"partlycloudy_day")       echo "⛅" ;;
+		"partlycloudy_night")     echo "🌗" ;;
+		*)                        echo "?" ;;
 		esac
-		if [ "$style" = "emoji_fixed" ]; then
-			printf '%s' "$symbol" | sed 's/\xef\xb8\x8f//g'
-		else
-			printf '%s' "$symbol"
-		fi
-	fi
+		;;
+	*)
+		# emoji: original symbols with VS16 variation selectors (default behaviour)
+		case "$condition" in
+		"clearsky_day")           echo "☀️ " ;;
+		"clearsky_night")         echo "🌙" ;;
+		"fair_day")               echo "🌤 " ;;
+		"fair_night")             echo "🌜" ;;
+		"fog")                    echo "🌫 " ;;
+		"cloudy")                 echo "☁️ " ;;
+		"rain" | "lightrain" | "heavyrain" | "sleet" | "lightsleet" | "heavysleet")
+			echo "🌧 " ;;
+		"heavyrainandthunder" | "heavyrainshowersandthunder_day" | "heavyrainshowersandthunder_night" | "heavysleetandthunder" | "heavysleetshowersandthunder_day" | "heavysleetshowersandthunder_night" | "heavysnowandthunder" | "heavysnowshowersandthunder_day" | "heavysnowshowersandthunder_night" | "lightrainandthunder" | "lightrainshowersandthunder_day" | "lightrainshowersandthunder_night" | "lightsleetandthunder" | "lightsnowandthunder" | "lightssleetshowersandthunder_day" | "lightssleetshowersandthunder_night" | "lightssnowshowersandthunder_day" | "lightssnowshowersandthunder_night" | "rainandthunder" | "rainshowersandthunder_day" | "rainshowersandthunder_night" | "sleetandthunder" | "sleetshowersandthunder_day" | "sleetshowersandthunder_night" | "snowandthunder" | "snowshowersandthunder_day" | "snowshowersandthunder_night")
+			echo "⛈️ " ;;
+		"heavyrainshowers_day" | "heavysleetshowers_day" | "lightrainshowers_day" | "lightsleetshowers_day" | "rainshowers_day" | "sleetshowers_day")
+			echo "🌦️ " ;;
+		"heavyrainshowers_night" | "heavysleetshowers_night" | "lightrainshowers_night" | "lightsleetshowers_night" | "rainshowers_night" | "sleetshowers_night")
+			echo "☔" ;;
+		"snow" | "lightsnow" | "heavysnow")
+			echo "❄️ " ;;
+		"lightsnowshowers_day" | "lightsnowshowers_night" | "heavysnowshowers_day" | "heavysnowshowers_night" | "snowshowers_day" | "snowshowers_night")
+			echo "🌨 " ;;
+		"partlycloudy_day")       echo "⛅" ;;
+		"partlycloudy_night")     echo "🌗" ;;
+		*)                        echo "?" ;;
+		esac
+		;;
+	esac
 }
 
 
