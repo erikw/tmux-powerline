@@ -1,6 +1,8 @@
 # shellcheck shell=bash
 # Prints the current weather in Celsius, Fahrenheits or lord Kelvins. The forecast is cached and updated with a period.
 # To configure your location, set TMUX_POWERLINE_SEG_WEATHER_(LAT|LON) in the tmux-powerline config file.
+#
+# Network fetches are done in a background process so tmux rendering is never blocked.
 
 # shellcheck source=lib/util.sh
 source "${TMUX_POWERLINE_DIR_LIB}/util.sh"
@@ -16,7 +18,6 @@ TMUX_POWERLINE_SEG_WEATHER_LON_DEFAULT="auto"
 TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data.txt"
 # Add: global cache file for auto-detected location (lat/lon)
 TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_location.txt"
-
 
 
 generate_segmentrc() {
@@ -42,32 +43,76 @@ EORC
 run_segment() {
 	local weather=""
 
-	# Check cache freshness and read if up-to-date
-	weather=$(__weather_cache_read)
+	# Apply non-location defaults following the __process_settings() pattern
+	__process_basic_settings
 
-	# Fetch from provider if empty
-	# If a new provider is implemented, please set the $weather variable!
-	if [ -z "$weather" ]; then
-		__process_settings
+	# Always return cached data immediately (even stale), never block on network
+	if [ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER" ]; then
+		weather=$(__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER")
+	fi
+
+	# If cache is stale or missing, trigger a background refresh
+	if ! __weather_cache_is_fresh "$TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD"; then
+		__weather_refresh_in_background
+	fi
+
+	echo "$weather"
+	return 0
+}
+
+
+# Returns 0 if cache is still fresh, 1 if stale or missing
+__weather_cache_is_fresh() {
+	local update_period="${1:-$TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT}"
+	[ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER" ] || return 1
+	local last_update time_now
+	last_update=$(__read_file_last_update "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER")
+	time_now=$(date +%s)
+	[ "$(echo "(${time_now}-${last_update}) < ${update_period}" | bc)" -eq 1 ]
+}
+
+
+# Spawn a background process to refresh the cache; does nothing if already running
+__weather_refresh_in_background() {
+	local lock_file="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_refresh.lock"
+
+	# Stale-lock check: if the lock is older than the maximum possible fetch time, treat it as abandoned
+	if [ -f "$lock_file" ]; then
+		local lock_mtime lock_age=0
+		lock_mtime=$(stat -c "%Y" "$lock_file" 2>/dev/null || stat -f "%m" "$lock_file" 2>/dev/null)
+		[ -n "$lock_mtime" ] && lock_age=$(( $(date +%s) - lock_mtime ))
+		if [ "$lock_age" -le 30 ]; then
+			return
+		fi
+		rm -f "$lock_file"
+	fi
+
+	# Atomically acquire the lock; bail out if another invocation beat us to it
+	( set -o noclobber; > "$lock_file" ) 2>/dev/null || return
+
+	(
+		exec >/dev/null 2>&1
+		trap 'rm -f "$lock_file"' EXIT
+
+		__process_settings || exit 1
+
+		local weather
 		case "$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER" in
 		"yrno")
 			weather=$(__yrno)
 			;;
 		*)
-			tp_err_seg "Err: Invalid weather data provider: ${TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER}"
-			return 1
+			exit 1
 			;;
 		esac
 
-		# Cache weather data if we got something.
 		__weather_cache_write "$weather"
-	fi
-
-	echo "$weather"
+	) &
+	disown
 }
 
 
-__process_settings() {
+__process_basic_settings() {
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER" ]; then
 		export TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER="${TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT}"
 	fi
@@ -80,6 +125,11 @@ __process_settings() {
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD" ]; then
 		export TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD_DEFAULT}"
 	fi
+}
+
+
+__process_settings() {
+	__process_basic_settings
 	if [ "$TMUX_POWERLINE_SEG_WEATHER_LAT" = "auto" ] || [ "$TMUX_POWERLINE_SEG_WEATHER_LON" = "auto" ] || [ -z "$TMUX_POWERLINE_SEG_WEATHER_LON" ] || [ -z "$TMUX_POWERLINE_SEG_WEATHER_LAT" ]; then
 		if ! __get_auto_location; then
 			exit 8
@@ -135,6 +185,7 @@ __yrno() {
 		degree=$(__degree_c2f "$degree")
 	fi
 	# condition_symbol=$(__get_yrno_condition_symbol "$condition" "$sunrise" "$sunset")
+	local condition_symbol
 	condition_symbol=$(__get_yrno_condition_symbol "$condition")
 	# Write the <content@date>, separated by a @ character, so we can fetch it later on without having to call 'stat'
 	echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')"
