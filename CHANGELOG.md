@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- [`weather.sh`](segments/weather.sh): new `TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE` option (`emoji` / `emoji_fixed` / `nerdfonts` / `auto`) to control weather condition icon rendering. Fixes status-bar width miscounting caused by VS16 variation selectors on some terminals. Users experiencing the status-bar scrolling issue ([#351](https://github.com/erikw/tmux-powerline/issues/351)) should set `TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE="emoji_fixed"` or `"nerdfonts"`. [#515](https://github.com/erikw/tmux-powerline/pull/515)
+- [`weather.sh`](segments/weather.sh): new `TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE` option (`emoji` / `emoji_fixed` / `nerdfonts` / `auto`) to control weather condition icon rendering. Fixes status-bar width miscounting caused by VS16 variation selectors on some terminals. Users experiencing the status-bar scrolling issue ([#351](https://github.com/erikw/tmux-powerline/issues/351)) should set `TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE="emoji_fixed"` or `"nerdfonts"`. After changing this option, delete `weather_cache_data.txt` in your tmux-powerline temp directory to see the effect immediately. [#515](https://github.com/erikw/tmux-powerline/pull/515)
 
 ## [3.2.0] - 2026-02-04
 ### Added

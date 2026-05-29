@@ -44,6 +44,8 @@ export TMUX_POWERLINE_SEG_WEATHER_LON="${TMUX_POWERLINE_SEG_WEATHER_LON_DEFAULT}
 #   "nerdfonts"   - Nerd Font PUA icons (1 cell, no width ambiguity); also fixes #351
 #                   if you already use a Nerd Font in your terminal
 #   "auto"        - nerdfonts when a patched font is detected, else emoji
+# Note: after changing this value, delete the weather cache file to see the effect immediately:
+#   rm "${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data.txt"
 export TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE="${TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE_DEFAULT}"
 EORC
 	echo "$rccontents"
