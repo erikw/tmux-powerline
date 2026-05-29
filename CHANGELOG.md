@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- [`weather.sh`](segments/weather.sh): new `TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE` option (`emoji` / `emoji_fixed` / `nerdfonts` / `auto`) to control weather condition icon rendering. Fixes status-bar width miscounting caused by VS16 variation selectors on some terminals. [#515](https://github.com/erikw/tmux-powerline/pull/515)
 
 ## [3.2.0] - 2026-02-04
 ### Added
