@@ -235,27 +235,27 @@ __get_yrno_condition_symbol() {
 	"nerdfonts")
 		# Literal UTF-8 glyphs (MDI PUA, 1 cell, no width ambiguity). Bash 3.2-safe.
 		case "$condition" in
-		"clearsky_day")           echo "󰖙" ;;  # U+F0599 mdi-weather-sunny
-		"clearsky_night")         echo "󰖔" ;;  # U+F0594 mdi-weather-night
-		"fair_day")               echo "󰖕" ;;  # U+F0595 mdi-weather-partly-cloudy
-		"fair_night")             echo "󰼱" ;;  # U+F0F31 mdi-weather-night-partly-cloudy
-		"fog")                    echo "󰖑" ;;  # U+F0591 mdi-weather-fog
-		"cloudy")                 echo "󰖐" ;;  # U+F0590 mdi-weather-cloudy
+		"clearsky_day")           echo "󰖙 " ;;  # U+F0599 mdi-weather-sunny
+		"clearsky_night")         echo "󰖔 " ;;  # U+F0594 mdi-weather-night
+		"fair_day")               echo "󰖕 " ;;  # U+F0595 mdi-weather-partly-cloudy
+		"fair_night")             echo "󰼱 " ;;  # U+F0F31 mdi-weather-night-partly-cloudy
+		"fog")                    echo "󰖑 " ;;  # U+F0591 mdi-weather-fog
+		"cloudy")                 echo "󰖐 " ;;  # U+F0590 mdi-weather-cloudy
 		"rain" | "lightrain" | "heavyrain" | "sleet" | "lightsleet" | "heavysleet")
-			echo "󰖗" ;;  # U+F0597 mdi-weather-rainy
+			echo "󰖗 " ;;  # U+F0597 mdi-weather-rainy
 		"heavyrainandthunder" | "heavyrainshowersandthunder_day" | "heavyrainshowersandthunder_night" | "heavysleetandthunder" | "heavysleetshowersandthunder_day" | "heavysleetshowersandthunder_night" | "heavysnowandthunder" | "heavysnowshowersandthunder_day" | "heavysnowshowersandthunder_night" | "lightrainandthunder" | "lightrainshowersandthunder_day" | "lightrainshowersandthunder_night" | "lightsleetandthunder" | "lightsnowandthunder" | "lightssleetshowersandthunder_day" | "lightssleetshowersandthunder_night" | "lightssnowshowersandthunder_day" | "lightssnowshowersandthunder_night" | "rainandthunder" | "rainshowersandthunder_day" | "rainshowersandthunder_night" | "sleetandthunder" | "sleetshowersandthunder_day" | "sleetshowersandthunder_night" | "snowandthunder" | "snowshowersandthunder_day" | "snowshowersandthunder_night")
-			echo "󰙾" ;;  # U+F067E mdi-weather-lightning-rainy
+			echo "󰙾 " ;;  # U+F067E mdi-weather-lightning-rainy
 		"heavyrainshowers_day" | "heavysleetshowers_day" | "lightrainshowers_day" | "lightsleetshowers_day" | "rainshowers_day" | "sleetshowers_day")
-			echo "󰼳" ;;  # U+F0F33 mdi-weather-partly-rainy
+			echo "󰼳 " ;;  # U+F0F33 mdi-weather-partly-rainy
 		"heavyrainshowers_night" | "heavysleetshowers_night" | "lightrainshowers_night" | "lightsleetshowers_night" | "rainshowers_night" | "sleetshowers_night")
-			echo "󰖗" ;;  # U+F0597 mdi-weather-rainy
+			echo "󰖗 " ;;  # U+F0597 mdi-weather-rainy
 		"snow" | "lightsnow" | "heavysnow")
-			echo "󰖘" ;;  # U+F0598 mdi-weather-snowy
+			echo "󰖘 " ;;  # U+F0598 mdi-weather-snowy
 		"lightsnowshowers_day" | "lightsnowshowers_night" | "heavysnowshowers_day" | "heavysnowshowers_night" | "snowshowers_day" | "snowshowers_night")
-			echo "󰼴" ;;  # U+F0F34 mdi-weather-partly-snowy
-		"partlycloudy_day")       echo "󰖕" ;;  # U+F0595 mdi-weather-partly-cloudy
-		"partlycloudy_night")     echo "󰼱" ;;  # U+F0F31 mdi-weather-night-partly-cloudy
-		*)                        echo "?" ;;
+			echo "󰼴 " ;;  # U+F0F34 mdi-weather-partly-snowy
+		"partlycloudy_day")       echo "󰖕 " ;;  # U+F0595 mdi-weather-partly-cloudy
+		"partlycloudy_night")     echo "󰼱 " ;;  # U+F0F31 mdi-weather-night-partly-cloudy
+		*)                        echo "? " ;;
 		esac
 		;;
 	"emoji_fixed")
