@@ -136,14 +136,12 @@ __process_basic_settings() {
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD" ]; then
 		export TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD_DEFAULT}"
 	fi
-	# Resolve icon style (including "auto" detection) and set the style-specific
-	# cache path so that switching ICON_STYLE takes effect without waiting for expiry.
+	# Resolve icon style, including "auto" detection.
 	local icon_style="${TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE:-$TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE_DEFAULT}"
 	if [ "$icon_style" = "auto" ]; then
 		tp_patched_font_in_use && icon_style="nerdfonts" || icon_style="emoji"
 	fi
 	export TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE="$icon_style"
-	TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data_${icon_style}.txt"
 }
 
 
