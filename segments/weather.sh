@@ -39,8 +39,10 @@ export TMUX_POWERLINE_SEG_WEATHER_LAT="${TMUX_POWERLINE_SEG_WEATHER_LAT_DEFAULT}
 export TMUX_POWERLINE_SEG_WEATHER_LON="${TMUX_POWERLINE_SEG_WEATHER_LON_DEFAULT}"
 # Icon style for weather condition symbols:
 #   "emoji"       - emoji with VS16 variation selector (default, original behaviour)
-#   "emoji_fixed" - emoji with VS16 stripped; use if tmux miscounts status-bar width
-#   "nerdfonts"   - Nerd Font PUA icons (1 cell, no width ambiguity)
+#   "emoji_fixed" - emoji with VS16 stripped; fixes status-bar scrolling/duplication
+#                   on terminals that miscount VS16 width (see issue #351)
+#   "nerdfonts"   - Nerd Font PUA icons (1 cell, no width ambiguity); also fixes #351
+#                   if you already use a Nerd Font in your terminal
 #   "auto"        - nerdfonts when a patched font is detected, else emoji
 export TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE="${TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE_DEFAULT}"
 EORC
