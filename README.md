@@ -194,6 +194,14 @@ However, this may not be enough to determine the error, so you can inspect all e
 bash -x powerline.sh (left|right)
 ```
 
+For a quick diagnostics snapshot of your local setup, run:
+
+```shell
+./doctor.sh
+```
+
+This prints resolved tmux-powerline paths and settings, active segment/theme configuration, and live tmux status options when a tmux server is reachable.
+
 To debug smaller portions of code, say if you think the problem lies in a specific segment, insert these lines at the top and bottom of the relevant code portions e.g., inside a function:
 
 ```bash
@@ -213,7 +221,7 @@ tail -f /tmp/tmux-powerline.log # or follow output like this.
 
 You can also enable the debug mode in your config file. Look for the `TMUX_POWERLINE_DEBUG_MODE_ENABLED` environment variable and set it to `true`.
 
-If you can not solve the problems, you can post an [issue](https://github.com/erikw/tmux-powerline/issues?state=open) and be sure to include relevant information about your system and script output (from bash -x) and/or screenshots if needed.
+If you can not solve the problems, you can post an [issue](https://github.com/erikw/tmux-powerline/issues?state=open) and be sure to include relevant information about your system and script output (from `./doctor.sh` and/or `bash -x`) and/or screenshots if needed.
 Be sure to search in the [resolved issues](https://github.com/erikw/tmux-powerline/issues?page=1&state=closed) section for similar problems you're experiencing before posting.
 
 

@@ -21,7 +21,6 @@ TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER="${TMUX_POWERLINE_DIR_TEMPORARY}/w
 # Add: global cache file for auto-detected location (lat/lon)
 TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_location.txt"
 
-
 generate_segmentrc() {
 	read -r -d '' rccontents <<EORC
 # The data provider to use. Currently only "yrno" is supported.
@@ -46,11 +45,11 @@ export TMUX_POWERLINE_SEG_WEATHER_LON="${TMUX_POWERLINE_SEG_WEATHER_LON_DEFAULT}
 #   "auto"        - nerdfonts when a patched font is detected, else emoji
 # Note: after changing this value, delete the weather cache file to see the effect immediately:
 #   rm "${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data.txt"
+#   Run doctor.sh to find out the TMUX_POWERLINE_DIR_TEMPORARY path.
 export TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE="${TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE_DEFAULT}"
 EORC
 	echo "$rccontents"
 }
-
 
 run_segment() {
 	local weather=""
@@ -72,7 +71,6 @@ run_segment() {
 	return 0
 }
 
-
 # Returns 0 if cache is still fresh, 1 if stale or missing
 __weather_cache_is_fresh() {
 	local update_period="${1:-$TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT}"
@@ -83,7 +81,6 @@ __weather_cache_is_fresh() {
 	[ "$(echo "(${time_now}-${last_update}) < ${update_period}" | bc)" -eq 1 ]
 }
 
-
 # Spawn a background process to refresh the cache; does nothing if already running
 __weather_refresh_in_background() {
 	local lock_file="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_refresh.lock"
@@ -92,7 +89,7 @@ __weather_refresh_in_background() {
 	if [ -f "$lock_file" ]; then
 		local lock_mtime lock_age=0
 		lock_mtime=$(stat -c "%Y" "$lock_file" 2>/dev/null || stat -f "%m" "$lock_file" 2>/dev/null)
-		[ -n "$lock_mtime" ] && lock_age=$(( $(date +%s) - lock_mtime ))
+		[ -n "$lock_mtime" ] && lock_age=$(($(date +%s) - lock_mtime))
 		if [ "$lock_age" -le 30 ]; then
 			return
 		fi
@@ -100,7 +97,10 @@ __weather_refresh_in_background() {
 	fi
 
 	# Atomically acquire the lock; bail out if another invocation beat us to it
-	( set -o noclobber; : > "$lock_file" ) 2>/dev/null || return
+	(
+		set -o noclobber
+		: >"$lock_file"
+	) 2>/dev/null || return
 
 	(
 		exec >/dev/null 2>&1
@@ -124,7 +124,6 @@ __weather_refresh_in_background() {
 	disown
 }
 
-
 __process_basic_settings() {
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER" ]; then
 		export TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER="${TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT}"
@@ -146,7 +145,6 @@ __process_basic_settings() {
 	export TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE="$icon_style"
 }
 
-
 __process_settings() {
 	__process_basic_settings
 	if [ "$TMUX_POWERLINE_SEG_WEATHER_LAT" = "auto" ] || [ "$TMUX_POWERLINE_SEG_WEATHER_LON" = "auto" ] || [ -z "$TMUX_POWERLINE_SEG_WEATHER_LON" ] || [ -z "$TMUX_POWERLINE_SEG_WEATHER_LAT" ]; then
@@ -155,7 +153,6 @@ __process_settings() {
 		fi
 	fi
 }
-
 
 # An implementation of a weather provider, just need to echo the result, run_segment() will take care of the rest
 __yrno() {
@@ -210,20 +207,17 @@ __yrno() {
 	echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')"
 }
 
-
 # Convert from Celcius to Lord Kelvins.
 __degree_c2k() {
 	local c="$1"
 	echo "${c} + 273.15" | bc
 }
 
-
 # Convert from Celcius to Fahrenheits.
 __degree_c2f() {
 	local c="$1"
 	echo "${c} * 9 / 5 + 32" | bc
 }
-
 
 # Get symbol for condition. Available symbol names: https://api.met.no/weatherapi/weathericon/2.0/documentation#List_of_symbols
 # NOTE: when adding new yr.no condition codes, update all three tables below (nerdfonts, emoji_fixed, emoji).
@@ -238,85 +232,102 @@ __get_yrno_condition_symbol() {
 	"nerdfonts")
 		# Literal UTF-8 glyphs (MDI PUA, 1 cell, no width ambiguity). Bash 3.2-safe.
 		case "$condition" in
-		"clearsky_day")           echo "󰖙 " ;;  # U+F0599 mdi-weather-sunny
-		"clearsky_night")         echo "󰖔 " ;;  # U+F0594 mdi-weather-night
-		"fair_day")               echo "󰖕 " ;;  # U+F0595 mdi-weather-partly-cloudy
-		"fair_night")             echo "󰼱 " ;;  # U+F0F31 mdi-weather-night-partly-cloudy
-		"fog")                    echo "󰖑 " ;;  # U+F0591 mdi-weather-fog
-		"cloudy")                 echo "󰖐 " ;;  # U+F0590 mdi-weather-cloudy
+		"clearsky_day") echo "󰖙 " ;;   # U+F0599 mdi-weather-sunny
+		"clearsky_night") echo "󰖔 " ;; # U+F0594 mdi-weather-night
+		"fair_day") echo "󰖕 " ;;       # U+F0595 mdi-weather-partly-cloudy
+		"fair_night") echo "󰼱 " ;;     # U+F0F31 mdi-weather-night-partly-cloudy
+		"fog") echo "󰖑 " ;;            # U+F0591 mdi-weather-fog
+		"cloudy") echo "󰖐 " ;;         # U+F0590 mdi-weather-cloudy
 		"rain" | "lightrain" | "heavyrain" | "sleet" | "lightsleet" | "heavysleet")
-			echo "󰖗 " ;;  # U+F0597 mdi-weather-rainy
+			echo "󰖗 "
+			;; # U+F0597 mdi-weather-rainy
 		"heavyrainandthunder" | "heavyrainshowersandthunder_day" | "heavyrainshowersandthunder_night" | "heavysleetandthunder" | "heavysleetshowersandthunder_day" | "heavysleetshowersandthunder_night" | "heavysnowandthunder" | "heavysnowshowersandthunder_day" | "heavysnowshowersandthunder_night" | "lightrainandthunder" | "lightrainshowersandthunder_day" | "lightrainshowersandthunder_night" | "lightsleetandthunder" | "lightsnowandthunder" | "lightsleetshowersandthunder_day" | "lightsleetshowersandthunder_night" | "lightsnowshowersandthunder_day" | "lightsnowshowersandthunder_night" | "rainandthunder" | "rainshowersandthunder_day" | "rainshowersandthunder_night" | "sleetandthunder" | "sleetshowersandthunder_day" | "sleetshowersandthunder_night" | "snowandthunder" | "snowshowersandthunder_day" | "snowshowersandthunder_night")
-			echo "󰙾 " ;;  # U+F067E mdi-weather-lightning-rainy
+			echo "󰙾 "
+			;; # U+F067E mdi-weather-lightning-rainy
 		"heavyrainshowers_day" | "heavysleetshowers_day" | "lightrainshowers_day" | "lightsleetshowers_day" | "rainshowers_day" | "sleetshowers_day")
-			echo "󰼳 " ;;  # U+F0F33 mdi-weather-partly-rainy
+			echo "󰼳 "
+			;; # U+F0F33 mdi-weather-partly-rainy
 		"heavyrainshowers_night" | "heavysleetshowers_night" | "lightrainshowers_night" | "lightsleetshowers_night" | "rainshowers_night" | "sleetshowers_night")
-			echo "󰖗 " ;;  # U+F0597 mdi-weather-rainy
+			echo "󰖗 "
+			;; # U+F0597 mdi-weather-rainy
 		"snow" | "lightsnow" | "heavysnow")
-			echo "󰖘 " ;;  # U+F0598 mdi-weather-snowy
+			echo "󰖘 "
+			;; # U+F0598 mdi-weather-snowy
 		"lightsnowshowers_day" | "lightsnowshowers_night" | "heavysnowshowers_day" | "heavysnowshowers_night" | "snowshowers_day" | "snowshowers_night")
-			echo "󰼴 " ;;  # U+F0F34 mdi-weather-partly-snowy
-		"partlycloudy_day")       echo "󰖕 " ;;  # U+F0595 mdi-weather-partly-cloudy
-		"partlycloudy_night")     echo "󰼱 " ;;  # U+F0F31 mdi-weather-night-partly-cloudy
-		*)                        echo "? " ;;  # trailing space matches other nerdfonts entries
+			echo "󰼴 "
+			;;                                # U+F0F34 mdi-weather-partly-snowy
+		"partlycloudy_day") echo "󰖕 " ;;   # U+F0595 mdi-weather-partly-cloudy
+		"partlycloudy_night") echo "󰼱 " ;; # U+F0F31 mdi-weather-night-partly-cloudy
+		*) echo "? " ;;                    # trailing space matches other nerdfonts entries
 		esac
 		;;
 	"emoji_fixed")
 		# VS16 (U+FE0F) omitted from Neutral-width base characters (☀ ☁ ⛈ 🌦 ❄) so
 		# tmux cell-width counting matches what the terminal renders. No sed needed.
 		case "$condition" in
-		"clearsky_day")           echo "☀ " ;;
-		"clearsky_night")         echo "🌙" ;;
-		"fair_day")               echo "🌤 " ;;
-		"fair_night")             echo "🌜" ;;
-		"fog")                    echo "🌫 " ;;
-		"cloudy")                 echo "☁ " ;;
+		"clearsky_day") echo "☀ " ;;
+		"clearsky_night") echo "🌙" ;;
+		"fair_day") echo "🌤 " ;;
+		"fair_night") echo "🌜" ;;
+		"fog") echo "🌫 " ;;
+		"cloudy") echo "☁ " ;;
 		"rain" | "lightrain" | "heavyrain" | "sleet" | "lightsleet" | "heavysleet")
-			echo "🌧 " ;;
+			echo "🌧 "
+			;;
 		"heavyrainandthunder" | "heavyrainshowersandthunder_day" | "heavyrainshowersandthunder_night" | "heavysleetandthunder" | "heavysleetshowersandthunder_day" | "heavysleetshowersandthunder_night" | "heavysnowandthunder" | "heavysnowshowersandthunder_day" | "heavysnowshowersandthunder_night" | "lightrainandthunder" | "lightrainshowersandthunder_day" | "lightrainshowersandthunder_night" | "lightsleetandthunder" | "lightsnowandthunder" | "lightsleetshowersandthunder_day" | "lightsleetshowersandthunder_night" | "lightsnowshowersandthunder_day" | "lightsnowshowersandthunder_night" | "rainandthunder" | "rainshowersandthunder_day" | "rainshowersandthunder_night" | "sleetandthunder" | "sleetshowersandthunder_day" | "sleetshowersandthunder_night" | "snowandthunder" | "snowshowersandthunder_day" | "snowshowersandthunder_night")
-			echo "⛈ " ;;
+			echo "⛈ "
+			;;
 		"heavyrainshowers_day" | "heavysleetshowers_day" | "lightrainshowers_day" | "lightsleetshowers_day" | "rainshowers_day" | "sleetshowers_day")
-			echo "🌦 " ;;
+			echo "🌦 "
+			;;
 		"heavyrainshowers_night" | "heavysleetshowers_night" | "lightrainshowers_night" | "lightsleetshowers_night" | "rainshowers_night" | "sleetshowers_night")
-			echo "☔" ;;
+			echo "☔"
+			;;
 		"snow" | "lightsnow" | "heavysnow")
-			echo "❄ " ;;
+			echo "❄ "
+			;;
 		"lightsnowshowers_day" | "lightsnowshowers_night" | "heavysnowshowers_day" | "heavysnowshowers_night" | "snowshowers_day" | "snowshowers_night")
-			echo "🌨 " ;;
-		"partlycloudy_day")       echo "⛅" ;;
-		"partlycloudy_night")     echo "🌗" ;;
-		*)                        echo "? " ;;
+			echo "🌨 "
+			;;
+		"partlycloudy_day") echo "⛅" ;;
+		"partlycloudy_night") echo "🌗" ;;
+		*) echo "? " ;;
 		esac
 		;;
 	*)
 		# emoji: original symbols with VS16 variation selectors (default behaviour)
 		case "$condition" in
-		"clearsky_day")           echo "☀️ " ;;
-		"clearsky_night")         echo "🌙" ;;
-		"fair_day")               echo "🌤 " ;;
-		"fair_night")             echo "🌜" ;;
-		"fog")                    echo "🌫 " ;;
-		"cloudy")                 echo "☁️ " ;;
+		"clearsky_day") echo "☀️ " ;;
+		"clearsky_night") echo "🌙" ;;
+		"fair_day") echo "🌤 " ;;
+		"fair_night") echo "🌜" ;;
+		"fog") echo "🌫 " ;;
+		"cloudy") echo "☁️ " ;;
 		"rain" | "lightrain" | "heavyrain" | "sleet" | "lightsleet" | "heavysleet")
-			echo "🌧 " ;;
+			echo "🌧 "
+			;;
 		"heavyrainandthunder" | "heavyrainshowersandthunder_day" | "heavyrainshowersandthunder_night" | "heavysleetandthunder" | "heavysleetshowersandthunder_day" | "heavysleetshowersandthunder_night" | "heavysnowandthunder" | "heavysnowshowersandthunder_day" | "heavysnowshowersandthunder_night" | "lightrainandthunder" | "lightrainshowersandthunder_day" | "lightrainshowersandthunder_night" | "lightsleetandthunder" | "lightsnowandthunder" | "lightsleetshowersandthunder_day" | "lightsleetshowersandthunder_night" | "lightsnowshowersandthunder_day" | "lightsnowshowersandthunder_night" | "rainandthunder" | "rainshowersandthunder_day" | "rainshowersandthunder_night" | "sleetandthunder" | "sleetshowersandthunder_day" | "sleetshowersandthunder_night" | "snowandthunder" | "snowshowersandthunder_day" | "snowshowersandthunder_night")
-			echo "⛈️ " ;;
+			echo "⛈️ "
+			;;
 		"heavyrainshowers_day" | "heavysleetshowers_day" | "lightrainshowers_day" | "lightsleetshowers_day" | "rainshowers_day" | "sleetshowers_day")
-			echo "🌦️ " ;;
+			echo "🌦️ "
+			;;
 		"heavyrainshowers_night" | "heavysleetshowers_night" | "lightrainshowers_night" | "lightsleetshowers_night" | "rainshowers_night" | "sleetshowers_night")
-			echo "☔" ;;
+			echo "☔"
+			;;
 		"snow" | "lightsnow" | "heavysnow")
-			echo "❄️ " ;;
+			echo "❄️ "
+			;;
 		"lightsnowshowers_day" | "lightsnowshowers_night" | "heavysnowshowers_day" | "heavysnowshowers_night" | "snowshowers_day" | "snowshowers_night")
-			echo "🌨 " ;;
-		"partlycloudy_day")       echo "⛅" ;;
-		"partlycloudy_night")     echo "🌗" ;;
-		*)                        echo "? " ;;
+			echo "🌨 "
+			;;
+		"partlycloudy_day") echo "⛅" ;;
+		"partlycloudy_night") echo "🌗" ;;
+		*) echo "? " ;;
 		esac
 		;;
 	esac
 }
-
 
 __read_file_split() {
 	file_to_read="$1"
@@ -327,7 +338,7 @@ __read_file_split() {
 		return
 	fi
 	local -a file_arr
-	IFS='@' read -ra file_arr <<< "$(cat "$file_to_read")"
+	IFS='@' read -ra file_arr <<<"$(cat "$file_to_read")"
 	if [ -z "${file_arr[$lookup_index]}" ]; then
 		echo "$fallback_value"
 		return
@@ -335,18 +346,15 @@ __read_file_split() {
 	echo "${file_arr[$lookup_index]}"
 }
 
-
 # Default to empty/blank
 __read_file_content() {
 	__read_file_split "$1" 0 ""
 }
 
-
 # Default to 0
 __read_file_last_update() {
 	__read_file_split "$1" 1 0
 }
-
 
 # Read cached content if still fresh; otherwise output empty
 __weather_cache_read() {
@@ -365,7 +373,6 @@ __weather_cache_read() {
 	fi
 }
 
-
 # Write <content@timestamp> to a file, overwriting existing content
 __write_to_file_with_last_updated() {
 	local file_to_write="$1"
@@ -373,9 +380,8 @@ __write_to_file_with_last_updated() {
 	if [ -z "$content" ]; then
 		return
 	fi
-	printf '%s@%s\n' "$content" "$(date +%s)" > "$file_to_write"
+	printf '%s@%s\n' "$content" "$(date +%s)" >"$file_to_write"
 }
-
 
 # Weather-specific cache write: only write when content is non-empty
 __weather_cache_write() {
@@ -389,64 +395,63 @@ __weather_cache_write() {
 	fi
 }
 
-
 # Try setting TMUX_POWERLINE_SEG_WEATHER_LAT & TMUX_POWERLINE_SEG_WEATHER_LON automatically with GeoIP services.
 __get_auto_location() {
-    local max_cache_age=$TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD
-    local -a lat_lon_arr
+	local max_cache_age=$TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD
+	local -a lat_lon_arr
 
-    if [[ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION" ]]; then
-        local cache_age=$(($(date +%s) - $(__read_file_last_update "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION")))
-        if (( cache_age < max_cache_age )); then
-            IFS=' ' read -ra lat_lon_arr <<< "$(__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION")"
-            TMUX_POWERLINE_SEG_WEATHER_LAT=${lat_lon_arr[0]}
-            TMUX_POWERLINE_SEG_WEATHER_LON=${lat_lon_arr[1]}
-            if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
-                return 0
-            fi
-        fi
-    fi
+	if [[ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION" ]]; then
+		local cache_age=$(($(date +%s) - $(__read_file_last_update "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION")))
+		if ((cache_age < max_cache_age)); then
+			IFS=' ' read -ra lat_lon_arr <<<"$(__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION")"
+			TMUX_POWERLINE_SEG_WEATHER_LAT=${lat_lon_arr[0]}
+			TMUX_POWERLINE_SEG_WEATHER_LON=${lat_lon_arr[1]}
+			if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
+				return 0
+			fi
+		fi
+	fi
 
-    local location_data
-    for api in "https://ipapi.co/json" "https://ipinfo.io/json"; do
-        if location_data=$(curl --max-time 4 -s "$api"); then
-            case "$api" in
-                *ipapi.co*)
-                    TMUX_POWERLINE_SEG_WEATHER_LAT=$(echo "$location_data" | jq -r '.latitude')
-                    TMUX_POWERLINE_SEG_WEATHER_LON=$(echo "$location_data" | jq -r '.longitude')
-                    ;;
-                *ipinfo.io*)
-                    IFS=',' read -ra loc <<< "$(echo "$location_data" | jq -r '.loc')"
-                    TMUX_POWERLINE_SEG_WEATHER_LAT="${loc[0]}"
-                    TMUX_POWERLINE_SEG_WEATHER_LON="${loc[1]}"
-                    ;;
-            esac
+	local location_data
+	for api in "https://ipapi.co/json" "https://ipinfo.io/json"; do
+		if location_data=$(curl --max-time 4 -s "$api"); then
+			case "$api" in
+			*ipapi.co*)
+				TMUX_POWERLINE_SEG_WEATHER_LAT=$(echo "$location_data" | jq -r '.latitude')
+				TMUX_POWERLINE_SEG_WEATHER_LON=$(echo "$location_data" | jq -r '.longitude')
+				;;
+			*ipinfo.io*)
+				IFS=',' read -ra loc <<<"$(echo "$location_data" | jq -r '.loc')"
+				TMUX_POWERLINE_SEG_WEATHER_LAT="${loc[0]}"
+				TMUX_POWERLINE_SEG_WEATHER_LON="${loc[1]}"
+				;;
+			esac
 
-            # There's no data, move on to the next API, just don't overwrite the previous location
-            # Also, there's a case where lat/lon was set to "null" as a string, gotta handle it
-            if [[ -z "$TMUX_POWERLINE_SEG_WEATHER_LAT" ||
-                  -z "$TMUX_POWERLINE_SEG_WEATHER_LON" ||
-                  "$TMUX_POWERLINE_SEG_WEATHER_LAT" == "null" ||
-                  "$TMUX_POWERLINE_SEG_WEATHER_LON" == "null" ]]; then
-                continue
-            fi
+			# There's no data, move on to the next API, just don't overwrite the previous location
+			# Also, there's a case where lat/lon was set to "null" as a string, gotta handle it
+			if [[ -z "$TMUX_POWERLINE_SEG_WEATHER_LAT" ||
+				-z "$TMUX_POWERLINE_SEG_WEATHER_LON" ||
+				"$TMUX_POWERLINE_SEG_WEATHER_LAT" == "null" ||
+				"$TMUX_POWERLINE_SEG_WEATHER_LON" == "null" ]]; then
+				continue
+			fi
 
-            # Write location using helper to append timestamp
-            __write_to_file_with_last_updated "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION" "$TMUX_POWERLINE_SEG_WEATHER_LAT $TMUX_POWERLINE_SEG_WEATHER_LON"
-            return 0
-        fi
-    done
+			# Write location using helper to append timestamp
+			__write_to_file_with_last_updated "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION" "$TMUX_POWERLINE_SEG_WEATHER_LAT $TMUX_POWERLINE_SEG_WEATHER_LON"
+			return 0
+		fi
+	done
 
-    if [[ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION" ]]; then
-        tp_err_seg "Warn: Using stale location data (failed to refresh)"
-        IFS=' ' read -ra lat_lon_arr <<< "$(__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION")"
-        TMUX_POWERLINE_SEG_WEATHER_LAT=${lat_lon_arr[0]}
-        TMUX_POWERLINE_SEG_WEATHER_LON=${lat_lon_arr[1]}
-        if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
-            return 0
-        fi
-    fi
+	if [[ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION" ]]; then
+		tp_err_seg "Warn: Using stale location data (failed to refresh)"
+		IFS=' ' read -ra lat_lon_arr <<<"$(__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION")"
+		TMUX_POWERLINE_SEG_WEATHER_LAT=${lat_lon_arr[0]}
+		TMUX_POWERLINE_SEG_WEATHER_LON=${lat_lon_arr[1]}
+		if [[ -n "$TMUX_POWERLINE_SEG_WEATHER_LAT" && -n "$TMUX_POWERLINE_SEG_WEATHER_LON" ]]; then
+			return 0
+		fi
+	fi
 
-    tp_err_seg "Err: Could not detect location automatically"
-    return 1
+	tp_err_seg "Err: Could not detect location automatically"
+	return 1
 }
