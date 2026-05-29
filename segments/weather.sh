@@ -50,14 +50,6 @@ EORC
 
 run_segment() {
 	local weather=""
-	# Resolve icon style before the cache read so the cache file path is
-	# style-specific; changing ICON_STYLE takes effect without waiting for expiry.
-	local icon_style="${TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE:-$TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE_DEFAULT}"
-	if [ "$icon_style" = "auto" ]; then
-		tp_patched_font_in_use && icon_style="nerdfonts" || icon_style="emoji"
-	fi
-	export TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE="$icon_style"
-	TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data_${icon_style}.txt"
 
 	# Apply non-location defaults following the __process_settings() pattern
 	__process_basic_settings
@@ -142,9 +134,14 @@ __process_basic_settings() {
 	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD" ]; then
 		export TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD_DEFAULT}"
 	fi
-	if [ -z "$TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE" ]; then
-		export TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE="${TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE_DEFAULT}"
+	# Resolve icon style (including "auto" detection) and set the style-specific
+	# cache path so that switching ICON_STYLE takes effect without waiting for expiry.
+	local icon_style="${TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE:-$TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE_DEFAULT}"
+	if [ "$icon_style" = "auto" ]; then
+		tp_patched_font_in_use && icon_style="nerdfonts" || icon_style="emoji"
 	fi
+	export TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE="$icon_style"
+	TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data_${icon_style}.txt"
 }
 
 
