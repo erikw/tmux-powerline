@@ -142,6 +142,13 @@ __process_basic_settings() {
 	fi
 	export TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE="$icon_style"
 	TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data_${icon_style}.txt"
+	# One-time migration: rename the pre-#515 unsuffixed cache to the emoji-specific name
+	# so existing users don't see a blank status bar on first upgrade. Only applies to the
+	# emoji style because the old cache content was emoji icons.
+	local legacy_cache="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data.txt"
+	if [ "$icon_style" = "emoji" ] && [ ! -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER" ] && [ -f "$legacy_cache" ]; then
+		mv "$legacy_cache" "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER"
+	fi
 }
 
 
@@ -224,6 +231,7 @@ __degree_c2f() {
 
 
 # Get symbol for condition. Available symbol names: https://api.met.no/weatherapi/weathericon/2.0/documentation#List_of_symbols
+# NOTE: when adding new yr.no condition codes, update all three tables below (nerdfonts, emoji_fixed, emoji).
 __get_yrno_condition_symbol() {
 	# local condition=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 	# local sunrise="$2"
@@ -255,7 +263,7 @@ __get_yrno_condition_symbol() {
 			echo "󰼴 " ;;  # U+F0F34 mdi-weather-partly-snowy
 		"partlycloudy_day")       echo "󰖕 " ;;  # U+F0595 mdi-weather-partly-cloudy
 		"partlycloudy_night")     echo "󰼱 " ;;  # U+F0F31 mdi-weather-night-partly-cloudy
-		*)                        echo "? " ;;
+		*)                        echo "? " ;;  # trailing space matches other nerdfonts entries
 		esac
 		;;
 	"emoji_fixed")
@@ -282,7 +290,7 @@ __get_yrno_condition_symbol() {
 			echo "🌨 " ;;
 		"partlycloudy_day")       echo "⛅" ;;
 		"partlycloudy_night")     echo "🌗" ;;
-		*)                        echo "?" ;;
+		*)                        echo "? " ;;
 		esac
 		;;
 	*)
@@ -308,7 +316,7 @@ __get_yrno_condition_symbol() {
 			echo "🌨 " ;;
 		"partlycloudy_day")       echo "⛅" ;;
 		"partlycloudy_night")     echo "🌗" ;;
-		*)                        echo "?" ;;
+		*)                        echo "? " ;;
 		esac
 		;;
 	esac
