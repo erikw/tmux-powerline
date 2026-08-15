@@ -108,6 +108,7 @@ Some segments have their own requirements. If you enable them in your theme, mak
 * **cpu_temp.sh**: `lm_sensors` for Linux, [smctemp](https://github.com/narugit/smctemp) for Macos
 * **dropbox_status.sh**: `dropbox-cli`
 * **github_notifications.sh**: `jq`, `curl`
+* **google_cloud.sh**: [gcloud CLI](https://cloud.google.com/cli)
 * **ifstat.sh**: `ifstat` (there is a simpler segment `ifstat_sys.sh` not using ifstat)
 * **mailcount.sh**
    * gmail: `wget`
