@@ -171,7 +171,7 @@ $EDITOR ~/.config/tmux-powerline/themes/my-theme.sh
 > Remember to update the configuration file to use the new theme by setting `TMUX_POWERLINE_THEME=my-theme`
 
 ## Custom Segments
-In the same was as themes, you can create your own segments at `TMUX_POWERLINE_DIR_USER_SEGMENTS` which defaults to `~/.config/tmux-powerline/segments`.
+In the same way as themes, you can create your own segments at `TMUX_POWERLINE_DIR_USER_SEGMENTS` which defaults to `~/.config/tmux-powerline/segments`.
 
 To get started, copy an existing segment that is similar to the segment that you want to create.
 ```shell
