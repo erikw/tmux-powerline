@@ -1,5 +1,5 @@
 # shellcheck shell=bash
-# Low-cadence tennis snapshots. All local instances share one persistent budget.
+# Low-cadence tennis snapshots. All local instances share one request budget.
 
 generate_segmentrc() {
 	cat <<'EORC'
@@ -22,8 +22,7 @@ run_segment() (
 		return 1
 	fi
 
-	# Unlike the normal temporary directory, this survives tmux and OS restarts.
-	local cache="${XDG_CACHE_HOME:-$HOME/.cache}/tmux-powerline/tennis"
+	local cache="${TMUX_POWERLINE_DIR_TEMPORARY}/tennis"
 	local now
 	now=$(date +%s) || return 1
 	umask 077
@@ -37,6 +36,10 @@ run_segment() (
 
 	if [ -f "$cache/snapshot.json" ]; then
 		__tennis_format "$cache/snapshot.json" "$now" && return 0
+	fi
+	if [ -f "$cache/initial_wait" ]; then
+		printf '%s\n' 'Tennis: waiting for request window'
+		return 0
 	fi
 	printf '%s\n' 'Tennis: unavailable'
 )
@@ -57,10 +60,19 @@ __tennis_refresh() (
 	trap 'rm -f "$cache/response.tmp" "$cache/snapshot.tmp" "$cache/attempt.tmp"; rmdir "$cache/refresh.lock"' EXIT
 	trap 'exit 1' HUP INT TERM
 	now=$(date +%s) || return 1
+	# Temporary files can disappear on reboot or cleanup. A full initial cooldown
+	# keeps those resets from allowing requests less than 900 seconds apart.
+	if [ ! -f "$cache/last_attempt" ]; then
+		: >"$cache/initial_wait" || return 1
+		printf '%s\n' "$now" >"$cache/attempt.tmp" &&
+			mv "$cache/attempt.tmp" "$cache/last_attempt"
+		return
+	fi
 	# Another process may have finished between the first check and taking the lock.
 	__tennis_due "$cache" "$now" || return 0
 	printf '%s\n' "$now" >"$cache/attempt.tmp" &&
 		mv "$cache/attempt.tmp" "$cache/last_attempt" || return 1
+	rm -f "$cache/initial_wait"
 
 	# Ignore curlrc (which could enable retries/redirects). Send the key on stdin,
 	# not in the URL or process arguments. One page and no follow-up requests.
@@ -80,13 +92,21 @@ __tennis_refresh() (
 __tennis_format() {
 	jq -er --argjson now "$2" --arg player "${TMUX_POWERLINE_SEG_TENNIS_PLAYER:-}" '
 		def name: if type == "string" and length > 0 then .[0:24] else "?" end;
+		# Match tiebreaks carry points in the final games slot as well. When the
+		# two fields agree, show that tiebreak score once, in brackets.
+		def shared_tiebreak_points:
+			.score.is_tiebreak == true and
+			([.score.games[]? | last | tostring] == [.score.points[]? | tostring]);
 		def games:
 			if (.score.games | type) == "array" and (.score.games | length) == 2
 				and all(.score.games[]; type == "array") then
-				.score.games | transpose | map(map(. // "?" | tostring) | join("-")) | join(" ")
+				shared_tiebreak_points as $shared |
+				.score.games | transpose | (length - 1) as $last | to_entries |
+				map((.value | map(. // "?" | tostring) | join("-")) as $score |
+					if $shared and .key == $last then "[" + $score + "]" else $score end) | join(" ")
 			else "" end;
 		def points:
-			if (.score.points | type) == "array" and (.score.points | length) == 2
+			if (shared_tiebreak_points | not) and (.score.points | type) == "array" and (.score.points | length) == 2
 				and all(.score.points[]; . != null) then
 				" (" + (if .score.is_tiebreak == true then "TB " else "" end)
 				+ (.score.points | map(tostring) | join("-")) + ")"

@@ -132,7 +132,8 @@ Add `"tennis 24 255"` to your theme's status segments and set
 filter is applied locally. Protect the configuration file with `chmod 600`.
 
 The segment shows the first matching live match, its set scores and available points,
-plus the snapshot age in minutes. `TB` marks tiebreak points and `[stale score]`
+plus the snapshot age in minutes. `TB` marks tiebreak points; a tiebreak score
+repeated in the current set slot is shown once in brackets. `[stale score]`
 preserves the provider's staleness warning. Additional matches on
 this page are counted; `[more]` indicates that the API has another page. The segment
 fetches only the first 100 matches and does not paginate. An unknown score is shown
@@ -140,14 +141,16 @@ as unavailable, rather than as 0-0.
 
 This is a snapshot refreshed at most every 15 minutes. It uses only the free live
 matches endpoint and needs no paid plan. All instances for the same local user share
-one persistent cache at `${XDG_CACHE_HOME:-$HOME/.cache}/tmux-powerline/tennis`.
+one cache at `${TMUX_POWERLINE_DIR_TEMPORARY}/tennis`, alongside the other segments.
 The fixed 900-second minimum between attempts includes failed requests, limiting the
-segment to 96 requests/day. Use a dedicated key: requests from other applications or
-computers also consume the key's 100/day allowance. Do not delete the cache to force
-an update, since it stores the request budget as well as the last score.
+segment to 96 requests/day. When the temporary cache is missing (including after a
+reboot or cleanup), the segment waits a full 15 minutes before requesting a snapshot
+and shows `Tennis: waiting for request window`. Clearing the cache therefore cannot
+force an early update. Use a dedicated key: requests from other applications or
+computers also consume the key's 100/day allowance.
 
-Network requests run in the background. Before the first successful fetch the segment
-shows `Tennis: unavailable`; later failures retain the last snapshot with its age.
+Network requests run in the background. If the first fetch fails the segment shows
+`Tennis: unavailable`; later failures retain the last snapshot with its age.
 No key means no output or network request. If a process is forcibly killed and leaves
 `refresh.lock` behind, stop the segment and remove that empty directory to resume;
 keep `last_attempt` so the budget remains intact.

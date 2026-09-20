@@ -8,7 +8,8 @@ trap 'rm -rf "$test_dir"' EXIT
 export TENNIS_TEST_DIR="$test_dir"
 export TENNIS_TEST_REAL_DATE
 TENNIS_TEST_REAL_DATE=$(command -v date)
-export XDG_CACHE_HOME="$test_dir/cache"
+export XDG_CACHE_HOME="$test_dir/unused-persistent-cache"
+export TMUX_POWERLINE_DIR_TEMPORARY="$test_dir/temporary"
 export TMUX_POWERLINE_SEG_TENNIS_API_KEY="test-key"
 mkdir -p "$test_dir/bin"
 export PATH="$test_dir/bin:$PATH"
@@ -52,9 +53,11 @@ passed=0
 fail() { printf 'FAIL: %s\n' "$*" >&2; exit 1; }
 assert_equal() { [ "$1" = "$2" ] || fail "expected <$2>, got <$1>"; }
 pass() { passed=$((passed + 1)); printf 'ok %s - %s\n' "$passed" "$1"; }
-cache="$XDG_CACHE_HOME/tmux-powerline/tennis"
+cache="$TMUX_POWERLINE_DIR_TEMPORARY/tennis"
 reset_case() {
-	rm -rf "$XDG_CACHE_HOME"
+	rm -rf "$TMUX_POWERLINE_DIR_TEMPORARY"
+	mkdir -p "$cache"
+	printf '999100\n' >"$cache/last_attempt"
 	printf '1000000\n' >"$test_dir/time"
 	printf '200\n' >"$test_dir/status"
 	: >"$test_dir/requests"
@@ -83,6 +86,7 @@ format_fixture() {
 }
 
 reset_case
+rm -rf "$TMUX_POWERLINE_DIR_TEMPORARY"
 assert_equal "$(TMUX_POWERLINE_SEG_TENNIS_API_KEY='' render)" ''
 assert_equal "$(requests)" 0
 [ ! -d "$cache" ] || fail 'disabled segment created cache'
@@ -94,6 +98,32 @@ fi
 assert_equal "$(requests)" 0
 pass 'invalid key rejected before network'
 
+fetch
+assert_equal "$(requests)" 0
+assert_equal "$(render)" 'Tennis: waiting for request window'
+[ ! -e "$XDG_CACHE_HOME" ] || fail 'created a persistent cache'
+printf '1000899\n' >"$test_dir/time"
+fetch
+assert_equal "$(requests)" 0
+printf '1000900\n' >"$test_dir/time"
+for _ in {1..20}; do render >/dev/null & done
+wait
+settle
+assert_equal "$(requests)" 1
+rm -rf "$TMUX_POWERLINE_DIR_TEMPORARY"
+for _ in {1..20}; do render >/dev/null & done
+wait
+settle
+assert_equal "$(requests)" 1
+printf '1001799\n' >"$test_dir/time"
+fetch
+assert_equal "$(requests)" 1
+printf '1001800\n' >"$test_dir/time"
+fetch
+assert_equal "$(requests)" 2
+pass 'temporary cache resets start a full cooldown, including concurrent first renders'
+
+reset_case
 fetch
 assert_equal "$(requests)" 1
 assert_equal "$(render)" 'Tennis (0m ago): Alice / Bob 6-4 3-4 (15-30)'
@@ -120,7 +150,7 @@ rm "$cache/snapshot.json"
 fetch
 assert_equal "$(requests)" 2
 assert_equal "$(render)" 'Tennis: unavailable'
-pass 'missing score cache does not erase persisted budget'
+pass 'missing score cache does not erase the shared request budget'
 
 for status in 401 403 429 500 000; do
 	reset_case
@@ -203,6 +233,22 @@ jq '.data[0].score |= (.games=[[6],[6]] | .points=["4","3"] | .is_tiebreak=true)
 mv "$test_dir/edited" "$test_dir/response"
 assert_equal "$(format_fixture)" 'Tennis (0m ago): Alice / Bob 6-6 (TB 4-3)'
 pass 'null points are omitted and tiebreak points labelled'
+
+for score in '[10,5]' '[0,0]' '[4,3]' '[12,10]'; do
+	reset_case
+	jq --argjson score "$score" '.data[0].score = {games:[[6,4,$score[0]],[4,6,$score[1]]],points:($score|map(tostring)),is_tiebreak:true}' "$test_dir/response" >"$test_dir/edited"
+	mv "$test_dir/edited" "$test_dir/response"
+	breaker=$(printf '%s' "$score" | jq -r 'map(tostring)|join("-")')
+	assert_equal "$(format_fixture)" "Tennis (0m ago): Alice / Bob 6-4 4-6 [$breaker]"
+done
+pass 'deciding match tiebreaks render once, including early and extended scores'
+
+reset_case
+jq '.data[0].score = {games:[[6,4,6],[4,6,6]],points:["4","3"],is_tiebreak:true}' "$test_dir/response" >"$test_dir/edited"
+mv "$test_dir/edited" "$test_dir/response"
+assert_equal "$(format_fixture)" 'Tennis (0m ago): Alice / Bob 6-4 4-6 6-6 (TB 4-3)'
+pass 'ordinary deciding-set tiebreak retains its distinct game and point scores'
+
 
 reset_case
 jq '.data[0].score.stale = true' "$test_dir/response" >"$test_dir/edited"
