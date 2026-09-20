@@ -116,12 +116,43 @@ Some segments have their own requirements. If you enable them in your theme, mak
    * mpd: [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
    * last.fm: `jq`, `curl`
 * **rainbarf.sh**: [rainbarf](https://github.com/creaktive/rainbarf)
+* **tennis.sh**: `jq`, `curl` >= 7.55, and a dedicated free [Live Tennis API key](https://livetennisapi.com)
 * **tmux_continuum\*.sh**: [tmux-continuum](https://github.com/tmux-plugins/tmux-continuum/)
 * **tmux_mem_cpu_load.sh**: [tmux-mem-cpu-load](https://github.com/thewtex/tmux-mem-cpu-load)
 * **wan_ip.sh**: `curl`
 * **weather.sh**:
    * Provider *yrno*: `jq`, `curl`
 * **xkb_layout.sh**: X11, XKB
+
+
+### Tennis score snapshots
+Add `"tennis 24 255"` to your theme's status segments and set
+`TMUX_POWERLINE_SEG_TENNIS_API_KEY` in your private configuration file. Optionally set
+`TMUX_POWERLINE_SEG_TENNIS_PLAYER` to a player or doubles-team name substring. This
+filter is applied locally. Protect the configuration file with `chmod 600`.
+
+The segment shows the first matching live match, its set scores and available points,
+plus the snapshot age in minutes. `TB` marks tiebreak points and `[stale score]`
+preserves the provider's staleness warning. Additional matches on
+this page are counted; `[more]` indicates that the API has another page. The segment
+fetches only the first 100 matches and does not paginate. An unknown score is shown
+as unavailable, rather than as 0-0.
+
+This is a snapshot refreshed at most every 15 minutes. It uses only the free live
+matches endpoint and needs no paid plan. All instances for the same local user share
+one persistent cache at `${XDG_CACHE_HOME:-$HOME/.cache}/tmux-powerline/tennis`.
+The fixed 900-second minimum between attempts includes failed requests, limiting the
+segment to 96 requests/day. Use a dedicated key: requests from other applications or
+computers also consume the key's 100/day allowance. Do not delete the cache to force
+an update, since it stores the request budget as well as the last score.
+
+Network requests run in the background. Before the first successful fetch the segment
+shows `Tennis: unavailable`; later failures retain the last snapshot with its age.
+No key means no output or network request. If a process is forcibly killed and leaves
+`refresh.lock` behind, stop the segment and remove that empty directory to resume;
+keep `last_attempt` so the budget remains intact.
+
+Run the offline regression checks with `bash tests/tennis.sh`.
 
 # Installation
 1. Install [tpm](https://github.com/tmux-plugins/tpm) and make sure it's working.
