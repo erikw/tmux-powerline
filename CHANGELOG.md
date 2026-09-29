@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+* [`google_cloud.sh`](segments/google_cloud.sh): new segment showing the Google Cloud context properties.
 * `tennis.sh`: optional free-tier tennis score snapshots with local player filtering, a shared persistent request budget and background updates.
 * [`claude_code.sh`](segments/claude_code.sh): new segment showing Claude Code subscription usage. Each window pairs a usage figure with its time remaining — session `%` + 5-hour reset, weekly `%` + 7-day reset, and a billing window with an optional notional cost (via [ccusage](https://github.com/ryoppippi/ccusage); all-time, current payment period, or both per `COST_MODE`, scoped to Claude Code sessions only) + cycle reset. The session/weekly limits come from the OAuth endpoint backing `/usage`; the billing renewal day is derived from the subscription anchor. Every indicator is individually toggleable. Example: `󰚩 42% 1:30 | 18% 4d8h | $312.40 ($86.25 ↻5d12h)`. Requires `jq`, `curl` and [`ccusage`](https://github.com/ryoppippi/ccusage) (only if you enable the accumulated cost display).
 * [`doctor.sh`](doctor.sh): new diagnostics command that prints system information, resolved tmux-powerline settings and paths, and live tmux status options to help debug local setups.
