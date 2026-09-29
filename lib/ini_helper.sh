@@ -1,6 +1,6 @@
 # shellcheck shell=bash
 
-# Echoes the value of the given section and key of in the INI file. When the
+# Echoes the value of the given section and key in the INI file. When the
 # section is omitted, the key is looked up in the unnamed section.
 #
 # Usage: `tp_get_ini_value <file_path> [<section>] <key>`
