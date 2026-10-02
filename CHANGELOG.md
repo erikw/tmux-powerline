@@ -8,7 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.0] - 2026-10-02
+
 ### Added
+
 * [`google_cloud.sh`](segments/google_cloud.sh): new segment showing the Google Cloud context properties.
 * `tennis.sh`: optional free-tier tennis score snapshots with local player filtering, a shared persistent request budget and background updates.
 * [`claude_code.sh`](segments/claude_code.sh): new segment showing Claude Code subscription usage. Each window pairs a usage figure with its time remaining — session `%` + 5-hour reset, weekly `%` + 7-day reset, and a billing window with an optional notional cost (via [ccusage](https://github.com/ryoppippi/ccusage); all-time, current payment period, or both per `COST_MODE`, scoped to Claude Code sessions only) + cycle reset. The session/weekly limits come from the OAuth endpoint backing `/usage`; the billing renewal day is derived from the subscription anchor. Every indicator is individually toggleable. Example: `󰚩 42% 1:30 | 18% 4d8h | $312.40 ($86.25 ↻5d12h)`. Requires `jq`, `curl` and [`ccusage`](https://github.com/ryoppippi/ccusage) (only if you enable the accumulated cost display).
@@ -16,14 +19,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [`weather.sh`](segments/weather.sh): new `TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE` option (`emoji` / `emoji_fixed` / `nerdfonts` / `auto`) to control weather condition icon rendering. Fixes status-bar width miscounting caused by VS16 variation selectors on some terminals. Users experiencing the status-bar scrolling issue ([#351](https://github.com/erikw/tmux-powerline/issues/351)) should set `TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE="emoji_fixed"` or `"nerdfonts"`. After changing this option, delete `weather_cache_data.txt` in your tmux-powerline temp directory to see the effect immediately. [#515](https://github.com/erikw/tmux-powerline/pull/515)
 
 ### Changed
+
 * `now_playing.sh`: all np_*-scripts should now print noting when the music is paused. This segment takes a lot of space, let's hide it when actually not playing anything.
 
 ### Fixed
+
 * [`weather.sh`](segments/weather.sh): prevent excessive MET and GeoIP requests by sharing a bounded refresh-attempt cache while retaining the last successful weather value after failures. [#504](https://github.com/erikw/tmux-powerline/issues/504)
 
 ## [3.2.0] - 2026-02-04
 
 ### Added
+
 * [`weather.sh`](segments/weather.sh): auto detection of location by GeoIP. [#464](https://github.com/erikw/tmux-powerline/pull/464)
 * `.editorconfig` for consistent coding style. [#477](https://github.com/erikw/tmux-powerline/pull/477)
 * [`dropbox_status.sh`](segments/dropbox_status.sh) a new segment showing Dropbox operation statuses. [#478](https://github.com/erikw/tmux-powerline/pull/478)
@@ -34,21 +40,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [`now_playing.sh`](segments/now_playing.sh): Added configuration to optionally display text when nothing is playing. [#503](https://github.com/erikw/tmux-powerline/pull/503)
 
 ### Changed
+
 * **Deprecation Warning:** functions `patched_font_in_use()`, `air_color()` and `format()` have been replaced by `tp_patched_font_in_use()`, `tp_air_color()` and `tp_format()` respectively and will be removed in future releases.
 Please update your custom themes and segments now. [#489](https://github.com/erikw/tmux-powerline/pull/489)
 
 ### Removed
+
 * [`now_playing.sh`](segments/now_playing.sh): removed Spotify though wine. Not likely this is used anymore. If someone still uses, shout at me and I'll add it back :-). [#473](https://github.com/erikw/tmux-powerline/pull/473)
 * [`weather.sh`](segments/weather.sh): Removed GNU Grep dependency [#468](https://github.com/erikw/tmux-powerline/pull/468)
 * [`cpu.sh`](segments/cpu.sh):  Removed GNU Grep dependency [#472](https://github.com/erikw/tmux-powerline/pull/472)
 
 ### Fixed
+
 * Set custom User Agent for weather segment's met.no API call. [#500](https://github.com/erikw/tmux-powerline/pull/500)
 * [`weather.sh`](segments/weather.sh): Fix caching issue causing DOSing met.no. [#505](https://github.com/erikw/tmux-powerline/pull/505)
 
 ## [3.1.0] - 2025-03-03
 
 ### Added
+
 * Dual status bar support [#379](https://github.com/erikw/tmux-powerline/issues/379)
 * New segment `date_week.sh` [#375](https://github.com/erikw/tmux-powerline/issues/375)
 * New segment `kubernetes_context.sh` [#377](https://github.com/erikw/tmux-powerline/issues/377)
@@ -59,6 +69,7 @@ Please update your custom themes and segments now. [#489](https://github.com/eri
 * Add `semver` to devcontainer to help bumping versions.
 
 ### Changed
+
 * Improved roll_text function [#390](https://github.com/erikw/tmux-powerline/issues/390)
 * Improved segment ifstat [#402](https://github.com/erikw/tmux-powerline/issues/402)
 * Minor improvements, cleanup & shellcheck compliance
@@ -69,6 +80,7 @@ Please update your custom themes and segments now. [#489](https://github.com/eri
 * Improve Linter [#418](https://github.com/erikw/tmux-powerline/pull/418)
 
 ### Fixed
+
 * Fix vcs segments [#371](https://github.com/erikw/tmux-powerline/issues/371)
 * Fix wrong session_info in nested tmux session [#359](https://github.com/erikw/tmux-powerline/issues/359)
 * Fix air segment [#394](https://github.com/erikw/tmux-powerline/pull/394) & [#397](https://github.com/erikw/tmux-powerline/pull/397)
@@ -76,53 +88,65 @@ Please update your custom themes and segments now. [#489](https://github.com/eri
 ## [3.0.0] - 2023-10-02
 
 ### Added
+
 * Config options to set the status bar's initial visibility, refresh interval and justification: `TMUX_POWERLINE_STATUS_VISIBILITY`, `TMUX_POWERLINE_STATUS_INTERVAL` and `TMUX_POWERLINE_STATUS_JUSTIFICATION`.
 * Allow setting the `default` tmux color in segment themes. [#296](https://github.com/erikw/tmux-powerline/issues/296).
 * Allow truncation of VCS branch name with a new config `TMUX_POWERLINE_SEG_VCS_BRANCH_MAX_LEN`.
 
 ### Changed
+
 * Removed support for the deprecated config file `~/.tmux-powerlinerc`. [#330](https://github.com/erikw/tmux-powerline/issues/330)
 
 ### Fixed
+
 * The now playing segment is fixed for Last.FM using their 2.0 API. [#307](https://github.com/erikw/tmux-powerline/issues/307)
 * Correctly handle named colours when specifying theme colours. [#314](https://github.com/erikw/tmux-powerline/issues/314)
 
 ## [2.1.0] - 2023-04-16
 
 ### Added
+
 * Config options to add keybindigns to mute the status bar added: `TMUX_POWERLINE_MUTE_LEFT_KEYBINDING` and `TMUX_POWERLINE_MUTE_RIGHT_KEYBINDING`.
 
 ### Changed
+
 * The old manual way is not supported for simplicity of maintaining the code.
 
 ## [2.0.0] - 2023-04-15
 
 ### Added
+
 * tmux-powerline is now installable as a [tpm](https://github.com/tmux-plugins/tpm) plugin! Long requested feature. [#189](https://github.com/erikw/tmux-powerline/issues/189)
 * Theme config: add ability to selectively disable spacing and segment characters. [#302](https://github.com/erikw/tmux-powerline/pull/302)
 
 ### Changed
+
 * Improved the README.md with config instructions and include user segment instructions.
 
 ### Removed
+
 * Dropped support for `$(tmux -V)` <2.2.
 
 ## [1.4.0] - 2022-05-04
 
 ### Fixed
+
 * Weather segment now working with yr.no as weather provider. [#285](https://github.com/erikw/tmux-powerline/pull/285)
 
 ## [1.3.0] - 2022-04-05
 
 ### Changed
+
 * Rename master branch to main.
 
 ## [1.2.0] - 2021-10-25
 
 ### Added
+
 * Support for `$XDG_CONFIG_HOME` for config file.
 
 ## [1.1.0] - 2018-03-26
 
 ## [1.0.0] - 2015-05-07
+
 * First tagged release.
