@@ -157,6 +157,20 @@ keep `last_attempt` so the budget remains intact.
 
 Run the offline regression checks with `bash tests/tennis.sh`.
 
+### Weather refresh behavior
+
+`weather.sh` refreshes in the background and shares its cache between all local tmux
+clients. It makes at most one GeoIP or MET Weather API attempt per configured
+`TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD` (600 seconds by default), including when
+the provider, network, or auto-location lookup fails. A failed refresh retains the
+last successfully displayed weather; the segment is blank until the first successful
+refresh.
+
+The weather cache and refresh-attempt marker are stored in
+`${TMUX_POWERLINE_DIR_TEMPORARY}` as `weather_cache_data.txt` and
+`weather_cache_last_attempt.txt`. Delete both files to force a new attempt on the
+next status render. Run the offline regression checks with `bash tests/weather.sh`.
+
 # Installation
 1. Install [tpm](https://github.com/tmux-plugins/tpm) and make sure it's working.
 2. Install tmux-powerline as a plugin by adding a line to `tmux.conf`:

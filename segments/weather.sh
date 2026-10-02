@@ -20,6 +20,7 @@ TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE_DEFAULT="emoji"
 TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data.txt"
 # Add: global cache file for auto-detected location (lat/lon)
 TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_location.txt"
+TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LAST_ATTEMPT="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_last_attempt.txt"
 
 generate_segmentrc() {
 	read -r -d '' rccontents <<EORC
@@ -71,14 +72,33 @@ run_segment() {
 	return 0
 }
 
-# Returns 0 if cache is still fresh, 1 if stale or missing
+# Returns 0 if a refresh was attempted within the update period, 1 otherwise.
 __weather_cache_is_fresh() {
 	local update_period="${1:-$TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT}"
-	[ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER" ] || return 1
-	local last_update time_now
-	last_update=$(__read_file_last_update "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER")
+	if ! [[ "$update_period" =~ ^[1-9][0-9]*$ ]]; then
+		update_period="$TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT"
+	fi
+
+	local last_attempt time_now attempt_age
 	time_now=$(date +%s)
-	[ "$(echo "(${time_now}-${last_update}) < ${update_period}" | bc)" -eq 1 ]
+	last_attempt=$(__weather_last_attempt)
+
+	if [ -z "$last_attempt" ]; then
+		return 1
+	fi
+	if ! [[ "$last_attempt" =~ ^[0-9]+$ ]]; then
+		tp_err_seg "Warn: Invalid weather refresh attempt timestamp; delaying retry"
+		__weather_record_attempt "$time_now"
+		return 0
+	fi
+	if [ "$last_attempt" -gt "$time_now" ]; then
+		tp_err_seg "Warn: Weather refresh attempt timestamp is in the future; delaying retry"
+		__weather_record_attempt "$time_now"
+		return 0
+	fi
+
+	attempt_age=$((time_now - last_attempt))
+	[ "$attempt_age" -lt "$update_period" ]
 }
 
 # Spawn a background process to refresh the cache; does nothing if already running
@@ -106,6 +126,9 @@ __weather_refresh_in_background() {
 		exec >/dev/null 2>&1
 		trap 'rm -f "$lock_file"' EXIT
 
+		# A renderer may have checked freshness before another worker recorded its attempt.
+		__weather_cache_is_fresh "$TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD" && exit 0
+		__weather_record_attempt "$(date +%s)" || exit 1
 		__process_settings || exit 1
 
 		local weather
@@ -179,17 +202,19 @@ __yrno() {
 	local user_agent
 	user_agent="tmux-powerline/$(tp_version) (https://github.com/erikw/tmux-powerline)"
 
-	if weather_data=$(curl --max-time 4 -A "$user_agent" -s "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}"); then
-		error=$(echo "$weather_data" | grep -i "error")
-		if [ -n "$error" ]; then
-			tp_err_seg "Err: yr.no err: error in api return"
-			return 1
-		fi
-		degree=$(echo "$weather_data" | jq -r '.properties.timeseries | .[0].data.instant.details.air_temperature')
-		condition=$(echo "$weather_data" | jq -r '.properties.timeseries | .[0].data.next_1_hours.summary.symbol_code')
+	if ! weather_data=$(curl --fail --max-time 4 -A "$user_agent" -s "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}"); then
+		tp_err_seg "Err: yr.no err: unable to fetch weather data"
+		return 1
 	fi
-
-	if [ -z "$degree" ]; then
+	if ! degree=$(echo "$weather_data" | jq -er '.properties.timeseries[0].data.instant.details.air_temperature'); then
+		tp_err_seg "Err: yr.no err: unable to parse temperature"
+		return 1
+	fi
+	if ! condition=$(echo "$weather_data" | jq -er '.properties.timeseries[0].data.next_1_hours.summary.symbol_code'); then
+		tp_err_seg "Err: yr.no err: unable to parse weather condition"
+		return 1
+	fi
+	if [ -z "$degree" ] || [ "$degree" = "null" ]; then
 		tp_err_seg "Err: yr.no err: unable to fetch weather data"
 		return 1
 	fi
@@ -356,42 +381,58 @@ __read_file_last_update() {
 	__read_file_split "$1" 1 0
 }
 
-# Read cached content if still fresh; otherwise output empty
-__weather_cache_read() {
-	local last_update time_now up_to_date
-	if [ ! -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER" ]; then
-		echo ""
-		return
-	fi
-	last_update=$(__read_file_last_update "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER")
-	time_now=$(date +%s)
-	up_to_date=$(echo "(${time_now}-${last_update}) < ${TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD}" | bc)
-	if [ "$up_to_date" -eq 1 ]; then
-		__read_file_content "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER"
-	else
-		echo ""
+# Read the dedicated attempt marker, falling back to the legacy weather cache timestamp.
+__weather_last_attempt() {
+	if [ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LAST_ATTEMPT" ]; then
+		cat "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LAST_ATTEMPT"
+	elif [ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER" ]; then
+		__read_file_last_update "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER"
 	fi
 }
 
-# Write <content@timestamp> to a file, overwriting existing content
+# Atomically write content to avoid renderers reading a truncated cache file.
+__write_file_atomically() {
+	local file_to_write="$1"
+	local content="$2"
+	local temporary_file
+	temporary_file=$(mktemp "${file_to_write}.XXXXXX") || {
+		tp_err_seg "Err: Unable to create temporary weather cache file"
+		return 1
+	}
+	if ! printf '%s\n' "$content" >"$temporary_file"; then
+		rm -f "$temporary_file"
+		tp_err_seg "Err: Unable to write temporary weather cache file"
+		return 1
+	fi
+	if ! mv -f "$temporary_file" "$file_to_write"; then
+		rm -f "$temporary_file"
+		tp_err_seg "Err: Unable to update weather cache file"
+		return 1
+	fi
+}
+
+# Write <content@timestamp> to a file, overwriting existing content.
 __write_to_file_with_last_updated() {
 	local file_to_write="$1"
 	local content="$2"
 	if [ -z "$content" ]; then
-		return
+		return 1
 	fi
-	printf '%s@%s\n' "$content" "$(date +%s)" >"$file_to_write"
+	__write_file_atomically "$file_to_write" "${content}@$(date +%s)"
 }
 
-# Weather-specific cache write: only write when content is non-empty
+__weather_record_attempt() {
+	__write_file_atomically "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LAST_ATTEMPT" "$1"
+}
+
+# Weather-specific cache write: only write successful weather data.
 __weather_cache_write() {
 	local content="$1"
 	if [ -n "$content" ]; then
 		__write_to_file_with_last_updated "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER" "$content"
 	else
-		# Overwrite the cache file with an error message and updated timestamp to avoid repeated fetch attempts while the provider is unavailable
-		tp_err_seg "Err: Failed to fetch weather data, caching error message to avoid repeated fetch attempts"
-		__write_to_file_with_last_updated "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER" "failed to fetch weather data"
+		tp_err_seg "Err: Failed to fetch weather data; retaining the previous weather cache"
+		return 1
 	fi
 }
 
