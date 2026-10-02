@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 * `now_playing.sh`: all np_*-scripts should now print noting when the music is paused. This segment takes a lot of space, let's hide it when actually not playing anything.
 
+### Fixed
+* [`weather.sh`](segments/weather.sh): prevent excessive MET and GeoIP requests by sharing a bounded refresh-attempt cache while retaining the last successful weather value after failures. [#504](https://github.com/erikw/tmux-powerline/issues/504)
+
 ## [3.2.0] - 2026-02-04
 
 ### Added
