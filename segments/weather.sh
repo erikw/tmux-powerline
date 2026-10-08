@@ -612,11 +612,15 @@ __weather_endpoint_file_is_valid() {
 	' "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_FILE"
 }
 
+__weather_read_endpoint_file() {
+	awk 'NR == 1 { print; exit }' "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_FILE"
+}
+
 __weather_endpoint() {
 	local expected
 	expected=$(__weather_decode_endpoint) || return 1
 	if __weather_endpoint_file_is_valid "$expected"; then
-		printf '%s\n' "$expected"
+		__weather_read_endpoint_file
 		return
 	fi
 
@@ -643,7 +647,8 @@ __weather_endpoint() {
 		chmod 600 "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_FILE" 2>/dev/null || true
 	fi
 	rmdir "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_LOCK" 2>/dev/null || return 1
-	printf '%s\n' "$expected"
+	__weather_endpoint_file_is_valid "$expected" || return 1
+	__weather_read_endpoint_file
 }
 
 __weather_prepare_coordinates() {
