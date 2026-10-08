@@ -117,7 +117,7 @@ __weather_refresh_in_background() {
 
 		local weather
 		case "$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER" in
-		"met")
+		"met" | "yrno") # "yrno" is retained as a compatibility alias for existing configurations.
 			weather=$(__weather_met_fetch)
 			;;
 		*)

@@ -174,6 +174,12 @@ assert_file_not_contains "$test_dir/urls" 'https://api.met.no/'
 pass 'concurrent renders make one assigned-endpoint request with four-decimal coordinates'
 
 reset_case
+TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER=yrno render >/dev/null
+settle
+assert_equal "$(requests)" 1
+pass 'legacy yrno provider setting remains a MET compatibility alias'
+
+reset_case
 printf '☁️  8°C@999900\n' >"$weather_cache"
 unset TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD
 assert_equal "$(render)" '☁️  8°C'
