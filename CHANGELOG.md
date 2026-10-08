@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-* [`weather.sh`](segments/weather.sh): improve MET Norway Locationforecast API compliance with a descriptive User-Agent, conditional requests, normalized coordinates, and support for the provider endpoint. Refresh scheduling now enforces the provider's minimum interval, respects `Retry-After` responses, and backs off after failures while retaining the last successful weather value.
+* [`weather.sh`](segments/weather.sh): improve MET Norway Locationforecast API compliance with a descriptive User-Agent, conditional requests, normalized coordinates, and support for the provider endpoint. Refresh scheduling now enforces the provider's minimum interval, respects `Retry-After` responses, and backs off after failures while retaining the last successful weather value. You need to upgrade to v4.0.0 to continue to use the weather segment as weather API requests to met.no from 3.x releases of tmux-powerline soon will be blocked.
 
 ## [3.3.0] - 2026-10-02
 
