@@ -36,12 +36,13 @@
 <img alt="Top Contributors" src="https://contrib.rocks/image?repo=erikw/tmux-powerline&max=36"/>
 </a>
 
-
 # Intro
+
 tmux-powerline is a tmux <a title="Tmux Plugin Manager" href="https://github.com/tmux-plugins/tpm">tpm</a> plugin that gives you a slick and hackable powerline status bar consisting of segments. It's easily extensible with custom segments and themes.
 The plugin itself is implemented purely in bash, thus minimizing system requirements. However, you can make segments in any language you want (with a shell wrapper).
 
 Some examples of segments available that you can add to your tmux status bar are (full list [here](https://github.com/erikw/tmux-powerline/tree/main/segments)):
+
 * LAN & WAN IP addresses
 * Now Playing for MPD, Spotify (GNU/Linux native or wine, macOS), iTunes (macOS), Rhythmbox, Banshee, MOC, Audacious, Rdio (macOS), cmus, Pithos and Last.fm (last scrobbled track).
 * New mail count for GMail, Maildir, mbox, mailcheck, and Apple Mail
@@ -60,6 +61,7 @@ Some examples of segments available that you can add to your tmux status bar are
 * Claude Code subscription usage: session/weekly limits, time remaining (session/weekly/billing cycle), and optional accumulated cost
 
 # Screenshots
+
 **Full screenshot**
 
 <a href="img/full.png" title="Full screenshot"><img src="img/full.png" width="850" alt="Full screenshot"></a>
@@ -93,15 +95,19 @@ Laptop mode: a battery segment.
 ![dual-line status bar](img/dual-line-status-bar.png)
 
 # Co-Maintainer
+
 [@xx4h](https://github.com/xx4h) is helping out with developing, maintaining, and managing this project!
 
 # Requirements
+
 Requirements for the lib to work are:
+
 * `tmux -V` >= 2.9
 * `bash --version` >= 3.2 (Does not have to be your default shell.)
 * Nerd Font. Follow instructions at [Font Installation](https://github.com/ryanoasis/nerd-fonts?tab=readme-ov-file#font-installation). However, you can use other substitute symbols as well; see `config.sh`.
 
 ## Segment Requirements
+
 Some segments have their own requirements. If you enable them in your theme, make sure all requirements are met for those.
 
 * **claude_code.sh**: `jq`, `curl` and [`ccusage`](https://github.com/ryoppippi/ccusage) (only if you enable the accumulated cost display)
@@ -110,22 +116,22 @@ Some segments have their own requirements. If you enable them in your theme, mak
 * **github_notifications.sh**: `jq`, `curl`
 * **ifstat.sh**: `ifstat` (there is a simpler segment `ifstat_sys.sh` not using ifstat)
 * **mailcount.sh**
-   * gmail: `wget`
-   * mailcheck: [mailcheck](http://packages.debian.org/sid/mailcheck)
+  * gmail: `wget`
+  * mailcheck: [mailcheck](http://packages.debian.org/sid/mailcheck)
 * **now_playing.sh**
-   * mpd: [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
-   * last.fm: `jq`, `curl`
+  * mpd: [libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
+  * last.fm: `jq`, `curl`
 * **rainbarf.sh**: [rainbarf](https://github.com/creaktive/rainbarf)
 * **tennis.sh**: `jq`, `curl` >= 7.55, and a dedicated free [Live Tennis API key](https://livetennisapi.com)
 * **tmux_continuum\*.sh**: [tmux-continuum](https://github.com/tmux-plugins/tmux-continuum/)
 * **tmux_mem_cpu_load.sh**: [tmux-mem-cpu-load](https://github.com/thewtex/tmux-mem-cpu-load)
 * **wan_ip.sh**: `curl`
 * **weather.sh**:
-   * Provider *yrno*: `jq`, `curl`
+  * Provider *yrno*: `jq`, `curl`
 * **xkb_layout.sh**: X11, XKB
 
-
 ### Tennis score snapshots
+
 Add `"tennis 24 255"` to your theme's status segments and set
 `TMUX_POWERLINE_SEG_TENNIS_API_KEY` in your private configuration file. Optionally set
 `TMUX_POWERLINE_SEG_TENNIS_PLAYER` to a player or doubles-team name substring. This
@@ -161,22 +167,28 @@ Run the offline regression checks with `bash tests/tennis.sh`.
 
 `weather.sh` refreshes in the background and shares its cache between all local tmux
 clients. It makes at most one GeoIP or MET Weather API attempt per configured
-`TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD` (600 seconds by default), including when
-the provider, network, or auto-location lookup fails. A failed refresh retains the
-last successfully displayed weather; the segment is blank until the first successful
-refresh.
+`TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD` (600 seconds by default). Shorter,
+zero, negative, and invalid values cannot reduce the 600-second MET minimum.
+Response cache headers can defer a refresh further; failed requests use a
+conservative retry delay, retain the last successfully displayed weather, and leave
+the segment blank until the first successful refresh.
 
-The weather cache and refresh-attempt marker are stored in
-`${TMUX_POWERLINE_DIR_TEMPORARY}` as `weather_cache_data.txt` and
-`weather_cache_last_attempt.txt`. Delete both files to force a new attempt on the
-next status render. Run the offline regression checks with `bash tests/weather.sh`.
+Weather data and request eligibility are stored under
+`${TMUX_POWERLINE_DIR_TEMPORARY}`. The segment records eligibility before making a
+request, so a missing or unwritable local state directory suppresses requests rather
+than retrying for every status render. Removing local state can cause one recovery
+request once state can be written; it does not bypass the provider's minimum
+interval.
 
 # Installation
+
 1. Install [tpm](https://github.com/tmux-plugins/tpm) and make sure it's working.
 2. Install tmux-powerline as a plugin by adding a line to `tmux.conf`:
+
      ```conf
       set -g @plugin 'erikw/tmux-powerline'
      ```
+
 3. Install the plugin with `<prefix>I`, unless you changed [tpm's keybindings](https://github.com/tmux-plugins/tpm#key-bindings).
    * The default powerline should already be visible now!
 4. Continue to the [Configuration](#configuration) section below.
@@ -185,18 +197,21 @@ next status render. Run the offline regression checks with `bash tests/weather.s
 > Note that tpm plugins should be at the bottom of your `tmux.conf`. This plugin will then override some tmux settings like `status-left`, `status-right`, etc. If you had already set those in your tmux config, it is a good opportunity to remove or comment them out.
 > Take a look at [main.tmux](https://github.com/erikw/tmux-powerline/blob/main/main.tmux) for exactly which settings are overridden.
 
-
 # Configuration
+
 tmux-powerline stores the custom config, themes, and segments at `$XDG_CONFIG_HOME/tmux-powerline/`.
 
 To make the following example easier, let's assume the following:
+
 * `$XDG_CONFIG_HOME` has the default value of `~/.config`
 * tmux-powerline was installed to the XDG path `~/.config/tmux/plugins/tmux-powerline`
 
 Adapt the commands below if your paths differ from this.
 
 ## Configuration File
+
 Start by generating your own configuration file:
+
 ```shell
 ~/.config/tmux/plugins/tmux-powerline/generate_config.sh
 mv ~/.config/tmux-powerline/config.sh.default ~/.config/tmux-powerline/config.sh
@@ -206,9 +221,11 @@ $EDITOR ~/.config/tmux-powerline/config.sh
 Go through the default config and adjust it to your needs!
 
 ## Custom Theme
+
 The theme is specified by setting the environment variable `$TMUX_POWERLINE_THEME` in the config file above. It will use a default theme, and you probably want to use your own. The default config has set the custom theme path to be `~/.config/tmux-powerline/themes/`.
 
 Make a copy of the default theme and make your own, say `my-theme`:
+
 ```shell
 mkdir -p ~/.config/tmux-powerline/themes
 cp ~/.config/tmux/plugins/tmux-powerline/themes/default.sh ~/.config/tmux-powerline/themes/my-theme.sh
@@ -219,9 +236,11 @@ $EDITOR ~/.config/tmux-powerline/themes/my-theme.sh
 > Remember to update the configuration file to use the new theme by setting `TMUX_POWERLINE_THEME=my-theme`
 
 ## Custom Segments
+
 In the same way as themes, you can create your own segments at `TMUX_POWERLINE_DIR_USER_SEGMENTS` which defaults to `~/.config/tmux-powerline/segments`.
 
 To get started, copy an existing segment that is similar to the segment that you want to create.
+
 ```shell
 mkdir -p ~/.config/tmux-powerline/segments
 cp ~/.config/tmux/plugins/tmux-powerline/segments/date.sh ~/.config/tmux-powerline/segments/my-segment.sh
@@ -232,8 +251,8 @@ Now you can add `my-segment` to your own theme!
 
 Also see [How to make a segment](#how-to-make-a-segment) below for more details.
 
-
 # Debugging
+
 Some segments might not work on your system for various reasons, such as missing programs or different versions not having the same options. To find out which segment is not working, it may help to enable the debug setting in `~/.config/tmux-powerline/config.sh`.
 
 Next step would be to enable the error logging in general or even with a scope, see `TMUX_POWERLINE_ERROR_LOGS_ENABLED` and `TMUX_POWERLINE_ERROR_LOGS_SCOPES` in your config.
@@ -268,16 +287,15 @@ less /tmp/tmux-powerline.log
 tail -f /tmp/tmux-powerline.log # or follow output like this.
 ```
 
-
 You can also enable the debug mode in your config file. Look for the `TMUX_POWERLINE_DEBUG_MODE_ENABLED` environment variable and set it to `true`.
 
 If you can not solve the problems, you can post an [issue](https://github.com/erikw/tmux-powerline/issues?state=open) and be sure to include relevant information about your system and script output (from `./doctor.sh` and/or `bash -x`) and/or screenshots if needed.
 Be sure to search in the [resolved issues](https://github.com/erikw/tmux-powerline/issues?page=1&state=closed) section for similar problems you're experiencing before posting.
 
-
-
 ## Common Problems
+
 ### Nothing is Displayed
+
 You have edited `~/.tmux.conf`, but no powerline is displayed. This might be because tmux is not aware of the changes, so you have to restart your tmux session or reload that file by typing this on the command line (or in tmux command mode with `prefix :`)
 
 ```shell
@@ -285,16 +303,18 @@ tmux source-file ~/.tmux.conf
 ```
 
 ### Multiple lines in bash or no powerline in Zsh using iTerm (macOS)
+
 If your tmux looks like [this](https://github.com/erikw/tmux-powerline/issues/125), then you may have to, in iTerm, uncheck [Unicode East Asian Ambiguous characters are wide] in Preferences -> Settings -> Advanced.
 
-
 # Hacking (Development)
+>
 > [!IMPORTANT]
 > Please read and follow the [CONTRIBUTING.md](CONTRIBUTING.md) guidelines!
 
 This project can only gain positively from contributions. Fork today and make your own enhancements and segments to share back!
 
 ## Codespaces Devcontainer
+
 You can fork this project and then start coding right away with GitHub Codespaces, as this project is set up to install all development dependencies and install tmux-powerline on the devcontainer. See [devcontainer.json](.devcontainer/devcontainer.json) and [devcontainer_postCreateCommand.sh](scripts/devcontainer_postCreateCommand.sh). After starting the devcontainer, just type `tmux` in the terminal, and you should see a working tmux-powerline already to start playing with.
 
 > [!IMPORTANT]
@@ -305,11 +325,11 @@ You can fork this project and then start coding right away with GitHub Codespace
 > ```
 
 ## How To Make a Segment
+
 Please section *How To Make a Segment* at [CONTRIBUTING.md](CONTRIBUTING.md#how-to-make-a-segment).
 
-
-
 # Releasing
+
 Create a new version of this project by using [semver-cli](https://github.com/maykonlsf/semver-cli).
 
 ```shell
@@ -320,5 +340,7 @@ git commit -am "Bump version to $ver" && git tag $ver && git push --atomic origi
 ```
 
 # More Tmux Plugins
+
 I have another tmux plugin that might interest you:
+
 * [tmux-dark-notify](https://github.com/erikw/tmux-dark-notify) - A plugin that makes tmux's theme follow macOS dark/light mode.

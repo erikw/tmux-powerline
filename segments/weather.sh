@@ -15,12 +15,22 @@ TMUX_POWERLINE_SEG_WEATHER_LAT_DEFAULT="auto"
 TMUX_POWERLINE_SEG_WEATHER_LON_DEFAULT="auto"
 # Icon style: "emoji" (default), "nerdfonts", "emoji_fixed", "auto"
 TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE_DEFAULT="emoji"
+TMUX_POWERLINE_SEG_WEATHER_MIN_UPDATE_PERIOD="600"
+TMUX_POWERLINE_SEG_WEATHER_FAILURE_RETRY="900"
+TMUX_POWERLINE_SEG_WEATHER_FAILURE_RETRY_MAX="21600"
+TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX="300"
+TMUX_POWERLINE_SEG_WEATHER_MET_ENDPOINT_ENCODED="YWEwNzBqM2I0eTFqZ29xOW4uYXBpLm1ldC5ubw=="
 
 # Global cache file for weather data
 TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data.txt"
 # Add: global cache file for auto-detected location (lat/lon)
 TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_location.txt"
 TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LAST_ATTEMPT="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_last_attempt.txt"
+TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_STATE="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_state.txt"
+TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCK="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_refresh.lock.d"
+TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/tmux-powerline"
+TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_FILE="${TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DIR}/met-endpoint"
+TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_LOCK="${TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DIR}/met-endpoint.lock.d"
 
 generate_segmentrc() {
 	read -r -d '' rccontents <<EORC
@@ -72,64 +82,41 @@ run_segment() {
 	return 0
 }
 
-# Returns 0 if a refresh was attempted within the update period, 1 otherwise.
+# Returns 0 if a refresh is not eligible yet, 1 otherwise.
 __weather_cache_is_fresh() {
-	local update_period="${1:-$TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT}"
-	if ! [[ "$update_period" =~ ^[1-9][0-9]*$ ]]; then
-		update_period="$TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT"
-	fi
-
-	local last_attempt time_now attempt_age
+	local time_now next_eligible
 	time_now=$(date +%s)
-	last_attempt=$(__weather_last_attempt)
-
-	if [ -z "$last_attempt" ]; then
-		return 1
-	fi
-	if ! [[ "$last_attempt" =~ ^[0-9]+$ ]]; then
-		tp_err_seg "Warn: Invalid weather refresh attempt timestamp; delaying retry"
-		__weather_record_attempt "$time_now"
-		return 0
-	fi
-	if [ "$last_attempt" -gt "$time_now" ]; then
-		tp_err_seg "Warn: Weather refresh attempt timestamp is in the future; delaying retry"
-		__weather_record_attempt "$time_now"
-		return 0
-	fi
-
-	attempt_age=$((time_now - last_attempt))
-	[ "$attempt_age" -lt "$update_period" ]
+	next_eligible=$(__weather_next_eligible) || return 1
+	[ "$next_eligible" -gt "$time_now" ]
 }
 
 # Spawn a background process to refresh the cache; does nothing if already running
 __weather_refresh_in_background() {
-	local lock_file="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_refresh.lock"
-
-	# Stale-lock check: if the lock is older than the maximum possible fetch time, treat it as abandoned
-	if [ -f "$lock_file" ]; then
-		local lock_mtime lock_age=0
-		lock_mtime=$(stat -c "%Y" "$lock_file" 2>/dev/null || stat -f "%m" "$lock_file" 2>/dev/null)
-		[ -n "$lock_mtime" ] && lock_age=$(($(date +%s) - lock_mtime))
-		if [ "$lock_age" -le 30 ]; then
-			return
-		fi
-		rm -f "$lock_file"
+	if ! __weather_state_directory_is_usable; then
+		tp_err_seg "Err: Weather cache directory is unavailable; skipping refresh"
+		return
 	fi
 
-	# Atomically acquire the lock; bail out if another invocation beat us to it
-	(
-		set -o noclobber
-		: >"$lock_file"
-	) 2>/dev/null || return
+	if [ -d "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCK" ]; then
+		if ! __weather_lock_is_stale "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCK" 60; then
+			return
+		fi
+		rmdir "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCK" 2>/dev/null || return
+	fi
+
+	mkdir "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCK" 2>/dev/null || return
 
 	(
 		exec >/dev/null 2>&1
-		trap 'rm -f "$lock_file"' EXIT
+		trap 'rmdir "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCK" 2>/dev/null' EXIT
 
-		# A renderer may have checked freshness before another worker recorded its attempt.
+		# A renderer may have checked eligibility before another worker updated it.
 		__weather_cache_is_fresh "$TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD" && exit 0
-		__weather_record_attempt "$(date +%s)" || exit 1
-		__process_settings || exit 1
+		__weather_reserve_attempt || exit 1
+		__process_settings || {
+			__weather_schedule_failure
+			exit 1
+		}
 
 		local weather
 		case "$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER" in
@@ -138,11 +125,14 @@ __weather_refresh_in_background() {
 			;;
 		*)
 			tp_err_seg "Err: Invalid weather data provider: ${TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER}"
+			__weather_schedule_failure
 			exit 1
 			;;
 		esac
 
-		__weather_cache_write "$weather"
+		if [ -n "$weather" ]; then
+			__weather_cache_write "$weather" || __weather_schedule_failure
+		fi
 	) &
 	disown
 }
@@ -175,6 +165,10 @@ __process_settings() {
 			exit 8
 		fi
 	fi
+	__weather_prepare_coordinates || {
+		tp_err_seg "Err: Invalid weather location"
+		return 1
+	}
 }
 
 # An implementation of a weather provider, just need to echo the result, run_segment() will take care of the rest
@@ -198,26 +192,72 @@ __yrno() {
 		return 1
 	fi
 
-	# Ref: https://api.met.no/doc/TermsOfService
-	local user_agent
+	local user_agent endpoint weather_data header_file body_file http_status curl_status
 	user_agent="tmux-powerline/$(tp_version) (https://github.com/erikw/tmux-powerline)"
+	endpoint=$(__weather_endpoint) || {
+		tp_err_seg "Err: Weather endpoint is unavailable"
+		__weather_schedule_failure
+		return 1
+	}
 
-	if ! weather_data=$(curl --fail --max-time 4 -A "$user_agent" -s "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}"); then
+	header_file=$(mktemp "${TMUX_POWERLINE_DIR_TEMPORARY}/weather_headers.XXXXXX") || {
+		tp_err_seg "Err: Unable to create weather response metadata"
+		__weather_schedule_failure
+		return 1
+	}
+	body_file=$(mktemp "${TMUX_POWERLINE_DIR_TEMPORARY}/weather_body.XXXXXX") || {
+		rm -f "$header_file"
+		tp_err_seg "Err: Unable to create weather response cache"
+		__weather_schedule_failure
+		return 1
+	}
+
+	if [ -n "$TMUX_POWERLINE_SEG_WEATHER_STATE_LAST_MODIFIED" ]; then
+		http_status=$(curl --compressed --location --max-time 4 -A "$user_agent" -H "If-Modified-Since: ${TMUX_POWERLINE_SEG_WEATHER_STATE_LAST_MODIFIED}" -sS -D "$header_file" -o "$body_file" -w '%{http_code}' "https://${endpoint}/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}")
+	else
+		http_status=$(curl --compressed --location --max-time 4 -A "$user_agent" -sS -D "$header_file" -o "$body_file" -w '%{http_code}' "https://${endpoint}/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}")
+	fi
+	curl_status=$?
+	if [ "$curl_status" -ne 0 ] || ! [[ "$http_status" =~ ^[0-9]{3}$ ]]; then
+		rm -f "$header_file" "$body_file"
 		tp_err_seg "Err: yr.no err: unable to fetch weather data"
+		__weather_schedule_failure
 		return 1
 	fi
-	if ! degree=$(echo "$weather_data" | jq -er '.properties.timeseries[0].data.instant.details.air_temperature'); then
+
+	if [ "$http_status" = "304" ]; then
+		__weather_schedule_success "$(__weather_header_value "$header_file" "expires")" "$(__weather_header_value "$header_file" "last-modified")"
+		rm -f "$header_file" "$body_file"
+		return 0
+	fi
+	if [ "$http_status" != "200" ]; then
+		__weather_schedule_failure "$(__weather_header_value "$header_file" "retry-after")"
+		rm -f "$header_file" "$body_file"
+		tp_err_seg "Err: yr.no err: provider returned HTTP ${http_status}"
+		return 1
+	fi
+
+	weather_data=$(cat "$body_file")
+	if ! degree=$(printf '%s' "$weather_data" | jq -er '.properties.timeseries[0].data.instant.details.air_temperature'); then
+		rm -f "$header_file" "$body_file"
 		tp_err_seg "Err: yr.no err: unable to parse temperature"
+		__weather_schedule_failure
 		return 1
 	fi
-	if ! condition=$(echo "$weather_data" | jq -er '.properties.timeseries[0].data.next_1_hours.summary.symbol_code'); then
+	if ! condition=$(printf '%s' "$weather_data" | jq -er '.properties.timeseries[0].data.next_1_hours.summary.symbol_code'); then
+		rm -f "$header_file" "$body_file"
 		tp_err_seg "Err: yr.no err: unable to parse weather condition"
+		__weather_schedule_failure
 		return 1
 	fi
 	if [ -z "$degree" ] || [ "$degree" = "null" ]; then
+		rm -f "$header_file" "$body_file"
 		tp_err_seg "Err: yr.no err: unable to fetch weather data"
+		__weather_schedule_failure
 		return 1
 	fi
+	__weather_schedule_success "$(__weather_header_value "$header_file" "expires")" "$(__weather_header_value "$header_file" "last-modified")"
+	rm -f "$header_file" "$body_file"
 
 	if [ "$TMUX_POWERLINE_SEG_WEATHER_UNIT" == "k" ]; then
 		degree=$(__degree_c2k "$degree")
@@ -381,13 +421,248 @@ __read_file_last_update() {
 	__read_file_split "$1" 1 0
 }
 
-# Read the dedicated attempt marker, falling back to the legacy weather cache timestamp.
-__weather_last_attempt() {
-	if [ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LAST_ATTEMPT" ]; then
-		cat "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LAST_ATTEMPT"
-	elif [ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER" ]; then
-		__read_file_last_update "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER"
+__weather_effective_update_period() {
+	local update_period="${TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD:-$TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT}"
+	if ! [[ "$update_period" =~ ^[1-9][0-9]*$ ]] || [ "$update_period" -lt "$TMUX_POWERLINE_SEG_WEATHER_MIN_UPDATE_PERIOD" ]; then
+		update_period="$TMUX_POWERLINE_SEG_WEATHER_MIN_UPDATE_PERIOD"
 	fi
+	printf '%s\n' "$update_period"
+}
+
+__weather_state_directory_is_usable() {
+	mkdir -p "$TMUX_POWERLINE_DIR_TEMPORARY" 2>/dev/null &&
+		[ -d "$TMUX_POWERLINE_DIR_TEMPORARY" ] &&
+		[ -w "$TMUX_POWERLINE_DIR_TEMPORARY" ]
+}
+
+__weather_lock_is_stale() {
+	local lock_file="$1"
+	local maximum_age="$2"
+	local lock_mtime lock_age
+
+	lock_mtime=$(stat -c "%Y" "$lock_file" 2>/dev/null || stat -f "%m" "$lock_file" 2>/dev/null) || return 1
+	lock_age=$(( $(date +%s) - lock_mtime ))
+	[ "$lock_age" -gt "$maximum_age" ]
+}
+
+__weather_read_state() {
+	TMUX_POWERLINE_SEG_WEATHER_STATE_NEXT_ELIGIBLE=""
+	TMUX_POWERLINE_SEG_WEATHER_STATE_FAILURES="0"
+	TMUX_POWERLINE_SEG_WEATHER_STATE_LAST_MODIFIED=""
+
+	if [ ! -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_STATE" ]; then
+		return 0
+	fi
+
+	local key value
+	while IFS='=' read -r key value; do
+		case "$key" in
+		next_eligible) TMUX_POWERLINE_SEG_WEATHER_STATE_NEXT_ELIGIBLE="$value" ;;
+		failures) TMUX_POWERLINE_SEG_WEATHER_STATE_FAILURES="$value" ;;
+		last_modified) TMUX_POWERLINE_SEG_WEATHER_STATE_LAST_MODIFIED="$value" ;;
+		*) return 1 ;;
+		esac
+	done <"$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_STATE"
+
+	if ! [[ "$TMUX_POWERLINE_SEG_WEATHER_STATE_NEXT_ELIGIBLE" =~ ^[0-9]+$ ]] ||
+		! [[ "$TMUX_POWERLINE_SEG_WEATHER_STATE_FAILURES" =~ ^[0-9]+$ ]] ||
+		[[ "$TMUX_POWERLINE_SEG_WEATHER_STATE_LAST_MODIFIED" == *$'\n'* ]]; then
+		return 1
+	fi
+	return 0
+}
+
+__weather_write_state() {
+	local next_eligible="$1"
+	local failures="$2"
+	local last_modified="$3"
+	if ! [[ "$next_eligible" =~ ^[0-9]+$ ]] || ! [[ "$failures" =~ ^[0-9]+$ ]] ||
+		[[ "$last_modified" == *$'\n'* ]]; then
+		return 1
+	fi
+	__write_file_atomically "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_STATE" "next_eligible=${next_eligible}
+failures=${failures}
+last_modified=${last_modified}"
+}
+
+__weather_next_eligible() {
+	if ! __weather_read_state; then
+		return 1
+	fi
+	if [ -n "$TMUX_POWERLINE_SEG_WEATHER_STATE_NEXT_ELIGIBLE" ]; then
+		printf '%s\n' "$TMUX_POWERLINE_SEG_WEATHER_STATE_NEXT_ELIGIBLE"
+		return
+	fi
+
+	# Preserve an existing v3.3.0 cooldown after upgrading to the state format.
+	if [ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LAST_ATTEMPT" ]; then
+		local last_attempt
+		last_attempt=$(cat "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LAST_ATTEMPT")
+		if [[ "$last_attempt" =~ ^[0-9]+$ ]]; then
+			printf '%s\n' "$((last_attempt + $(__weather_effective_update_period)))"
+			return
+		fi
+	fi
+	if [ -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER" ]; then
+		local last_update
+		last_update=$(__read_file_last_update "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER")
+		if [[ "$last_update" =~ ^[0-9]+$ ]] && [ "$last_update" -gt 0 ]; then
+			printf '%s\n' "$((last_update + $(__weather_effective_update_period)))"
+			return
+		fi
+	fi
+	printf '%s\n' 0
+}
+
+__weather_reserve_attempt() {
+	local time_now next_eligible
+	time_now=$(date +%s)
+	if ! __weather_read_state; then
+		# Do not turn corrupt state into an immediate request loop.
+		__weather_write_state "$((time_now + $(__weather_effective_update_period)))" 0 "" || return 1
+		return 1
+	fi
+	next_eligible=$(__weather_next_eligible) || return 1
+	[ "$next_eligible" -le "$time_now" ] || return 1
+	__weather_write_state "$((time_now + $(__weather_effective_update_period)))" "$TMUX_POWERLINE_SEG_WEATHER_STATE_FAILURES" "$TMUX_POWERLINE_SEG_WEATHER_STATE_LAST_MODIFIED"
+}
+
+__weather_parse_http_date() {
+	local value="$1"
+	local parsed
+	parsed=$(date -d "$value" +%s 2>/dev/null || date -j -f "%a, %d %b %Y %T %Z" "$value" +%s 2>/dev/null) || return 1
+	[[ "$parsed" =~ ^[0-9]+$ ]] || return 1
+	printf '%s\n' "$parsed"
+}
+
+__weather_header_value() {
+	local header_file="$1"
+	local header_name="$2"
+	awk -v wanted="$header_name" '
+		tolower($0) ~ "^" wanted ":" {
+			sub(/^[^:]*:[[:space:]]*/, "")
+			sub(/\r$/, "")
+			print
+			exit
+		}
+	' "$header_file"
+}
+
+__weather_schedule_success() {
+	local expires="$1"
+	local last_modified="$2"
+	local time_now next_eligible expires_at jitter=0
+	time_now=$(date +%s)
+	next_eligible=$((time_now + $(__weather_effective_update_period)))
+	expires_at=$(__weather_parse_http_date "$expires") || expires_at=""
+	if [ -n "$expires_at" ] && [ "$expires_at" -gt "$next_eligible" ]; then
+		next_eligible="$expires_at"
+	fi
+	if [ "$TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX" -gt 0 ]; then
+		jitter=$((RANDOM % (TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX + 1)))
+	fi
+	__weather_write_state "$((next_eligible + jitter))" 0 "${last_modified:-$TMUX_POWERLINE_SEG_WEATHER_STATE_LAST_MODIFIED}"
+}
+
+__weather_schedule_failure() {
+	local retry_after="${1:-}"
+	local time_now failures delay retry_after_at
+	time_now=$(date +%s)
+	__weather_read_state || return 1
+	failures=$((TMUX_POWERLINE_SEG_WEATHER_STATE_FAILURES + 1))
+	delay="$TMUX_POWERLINE_SEG_WEATHER_FAILURE_RETRY"
+	while [ "$failures" -gt 1 ] && [ "$delay" -lt "$TMUX_POWERLINE_SEG_WEATHER_FAILURE_RETRY_MAX" ]; do
+		delay=$((delay * 2))
+		failures=$((failures - 1))
+	done
+	# Keep the count, rather than the loop counter used to calculate the delay.
+	__weather_read_state || return 1
+	failures=$((TMUX_POWERLINE_SEG_WEATHER_STATE_FAILURES + 1))
+	[ "$delay" -gt "$TMUX_POWERLINE_SEG_WEATHER_FAILURE_RETRY_MAX" ] && delay="$TMUX_POWERLINE_SEG_WEATHER_FAILURE_RETRY_MAX"
+	if [[ "$retry_after" =~ ^[0-9]+$ ]] && [ "$retry_after" -gt "$delay" ]; then
+		delay="$retry_after"
+	else
+		retry_after_at=$(__weather_parse_http_date "$retry_after") || retry_after_at=""
+		if [ -n "$retry_after_at" ] && [ "$retry_after_at" -gt "$((time_now + delay))" ]; then
+			delay=$((retry_after_at - time_now))
+		fi
+	fi
+	__weather_write_state "$((time_now + delay))" "$failures" "$TMUX_POWERLINE_SEG_WEATHER_STATE_LAST_MODIFIED"
+}
+
+__weather_decode_endpoint() {
+	local decoded
+	decoded=$(printf '%s' "$TMUX_POWERLINE_SEG_WEATHER_MET_ENDPOINT_ENCODED" | base64 -d 2>/dev/null ||
+		printf '%s' "$TMUX_POWERLINE_SEG_WEATHER_MET_ENDPOINT_ENCODED" | base64 -D 2>/dev/null) || return 1
+	if ! [[ "$decoded" =~ ^[a-z0-9][a-z0-9.-]*\.api\.met\.no$ ]] ||
+		[[ "$decoded" == *..* ]] ||
+		[[ "$decoded" == *$'\n'* ]]; then
+		return 1
+	fi
+	printf '%s\n' "$decoded"
+}
+
+__weather_endpoint_file_is_valid() {
+	local expected="$1"
+	[ -f "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_FILE" ] || return 1
+	awk -v expected="$expected" '
+		NR == 1 { valid = ($0 == expected); next }
+		{ valid = 0 }
+		END { exit (NR == 1 && valid) ? 0 : 1 }
+	' "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_FILE"
+}
+
+__weather_endpoint() {
+	local expected
+	expected=$(__weather_decode_endpoint) || return 1
+	if __weather_endpoint_file_is_valid "$expected"; then
+		printf '%s\n' "$expected"
+		return
+	fi
+
+	mkdir -p "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DIR" 2>/dev/null ||
+		return 1
+	[ -d "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DIR" ] &&
+		[ -w "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DIR" ] || return 1
+
+	if [ -d "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_LOCK" ]; then
+		if ! __weather_lock_is_stale "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_LOCK" 60; then
+			return 1
+		fi
+		rmdir "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_LOCK" 2>/dev/null || return 1
+	fi
+	mkdir "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_LOCK" 2>/dev/null || return 1
+	if ! __weather_endpoint_file_is_valid "$expected"; then
+		(
+			umask 077
+			__write_file_atomically "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_FILE" "$expected"
+		) || {
+			rmdir "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_LOCK" 2>/dev/null
+			return 1
+		}
+		chmod 600 "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_FILE" 2>/dev/null || true
+	fi
+	rmdir "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_LOCK" 2>/dev/null || return 1
+	printf '%s\n' "$expected"
+}
+
+__weather_prepare_coordinates() {
+	local latitude longitude
+	latitude=$(awk -v value="$TMUX_POWERLINE_SEG_WEATHER_LAT" '
+		BEGIN {
+			if (value !~ /^-?[0-9]+([.][0-9]+)?$/ || value < -90 || value > 90) exit 1
+			printf "%.4f", value
+		}
+	') || return 1
+	longitude=$(awk -v value="$TMUX_POWERLINE_SEG_WEATHER_LON" '
+		BEGIN {
+			if (value !~ /^-?[0-9]+([.][0-9]+)?$/ || value < -180 || value > 180) exit 1
+			printf "%.4f", value
+		}
+	') || return 1
+	TMUX_POWERLINE_SEG_WEATHER_LAT="$latitude"
+	TMUX_POWERLINE_SEG_WEATHER_LON="$longitude"
+	export TMUX_POWERLINE_SEG_WEATHER_LAT TMUX_POWERLINE_SEG_WEATHER_LON
 }
 
 # Atomically write content to avoid renderers reading a truncated cache file.
