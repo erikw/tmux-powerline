@@ -18,6 +18,7 @@
 </p>
 
 <!-- markdownlint-disable no-empty-links -->
+[![Test](https://github.com/erikw/tmux-powerline/actions/workflows/test.yml/badge.svg)](https://github.com/erikw/tmux-powerline/actions/workflows/test.yml)
 [![Lint Full](https://github.com/erikw/tmux-powerline/actions/workflows/linter-full.yml/badge.svg)](https://github.com/erikw/tmux-powerline/actions/workflows/linter-full.yml)
 [![SLOC](https://sloc.xyz/github/erikw/tmux-powerline?lower=true)](#)
 [![Number of programming languages used](https://img.shields.io/github/languages/count/erikw/tmux-powerline)](#)
