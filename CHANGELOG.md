@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+* [`weather.sh`](segments/weather.sh): improve MET Norway Locationforecast API compliance with a descriptive User-Agent, conditional requests, normalized coordinates, and support for the provider endpoint. Refresh scheduling now enforces the provider's minimum interval, respects `Retry-After` responses, and backs off after failures while retaining the last successful weather value.
+
 ## [3.3.0] - 2026-10-02
 
 ### Added
