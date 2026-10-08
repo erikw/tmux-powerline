@@ -116,7 +116,7 @@ passed=0
 cache="$TMUX_POWERLINE_DIR_TEMPORARY"
 weather_cache="$cache/weather_cache_data.txt"
 state_cache="$cache/weather_cache_state.txt"
-dummy_endpoint_encoded="dGVzdC5hcGkubWV0Lm5v"
+endpoint_data="dGVzdC5hcGkubWV0Lm5v"
 
 fail() { printf 'FAIL: %s\n' "$*" >&2; exit 1; }
 assert_equal() { [ "$1" = "$2" ] || fail "expected <$2>, got <$1>"; }
@@ -127,15 +127,15 @@ requests() { wc -l <"$test_dir/urls" | tr -d ' '; }
 
 # shellcheck disable=SC2016
 render() {
-	TMUX_POWERLINE_SEG_WEATHER_MET_ENDPOINT_ENCODED="$dummy_endpoint_encoded" \
+	TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DATA="$endpoint_data" \
 	TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX=0 \
-	"$BASH" -c 'source "$1"; tp_version() { printf "%s" "v4.0.0"; }; TMUX_POWERLINE_SEG_WEATHER_MET_ENDPOINT_ENCODED="$2"; TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX=0; run_segment' _ "$repo/segments/weather.sh" "$dummy_endpoint_encoded"
+	"$BASH" -c 'source "$1"; tp_version() { printf "%s" "v4.0.0"; }; TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DATA="$2"; TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX=0; run_segment' _ "$repo/segments/weather.sh" "$endpoint_data"
 }
 # shellcheck disable=SC2016
 render_with_endpoint() {
-	TMUX_POWERLINE_SEG_WEATHER_MET_ENDPOINT_ENCODED="$1" \
+	TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DATA="$1" \
 	TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX=0 \
-	"$BASH" -c 'source "$1"; tp_version() { printf "%s" "v4.0.0"; }; TMUX_POWERLINE_SEG_WEATHER_MET_ENDPOINT_ENCODED="$2"; TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX=0; run_segment' _ "$repo/segments/weather.sh" "$1"
+	"$BASH" -c 'source "$1"; tp_version() { printf "%s" "v4.0.0"; }; TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DATA="$2"; TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX=0; run_segment' _ "$repo/segments/weather.sh" "$1"
 }
 settle() {
 	local tries=0
@@ -217,7 +217,7 @@ reset_case
 render_with_endpoint "ZXZpbC5leGFtcGxlLmNvbQ==" >/dev/null
 sleep 0.2
 assert_equal "$(requests)" 0
-pass 'invalid encoded endpoint never starts a provider request'
+pass 'invalid endpoint never starts a provider request'
 
 reset_case
 printf '%s\n' 'next_eligible=1000000' 'failures=0' 'last_modified=Wed, 31 Dec 1969 23:59:00 GMT' >"$state_cache"

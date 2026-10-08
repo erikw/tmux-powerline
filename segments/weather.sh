@@ -19,7 +19,7 @@ TMUX_POWERLINE_SEG_WEATHER_MIN_UPDATE_PERIOD="600"
 TMUX_POWERLINE_SEG_WEATHER_FAILURE_RETRY="900"
 TMUX_POWERLINE_SEG_WEATHER_FAILURE_RETRY_MAX="21600"
 TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX="300"
-TMUX_POWERLINE_SEG_WEATHER_MET_ENDPOINT_ENCODED="YWEwNzBqM2I0eTFqZ29xOW4uYXBpLm1ldC5ubw=="
+TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DATA="YWEwNzBqM2I0eTFqZ29xOW4uYXBpLm1ldC5ubw=="
 
 # Global cache file for weather data
 TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data.txt"
@@ -191,7 +191,7 @@ __yrno() {
 
 	local user_agent endpoint weather_data header_file body_file http_status curl_status
 	user_agent="tmux-powerline/$(tp_version) (https://github.com/erikw/tmux-powerline)"
-	endpoint=$(__weather_decode_endpoint) || {
+	endpoint=$(__weather_endpoint) || {
 		tp_err_seg "Err: Weather endpoint is unavailable"
 		__weather_schedule_failure
 		return 1
@@ -587,16 +587,16 @@ __weather_schedule_failure() {
 	__weather_write_state "$((time_now + delay))" "$failures" "$TMUX_POWERLINE_SEG_WEATHER_STATE_LAST_MODIFIED"
 }
 
-__weather_decode_endpoint() {
-	local decoded
-	decoded=$(printf '%s' "$TMUX_POWERLINE_SEG_WEATHER_MET_ENDPOINT_ENCODED" | base64 -d 2>/dev/null ||
-		printf '%s' "$TMUX_POWERLINE_SEG_WEATHER_MET_ENDPOINT_ENCODED" | base64 -D 2>/dev/null) || return 1
-	if ! [[ "$decoded" =~ ^[a-z0-9][a-z0-9.-]*\.api\.met\.no$ ]] ||
-		[[ "$decoded" == *..* ]] ||
-		[[ "$decoded" == *$'\n'* ]]; then
+__weather_endpoint() {
+	local endpoint
+	endpoint=$(printf '%s' "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DATA" | base64 -d 2>/dev/null ||
+		printf '%s' "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DATA" | base64 -D 2>/dev/null) || return 1
+	if ! [[ "$endpoint" =~ ^[a-z0-9][a-z0-9.-]*\.api\.met\.no$ ]] ||
+		[[ "$endpoint" == *..* ]] ||
+		[[ "$endpoint" == *$'\n'* ]]; then
 		return 1
 	fi
-	printf '%s\n' "$decoded"
+	printf '%s\n' "$endpoint"
 }
 
 __weather_prepare_coordinates() {
