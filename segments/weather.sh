@@ -28,9 +28,6 @@ TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCATION="${TMUX_POWERLINE_DIR_TEMPORARY}/
 TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LAST_ATTEMPT="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_last_attempt.txt"
 TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_STATE="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_state.txt"
 TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCK="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_refresh.lock.d"
-TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/tmux-powerline"
-TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_FILE="${TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DIR}/met-endpoint"
-TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_LOCK="${TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DIR}/met-endpoint.lock.d"
 
 generate_segmentrc() {
 	read -r -d '' rccontents <<EORC
@@ -194,7 +191,7 @@ __yrno() {
 
 	local user_agent endpoint weather_data header_file body_file http_status curl_status
 	user_agent="tmux-powerline/$(tp_version) (https://github.com/erikw/tmux-powerline)"
-	endpoint=$(__weather_endpoint) || {
+	endpoint=$(__weather_decode_endpoint) || {
 		tp_err_seg "Err: Weather endpoint is unavailable"
 		__weather_schedule_failure
 		return 1
@@ -600,55 +597,6 @@ __weather_decode_endpoint() {
 		return 1
 	fi
 	printf '%s\n' "$decoded"
-}
-
-__weather_endpoint_file_is_valid() {
-	local expected="$1"
-	[ -f "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_FILE" ] || return 1
-	awk -v expected="$expected" '
-		NR == 1 { valid = ($0 == expected); next }
-		{ valid = 0 }
-		END { exit (NR == 1 && valid) ? 0 : 1 }
-	' "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_FILE"
-}
-
-__weather_read_endpoint_file() {
-	awk 'NR == 1 { print; exit }' "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_FILE"
-}
-
-__weather_endpoint() {
-	local expected
-	expected=$(__weather_decode_endpoint) || return 1
-	if __weather_endpoint_file_is_valid "$expected"; then
-		__weather_read_endpoint_file
-		return
-	fi
-
-	mkdir -p "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DIR" 2>/dev/null ||
-		return 1
-	[ -d "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DIR" ] &&
-		[ -w "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DIR" ] || return 1
-
-	if [ -d "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_LOCK" ]; then
-		if ! __weather_lock_is_stale "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_LOCK" 60; then
-			return 1
-		fi
-		rmdir "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_LOCK" 2>/dev/null || return 1
-	fi
-	mkdir "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_LOCK" 2>/dev/null || return 1
-	if ! __weather_endpoint_file_is_valid "$expected"; then
-		(
-			umask 077
-			__write_file_atomically "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_FILE" "$expected"
-		) || {
-			rmdir "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_LOCK" 2>/dev/null
-			return 1
-		}
-		chmod 600 "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_FILE" 2>/dev/null || true
-	fi
-	rmdir "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_LOCK" 2>/dev/null || return 1
-	__weather_endpoint_file_is_valid "$expected" || return 1
-	__weather_read_endpoint_file
 }
 
 __weather_prepare_coordinates() {

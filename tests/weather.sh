@@ -11,7 +11,6 @@ WEATHER_TEST_REAL_DATE=$(command -v date)
 export TMUX_POWERLINE_DIR_HOME="$repo"
 export TMUX_POWERLINE_DIR_LIB="$repo/lib"
 export TMUX_POWERLINE_DIR_TEMPORARY="$test_dir/temporary"
-export XDG_CACHE_HOME="$test_dir/cache"
 export TMUX_POWERLINE_SEG_WEATHER_LAT=59.912345
 export TMUX_POWERLINE_SEG_WEATHER_LON=10.751234
 export TMUX_POWERLINE_ERROR_LOGS_ENABLED=false
@@ -117,9 +116,7 @@ passed=0
 cache="$TMUX_POWERLINE_DIR_TEMPORARY"
 weather_cache="$cache/weather_cache_data.txt"
 state_cache="$cache/weather_cache_state.txt"
-endpoint_file="$XDG_CACHE_HOME/tmux-powerline/met-endpoint"
 dummy_endpoint_encoded="dGVzdC5hcGkubWV0Lm5v"
-dummy_endpoint_rotated_encoded="cm90YXRlZC5hcGkubWV0Lm5v"
 
 fail() { printf 'FAIL: %s\n' "$*" >&2; exit 1; }
 assert_equal() { [ "$1" = "$2" ] || fail "expected <$2>, got <$1>"; }
@@ -156,7 +153,7 @@ settle() {
 	sleep 0.1
 }
 reset_case() {
-	rm -rf "$cache" "$XDG_CACHE_HOME"
+	rm -rf "$cache"
 	mkdir -p "$cache"
 	printf '1000000\n' >"$test_dir/time"
 	printf 'success\n' >"$test_dir/met_mode"
@@ -217,13 +214,10 @@ assert_file_contains "$state_cache" 'next_eligible=1000600'
 pass 'corrupt request state is repaired without an immediate request'
 
 reset_case
-mkdir -p "$(dirname "$endpoint_file")"
-printf '%s\n' 'old.api.met.no' >"$endpoint_file"
-render_with_endpoint "$dummy_endpoint_rotated_encoded" >/dev/null
-settle
-assert_equal "$(cat "$endpoint_file")" 'rotated.api.met.no'
-assert_file_contains "$test_dir/urls" 'https://rotated.api.met.no/'
-pass 'endpoint provisioning rotates an old local value atomically'
+render_with_endpoint "ZXZpbC5leGFtcGxlLmNvbQ==" >/dev/null
+sleep 0.2
+assert_equal "$(requests)" 0
+pass 'invalid encoded endpoint never starts a provider request'
 
 reset_case
 printf '%s\n' 'next_eligible=1000000' 'failures=0' 'last_modified=Wed, 31 Dec 1969 23:59:00 GMT' >"$state_cache"
@@ -242,15 +236,6 @@ render >/dev/null
 settle
 assert_file_contains "$state_cache" 'next_eligible=1003600'
 pass '429 honors a longer Retry-After delay'
-
-reset_case
-export XDG_CACHE_HOME="$test_dir/unwritable-parent"
-printf '%s\n' 'not a directory' >"$XDG_CACHE_HOME"
-render >/dev/null
-sleep 0.2
-assert_equal "$(requests)" 0
-export XDG_CACHE_HOME="$test_dir/cache"
-pass 'endpoint provisioning failure never falls back to the public host'
 
 reset_case
 printf '%s\n' 'not a directory' >"$test_dir/unwritable-temporary"
