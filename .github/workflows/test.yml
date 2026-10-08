@@ -1,0 +1,26 @@
+name: Test
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          for test_file in tests/*; do
+            bash "$test_file"
+          done
