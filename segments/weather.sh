@@ -7,7 +7,7 @@
 # shellcheck source=lib/util.sh
 source "${TMUX_POWERLINE_DIR_LIB}/util.sh"
 
-TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT="yrno"
+TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT="met"
 TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAULT="c"
 TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD_DEFAULT="600"
 TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD_DEFAULT="86400" # 24 hours
@@ -19,7 +19,7 @@ TMUX_POWERLINE_SEG_WEATHER_MIN_UPDATE_PERIOD="600"
 TMUX_POWERLINE_SEG_WEATHER_FAILURE_RETRY="900"
 TMUX_POWERLINE_SEG_WEATHER_FAILURE_RETRY_MAX="21600"
 TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX="300"
-TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DATA="YWEwNzBqM2I0eTFqZ29xOW4uYXBpLm1ldC5ubw=="
+TMUX_POWERLINE_SEG_WEATHER_MET_ENDPOINT_DATA="YWEwNzBqM2I0eTFqZ29xOW4uYXBpLm1ldC5ubw=="
 
 # Global cache file for weather data
 TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_WEATHER="${TMUX_POWERLINE_DIR_TEMPORARY}/weather_cache_data.txt"
@@ -31,7 +31,7 @@ TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_LOCK="${TMUX_POWERLINE_DIR_TEMPORARY}/weat
 
 generate_segmentrc() {
 	read -r -d '' rccontents <<EORC
-# The data provider to use. Currently only "yrno" is supported.
+# The data provider to use. Currently only "met" is supported.
 export TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER="${TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER_DEFAULT}"
 # What unit to use. Can be any of {c,f,k}.
 export TMUX_POWERLINE_SEG_WEATHER_UNIT="${TMUX_POWERLINE_SEG_WEATHER_UNIT_DEFAULT}"
@@ -40,7 +40,7 @@ export TMUX_POWERLINE_SEG_WEATHER_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_WEATHER_UP
 # How often to update the weather location in seconds (this is only used when latitude and longitude settings are set to "auto")
 export TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD="${TMUX_POWERLINE_SEG_WEATHER_LOCATION_UPDATE_PERIOD_DEFAULT}"
 # Your location
-# Latitude and Longtitude for use with yr.no
+# Latitude and longitude for use with met.no
 # Set both to "auto" to detect automatically based on your IP address, or set them manually
 export TMUX_POWERLINE_SEG_WEATHER_LAT="${TMUX_POWERLINE_SEG_WEATHER_LAT_DEFAULT}"
 export TMUX_POWERLINE_SEG_WEATHER_LON="${TMUX_POWERLINE_SEG_WEATHER_LON_DEFAULT}"
@@ -117,8 +117,8 @@ __weather_refresh_in_background() {
 
 		local weather
 		case "$TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER" in
-		"yrno")
-			weather=$(__yrno)
+		"met")
+			weather=$(__weather_met_fetch)
 			;;
 		*)
 			tp_err_seg "Err: Invalid weather data provider: ${TMUX_POWERLINE_SEG_WEATHER_DATA_PROVIDER}"
@@ -168,8 +168,8 @@ __process_settings() {
 	}
 }
 
-# An implementation of a weather provider, just need to echo the result, run_segment() will take care of the rest
-__yrno() {
+# Fetch and format the current weather from the met.no API.
+__weather_met_fetch() {
 	# Ensure required tools exist
 	if ! command -v curl >/dev/null 2>&1; then
 		tp_err_seg "Err: curl not installed"
@@ -189,71 +189,70 @@ __yrno() {
 		return 1
 	fi
 
-	local user_agent endpoint weather_data header_file body_file http_status curl_status
+	local user_agent endpoint header_file body_file http_status curl_status degree condition
 	user_agent="tmux-powerline/$(tp_version) (https://github.com/erikw/tmux-powerline)"
-	endpoint=$(__weather_endpoint) || {
+	endpoint=$(__weather_met_endpoint) || {
 		tp_err_seg "Err: Weather endpoint is unavailable"
 		__weather_schedule_failure
 		return 1
 	}
 
-	header_file=$(mktemp "${TMUX_POWERLINE_DIR_TEMPORARY}/weather_headers.XXXXXX") || {
+	header_file=$(mktemp "${TMUX_POWERLINE_DIR_TEMPORARY}/weather_met_headers.XXXXXX") || {
 		tp_err_seg "Err: Unable to create weather response metadata"
 		__weather_schedule_failure
 		return 1
 	}
-	body_file=$(mktemp "${TMUX_POWERLINE_DIR_TEMPORARY}/weather_body.XXXXXX") || {
+	body_file=$(mktemp "${TMUX_POWERLINE_DIR_TEMPORARY}/weather_met_body.XXXXXX") || {
 		rm -f "$header_file"
 		tp_err_seg "Err: Unable to create weather response cache"
 		__weather_schedule_failure
 		return 1
 	}
 
-	if [ -n "$TMUX_POWERLINE_SEG_WEATHER_STATE_LAST_MODIFIED" ]; then
-		http_status=$(curl --compressed --location --max-time 4 -A "$user_agent" -H "If-Modified-Since: ${TMUX_POWERLINE_SEG_WEATHER_STATE_LAST_MODIFIED}" -sS -D "$header_file" -o "$body_file" -w '%{http_code}' "https://${endpoint}/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}")
+	if [ -n "$TMUX_POWERLINE_SEG_WEATHER_STATE_MET_LAST_MODIFIED" ]; then
+		http_status=$(curl --compressed --location --max-time 4 -A "$user_agent" -H "If-Modified-Since: ${TMUX_POWERLINE_SEG_WEATHER_STATE_MET_LAST_MODIFIED}" -sS -D "$header_file" -o "$body_file" -w '%{http_code}' "https://${endpoint}/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}")
 	else
 		http_status=$(curl --compressed --location --max-time 4 -A "$user_agent" -sS -D "$header_file" -o "$body_file" -w '%{http_code}' "https://${endpoint}/weatherapi/locationforecast/2.0/compact?lat=${TMUX_POWERLINE_SEG_WEATHER_LAT}&lon=${TMUX_POWERLINE_SEG_WEATHER_LON}")
 	fi
 	curl_status=$?
 	if [ "$curl_status" -ne 0 ] || ! [[ "$http_status" =~ ^[0-9]{3}$ ]]; then
 		rm -f "$header_file" "$body_file"
-		tp_err_seg "Err: yr.no err: unable to fetch weather data"
+		tp_err_seg "Err: met.no err: unable to fetch weather data"
 		__weather_schedule_failure
 		return 1
 	fi
 
 	if [ "$http_status" = "304" ]; then
-		__weather_schedule_success "$(__weather_header_value "$header_file" "expires")" "$(__weather_header_value "$header_file" "last-modified")"
+		__weather_schedule_met_success "$(__weather_header_value "$header_file" "expires")" "$(__weather_header_value "$header_file" "last-modified")"
 		rm -f "$header_file" "$body_file"
 		return 0
 	fi
 	if [ "$http_status" != "200" ]; then
 		__weather_schedule_failure "$(__weather_header_value "$header_file" "retry-after")"
 		rm -f "$header_file" "$body_file"
-		tp_err_seg "Err: yr.no err: provider returned HTTP ${http_status}"
+		tp_err_seg "Err: met.no err: provider returned HTTP ${http_status}"
 		return 1
 	fi
 
-	weather_data=$(cat "$body_file")
-	if ! degree=$(printf '%s' "$weather_data" | jq -er '.properties.timeseries[0].data.instant.details.air_temperature'); then
+	if ! degree=$(jq -er '.properties.timeseries[0].data.instant.details.air_temperature' "$body_file"); then
 		rm -f "$header_file" "$body_file"
-		tp_err_seg "Err: yr.no err: unable to parse temperature"
+		tp_err_seg "Err: met.no err: unable to parse temperature"
 		__weather_schedule_failure
 		return 1
 	fi
-	if ! condition=$(printf '%s' "$weather_data" | jq -er '.properties.timeseries[0].data.next_1_hours.summary.symbol_code'); then
+	if ! condition=$(jq -er '.properties.timeseries[0].data.next_1_hours.summary.symbol_code' "$body_file"); then
 		rm -f "$header_file" "$body_file"
-		tp_err_seg "Err: yr.no err: unable to parse weather condition"
+		tp_err_seg "Err: met.no err: unable to parse weather condition"
 		__weather_schedule_failure
 		return 1
 	fi
 	if [ -z "$degree" ] || [ "$degree" = "null" ]; then
 		rm -f "$header_file" "$body_file"
-		tp_err_seg "Err: yr.no err: unable to fetch weather data"
+		tp_err_seg "Err: met.no err: unable to fetch weather data"
 		__weather_schedule_failure
 		return 1
 	fi
-	__weather_schedule_success "$(__weather_header_value "$header_file" "expires")" "$(__weather_header_value "$header_file" "last-modified")"
+	__weather_schedule_met_success "$(__weather_header_value "$header_file" "expires")" "$(__weather_header_value "$header_file" "last-modified")"
 	rm -f "$header_file" "$body_file"
 
 	if [ "$TMUX_POWERLINE_SEG_WEATHER_UNIT" == "k" ]; then
@@ -262,9 +261,8 @@ __yrno() {
 	if [ "$TMUX_POWERLINE_SEG_WEATHER_UNIT" == "f" ]; then
 		degree=$(__degree_c2f "$degree")
 	fi
-	# condition_symbol=$(__get_yrno_condition_symbol "$condition" "$sunrise" "$sunset")
 	local condition_symbol
-	condition_symbol=$(__get_yrno_condition_symbol "$condition" "${TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE:-emoji}")
+	condition_symbol=$(__weather_met_condition_symbol "$condition" "${TMUX_POWERLINE_SEG_WEATHER_ICON_STYLE:-emoji}")
 	# Write the <content@date>, separated by a @ character, so we can fetch it later on without having to call 'stat'
 	echo "${condition_symbol} ${degree}°$(echo "$TMUX_POWERLINE_SEG_WEATHER_UNIT" | tr '[:lower:]' '[:upper:]')"
 }
@@ -282,8 +280,8 @@ __degree_c2f() {
 }
 
 # Get symbol for condition. Available symbol names: https://api.met.no/weatherapi/weathericon/2.0/documentation#List_of_symbols
-# NOTE: when adding new yr.no condition codes, update all three tables below (nerdfonts, emoji_fixed, emoji).
-__get_yrno_condition_symbol() {
+# NOTE: when adding new met.no condition codes, update all three tables below (nerdfonts, emoji_fixed, emoji).
+__weather_met_condition_symbol() {
 	# local condition=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 	# local sunrise="$2"
 	# local sunset="$3"
@@ -445,7 +443,7 @@ __weather_lock_is_stale() {
 __weather_read_state() {
 	TMUX_POWERLINE_SEG_WEATHER_STATE_NEXT_ELIGIBLE=""
 	TMUX_POWERLINE_SEG_WEATHER_STATE_FAILURES="0"
-	TMUX_POWERLINE_SEG_WEATHER_STATE_LAST_MODIFIED=""
+	TMUX_POWERLINE_SEG_WEATHER_STATE_MET_LAST_MODIFIED=""
 
 	if [ ! -f "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_STATE" ]; then
 		return 0
@@ -456,14 +454,14 @@ __weather_read_state() {
 		case "$key" in
 		next_eligible) TMUX_POWERLINE_SEG_WEATHER_STATE_NEXT_ELIGIBLE="$value" ;;
 		failures) TMUX_POWERLINE_SEG_WEATHER_STATE_FAILURES="$value" ;;
-		last_modified) TMUX_POWERLINE_SEG_WEATHER_STATE_LAST_MODIFIED="$value" ;;
+		met_last_modified | last_modified) TMUX_POWERLINE_SEG_WEATHER_STATE_MET_LAST_MODIFIED="$value" ;;
 		*) return 1 ;;
 		esac
 	done <"$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_STATE"
 
 	if ! [[ "$TMUX_POWERLINE_SEG_WEATHER_STATE_NEXT_ELIGIBLE" =~ ^[0-9]+$ ]] ||
 		! [[ "$TMUX_POWERLINE_SEG_WEATHER_STATE_FAILURES" =~ ^[0-9]+$ ]] ||
-		[[ "$TMUX_POWERLINE_SEG_WEATHER_STATE_LAST_MODIFIED" == *$'\n'* ]]; then
+		[[ "$TMUX_POWERLINE_SEG_WEATHER_STATE_MET_LAST_MODIFIED" == *$'\n'* ]]; then
 		return 1
 	fi
 	return 0
@@ -472,14 +470,14 @@ __weather_read_state() {
 __weather_write_state() {
 	local next_eligible="$1"
 	local failures="$2"
-	local last_modified="$3"
+	local met_last_modified="$3"
 	if ! [[ "$next_eligible" =~ ^[0-9]+$ ]] || ! [[ "$failures" =~ ^[0-9]+$ ]] ||
-		[[ "$last_modified" == *$'\n'* ]]; then
+		[[ "$met_last_modified" == *$'\n'* ]]; then
 		return 1
 	fi
 	__write_file_atomically "$TMUX_POWERLINE_SEG_WEATHER_CACHE_FILE_STATE" "next_eligible=${next_eligible}
 failures=${failures}
-last_modified=${last_modified}"
+met_last_modified=${met_last_modified}"
 }
 
 __weather_next_eligible() {
@@ -521,7 +519,7 @@ __weather_reserve_attempt() {
 	fi
 	next_eligible=$(__weather_next_eligible) || return 1
 	[ "$next_eligible" -le "$time_now" ] || return 1
-	__weather_write_state "$((time_now + $(__weather_effective_update_period)))" "$TMUX_POWERLINE_SEG_WEATHER_STATE_FAILURES" "$TMUX_POWERLINE_SEG_WEATHER_STATE_LAST_MODIFIED"
+	__weather_write_state "$((time_now + $(__weather_effective_update_period)))" "$TMUX_POWERLINE_SEG_WEATHER_STATE_FAILURES" "$TMUX_POWERLINE_SEG_WEATHER_STATE_MET_LAST_MODIFIED"
 }
 
 __weather_parse_http_date() {
@@ -545,7 +543,7 @@ __weather_header_value() {
 	' "$header_file"
 }
 
-__weather_schedule_success() {
+__weather_schedule_met_success() {
 	local expires="$1"
 	local last_modified="$2"
 	local time_now next_eligible expires_at jitter=0
@@ -558,7 +556,7 @@ __weather_schedule_success() {
 	if [ "$TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX" -gt 0 ]; then
 		jitter=$((RANDOM % (TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX + 1)))
 	fi
-	__weather_write_state "$((next_eligible + jitter))" 0 "${last_modified:-$TMUX_POWERLINE_SEG_WEATHER_STATE_LAST_MODIFIED}"
+	__weather_write_state "$((next_eligible + jitter))" 0 "${last_modified:-$TMUX_POWERLINE_SEG_WEATHER_STATE_MET_LAST_MODIFIED}"
 }
 
 __weather_schedule_failure() {
@@ -584,13 +582,13 @@ __weather_schedule_failure() {
 			delay=$((retry_after_at - time_now))
 		fi
 	fi
-	__weather_write_state "$((time_now + delay))" "$failures" "$TMUX_POWERLINE_SEG_WEATHER_STATE_LAST_MODIFIED"
+	__weather_write_state "$((time_now + delay))" "$failures" "$TMUX_POWERLINE_SEG_WEATHER_STATE_MET_LAST_MODIFIED"
 }
 
-__weather_endpoint() {
+__weather_met_endpoint() {
 	local endpoint
-	endpoint=$(printf '%s' "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DATA" | base64 -d 2>/dev/null ||
-		printf '%s' "$TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DATA" | base64 -D 2>/dev/null) || return 1
+	endpoint=$(printf '%s' "$TMUX_POWERLINE_SEG_WEATHER_MET_ENDPOINT_DATA" | base64 -d 2>/dev/null ||
+		printf '%s' "$TMUX_POWERLINE_SEG_WEATHER_MET_ENDPOINT_DATA" | base64 -D 2>/dev/null) || return 1
 	if ! [[ "$endpoint" =~ ^[a-z0-9][a-z0-9.-]*\.api\.met\.no$ ]] ||
 		[[ "$endpoint" == *..* ]] ||
 		[[ "$endpoint" == *$'\n'* ]]; then

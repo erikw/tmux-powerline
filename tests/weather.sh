@@ -127,15 +127,15 @@ requests() { wc -l <"$test_dir/urls" | tr -d ' '; }
 
 # shellcheck disable=SC2016
 render() {
-	TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DATA="$endpoint_data" \
+	TMUX_POWERLINE_SEG_WEATHER_MET_ENDPOINT_DATA="$endpoint_data" \
 	TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX=0 \
-	"$BASH" -c 'source "$1"; tp_version() { printf "%s" "v4.0.0"; }; TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DATA="$2"; TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX=0; run_segment' _ "$repo/segments/weather.sh" "$endpoint_data"
+	"$BASH" -c 'source "$1"; tp_version() { printf "%s" "v4.0.0"; }; TMUX_POWERLINE_SEG_WEATHER_MET_ENDPOINT_DATA="$2"; TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX=0; run_segment' _ "$repo/segments/weather.sh" "$endpoint_data"
 }
 # shellcheck disable=SC2016
 render_with_endpoint() {
-	TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DATA="$1" \
+	TMUX_POWERLINE_SEG_WEATHER_MET_ENDPOINT_DATA="$1" \
 	TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX=0 \
-	"$BASH" -c 'source "$1"; tp_version() { printf "%s" "v4.0.0"; }; TMUX_POWERLINE_SEG_WEATHER_ENDPOINT_DATA="$2"; TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX=0; run_segment' _ "$repo/segments/weather.sh" "$1"
+	"$BASH" -c 'source "$1"; tp_version() { printf "%s" "v4.0.0"; }; TMUX_POWERLINE_SEG_WEATHER_MET_ENDPOINT_DATA="$2"; TMUX_POWERLINE_SEG_WEATHER_JITTER_MAX=0; run_segment' _ "$repo/segments/weather.sh" "$1"
 }
 settle() {
 	local tries=0
@@ -228,7 +228,9 @@ settle
 assert_equal "$(render)" '☁️  8°C'
 assert_file_contains "$test_dir/if_modified_since" 'Wed, 31 Dec 1969 23:59:00 GMT'
 assert_file_contains "$state_cache" 'next_eligible=1001200'
-pass '304 retains stale weather and sends the stored validator'
+assert_file_contains "$state_cache" 'met_last_modified=Wed, 31 Dec 1969 23:59:00 GMT'
+! grep -q '^last_modified=' "$state_cache" || fail 'legacy validator key remains after migration'
+pass '304 retains stale weather and migrates the stored MET validator'
 
 reset_case
 printf 'throttled\n' >"$test_dir/met_mode"
